@@ -150,7 +150,9 @@ async function loadPage() {
 }
 
 loadPage();
-const lp = searchParams.get('dapreview');
+// enable live preview in da.live
+(async function loadDa() {
+  if (!new URL(window.location.href).searchParams.get('dapreview')) return;
   // eslint-disable-next-line import/no-unresolved
-  if (lp) import('https://da.live/scripts/dapreview.js').then((mod) => mod.default(loadPage));
-
+  import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
+}());
