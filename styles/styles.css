@@ -258,15 +258,39 @@ button.secondary:hover {
   box-shadow: none;
 }
 
+/* schedule section - table links as text links, not buttons */
+.section.schedule .table a {
+  color: var(--brand-1);
+  text-decoration: none;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.section.schedule .table a:hover {
+  color: var(--brand-2);
+  background: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  text-decoration: underline;
+}
+
 /* Featured sections - reusable pattern for cards with centered buttons and arrow links */
+
 /* Add top margin to cards in featured sections */
 .section.featured .cards {
   margin-top: 2rem;
 }
 
-/* Center buttons in cards within featured sections */
-.section.featured .cards .cards-card-body > p:has(a) {
-  text-align: center;
+/* Right-align paragraph with link after cards wrapper in featured sections */
+.section.featured .cards-wrapper + .default-content-wrapper p {
+  text-align: right;
 }
 
 /* Style links that come after cards wrapper in featured sections - make them arrow links */
@@ -278,6 +302,7 @@ button.secondary:hover {
   align-items: center;
   gap: 0.5em;
   transition: gap 0.2s ease;
+
   /* Override button styles */
   background: none !important;
   border: none !important;
@@ -306,9 +331,9 @@ button.secondary:hover {
   transform: translateX(4px);
 }
 
-/* Right-align paragraph with link after cards wrapper in featured sections */
-.section.featured .cards-wrapper + .default-content-wrapper p {
-  text-align: right;
+/* Center buttons in cards within featured sections */
+.section.featured .cards .cards-card-body > p:has(a) {
+  text-align: center;
 }
 
 main img {
@@ -326,29 +351,6 @@ main img {
 .icon img {
   height: 100%;
   width: 100%;
-}
-
-/* schedule section - table links as text links, not buttons */
-.section.schedule .table a {
-  color: var(--brand-1);
-  text-decoration: none;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  transform: none !important;
-  box-shadow: none !important;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.section.schedule .table a:hover {
-  color: var(--brand-2);
-  background: none !important;
-  transform: none !important;
-  box-shadow: none !important;
-  text-decoration: underline;
 }
 
 /* sections */
