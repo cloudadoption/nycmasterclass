@@ -11,23 +11,32 @@
 Required:
 - On your feature branch (`jsmith` - your first initial + last name)
 - Local dev server running at `http://localhost:3000`
-- Admin API token (instructor will provide)
 - Exercises 1-4 completed
 
 **Your Personal Workspace**: All work in `/drafts/jsmith/` (use your name: first initial + last name, lowercase)
 
-**Verify data source exists**:
+**What's already set up for you**:
 
-The instructor has created a **Sheet** in DA.live with future event data. Verify it exists:
+The instructor has pre-configured the entire JSON2HTML pipeline so you can focus on understanding how it works:
+
+| Component | Location | Status |
+|-----------|----------|--------|
+| **Data source** (Sheet) | `/future-events` in DA.live | ✅ Published — available as JSON |
+| **List template** | `/labs/exercise5/events-template` in repo | ✅ Committed |
+| **Detail template** | `/labs/exercise5/event-template` in repo | ✅ Committed |
+| **Event block** | `blocks/event/event.js` + `event.css` in repo | ✅ Committed |
+| **Worker config** | JSON2HTML Cloudflare worker | ✅ Configured for `main` branch |
+
+**Verify data source exists**:
 
 1. **Open in browser**:
    ```
    https://main--nycmasterclass--cloudadoption.aem.page/future-events.json
    ```
 
-2. **You should see**: JSON with 6 event records (Sydney, London, Bangalore, Berlin, Singapore, Dubai) including city, date, venue, highlights, images, etc.
+2. **You should see**: JSON with event records (Sydney, London, Bangalore, Berlin, Singapore, Dubai) including city, date, venue, highlights, images, etc.
 
-3. **If you see 404**: Ask the instructor to publish the `/future-events` Sheet to main branch.
+3. **If you see 404**: Ask the instructor to publish the `/future-events` Sheet.
 
 **Key concept**: Sheets in DA.live automatically become JSON endpoints. The Sheet at `/future-events` becomes available as `/future-events.json`.
 
@@ -35,593 +44,451 @@ The instructor has created a **Sheet** in DA.live with future event data. Verify
 
 ## What You'll Learn
 
-- How to generate multiple pages from a single JSON data source
-- How to create Mustache templates that transform JSON into HTML
-- How to configure the JSON2HTML worker service
-- How to use the JSON2HTML Simulator and Admin Edit tools
-- How to implement dynamic page patterns at scale
+- How a pre-configured JSON2HTML pipeline generates multiple pages from a single JSON data source
+- How Mustache templates transform JSON into HTML (list + detail templates)
+- How the JSON2HTML worker service is configured and how it matches URL patterns
+- How to add new data and see pages generated automatically
+- How the `event` block decorates both list cards and detail pages with responsive grid layouts
 
 ---
 
 ## Why This Matters
 
-**The problem**: You need to create event pages for 6 cities. Each page has the same structure but different data (city, date, venue, etc.).
+**The challenge**: You need event pages for 6 cities **plus** a landing page — each page has the same structure but different data.
 
-**Manual approach**: Create 6 pages by hand in DA.live. Time-consuming, error-prone, hard to maintain. If the layout changes, update all 6 pages.
+**The solution**: Use the JSON2HTML worker as a page generation engine — one JSON data source + Mustache templates = unlimited pages. In this exercise, the entire pipeline is pre-configured. You'll explore how it works and then prove it's dynamic by adding new events.
 
-**JSON2HTML approach**:
-- Create **one** Mustache template page
-- Store event data in **one** JSON file (6 records)
-- Configure the JSON2HTML worker
-- Worker generates all 6 pages automatically
-- Update template once → all 6 pages update automatically
-- Add a 7th city? Just add JSON, no new page needed
-
-**The pattern**:
-```
-1. Data in JSON: /future-events.json (6 city records)
-2. Template in DA.live: /templates/event-template.html (with {{city}}, {{date}}, etc.)
-3. Worker configuration: Maps /events/sydney → JSON + Template → HTML
-4. Result: 6 event pages, zero manual authoring
-```
+**Why use JSON2HTML**:
+- **Zero manual authoring** - Worker generates pages from data automatically
+- **Two templates, unlimited pages** - List view + detail view from one data source
+- **Branch-aware** - Test on your branch before production
+- **Easy maintenance** - Update template once → all pages update
+- **Scalable** - 6 events or 600, same templates
 
 **Real-world use cases**:
-- Event series across multiple cities
-- Product detail pages (e-commerce catalogs with 1000+ SKUs)
-- Speaker/author profiles (conferences with 100+ speakers)
-- Blog post templates (consistent article layouts)
-- Store locator pages (hundreds of locations)
+- Event series across multiple cities (list + individual event pages)
+- Product catalog with browse page + product detail pages
+- Speaker/author directory with grid listing + individual profiles
+- Store locator with map/list view + individual store pages
 
 ---
 
-## How JSON2HTML Works
+## The Complete Data Flow
 
-The JSON2HTML worker is a generic Edge Delivery Services worker that transforms JSON data into HTML pages using Mustache templates.
+Understanding the entire flow from user request to rendered page:
 
-**Architecture**:
 ```
-1. User visits: /events/sydney
-2. Worker checks config for /events/ pattern
-3. Worker fetches: /future-events.json
-4. Worker filters to: { "city": "Sydney", "URL": "/events/sydney", ... }
-5. Worker fetches template: /templates/event-template.html
-6. Worker renders: Mustache template + JSON data = HTML
-7. User sees: Fully rendered event page for Sydney
+┌─────────────┐
+│   Browser   │  User visits /events/sydney
+└──────┬──────┘
+       │
+       │ GET /events/sydney
+       │
+       ▼
+┌─────────────┐
+│  JSON2HTML  │  1. Matches /events/ pattern in config
+│   Worker    │  2. Fetches /future-events.json
+│ (Cloudflare)│  3. Filters to record where URL = "/events/sydney"
+│             │  4. Fetches template: /labs/exercise5/event-template
+│             │  5. Renders: Mustache template + JSON record = HTML
+└──────┬──────┘
+       │
+       │ HTML response
+       │
+       ▼
+┌─────────────┐
+│   Browser   │  6. EDS decorates HTML (sections, blocks, wrappers)
+│             │  7. Event block JS runs (reorganizes DOM)
+│  [Rendered  │  8. Event block CSS applies (card or hero layout)
+│    Page]    │  9. User sees fully styled event detail page
+└─────────────┘
 ```
 
-**Key benefits**:
-- **No custom code** - Hosted worker service, zero deployment
-- **Branch-aware** - Test on your branch before production
-- **Mustache templates** - Simple, logic-less syntax
-- **Flexible** - Works with any JSON structure
+**For the list page** (`/events/list`):
+- Worker does NOT filter — passes ALL records to template
+- Template loops with `{{#data}}...{{/data}}` to render 6 event cards
+- EDS wraps each card in an `.event-wrapper` inside one `.section`
+- CSS grid lays out cards responsively (1/2/3 columns)
 
-**Reference**: [JSON2HTML Documentation](https://www.aem.live/developer/json2html)
+**Key insight**: The browser never calls the JSON endpoint directly. The worker fetches data, applies the template, and returns fully-formed HTML that EDS then decorates.
 
 ---
 
-## Understanding the Data: Future Events Sheet
+## Understanding the Data
 
 The instructor has created a **Sheet in DA.live** at `/future-events` with upcoming masterclass events in 6 cities.
 
-**Sheet in DA.live**: `/future-events` (editable spreadsheet)
-
 **JSON endpoint**: `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json`
 
-**Key concept**: Sheets automatically become JSON endpoints. Authors edit the Sheet, developers consume the JSON.
+**Key fields in each record**:
 
-**Sheet structure** (what the author sees in DA.live):
+| Field | Example | Used For |
+|-------|---------|----------|
+| `city` | Sydney | Page title, headings |
+| `country` | Australia | Location display |
+| `date` | March 15-16, 2026 | Event dates |
+| `venue` | Sydney Convention Centre | Venue name |
+| `address` | 14 Darling Drive, Sydney NSW 2000 | Full address |
+| `description` | Join us for two days of... | Event description |
+| `highlights` | 12 expert-led sessions, 8 hands-on labs, ... | What's included |
+| `image` | https://images.unsplash.com/... | Hero/card image |
+| `registrationUrl` | https://events.adobe.com/sydney-2026 | Register button |
+| `URL` | /events/sydney | Page path (used by `pathKey`) |
 
-| city | country | date | venue | address | description | highlights | image | registrationUrl | URL |
-|------|---------|------|-------|---------|-------------|------------|-------|-----------------|-----|
-| Sydney | Australia | March 15-16, 2026 | Sydney Convention Centre | ... | Join us for... | 12 expert-led sessions, 8 hands-on labs, ... | https://images.unsplash.com/... | https://events.adobe.com/sydney-2026 | /events/sydney |
-| London | United Kingdom | April 20-21, 2026 | ExCeL London | ... | Experience two days... | ... | ... | ... | /events/london |
-| ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+**URL patterns**: `/events/sydney`, `/events/london`, `/events/bangalore`, `/events/berlin`, `/events/singapore`, `/events/dubai`
 
-**JSON structure** (what the developer gets):
-```json
-{
-  "total": 6,
-  "data": [
-    {
-      "city": "Sydney",
-      "country": "Australia",
-      "date": "March 15-16, 2026",
-      "venue": "Sydney Convention Centre",
-      "address": "14 Darling Drive, Sydney NSW 2000",
-      "description": "Join us for two days of hands-on Edge Delivery Services training in Sydney. Master the fundamentals of building blazing-fast websites with AEM.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner at Sydney Opera House, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=1200",
-      "registrationUrl": "https://events.adobe.com/sydney-2026",
-      "URL": "/events/sydney"
-    },
-    {
-      "city": "London",
-      "country": "United Kingdom",
-      "date": "April 20-21, 2026",
-      "venue": "ExCeL London",
-      "address": "One Western Gateway, Royal Victoria Dock, London E16 1XL",
-      "description": "Experience two days of cutting-edge web development training in London. Learn from Adobe's leading experts on Edge Delivery Services.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner at The Shard, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200",
-      "registrationUrl": "https://events.adobe.com/london-2026",
-      "URL": "/events/london"
-    },
-    {
-      "city": "Bangalore",
-      "country": "India",
-      "date": "May 10-11, 2026",
-      "venue": "Bangalore International Exhibition Centre",
-      "address": "10th Mile, Tumkur Road, Bangalore 560073",
-      "description": "Master Edge Delivery Services with hands-on training in Bangalore. Build fast, scalable websites with AEM's modern architecture.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner with local tech community, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=1200",
-      "registrationUrl": "https://events.adobe.com/bangalore-2026",
-      "URL": "/events/bangalore"
-    },
-    {
-      "city": "Berlin",
-      "country": "Germany",
-      "date": "June 5-6, 2026",
-      "venue": "Berlin Congress Center",
-      "address": "Alexanderplatz 1, 10178 Berlin",
-      "description": "Join developers from across Europe for two days of intensive EDS training in Berlin. Learn to build performance-first websites.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner at Brandenburg Gate, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=1200",
-      "registrationUrl": "https://events.adobe.com/berlin-2026",
-      "URL": "/events/berlin"
-    },
-    {
-      "city": "Singapore",
-      "country": "Singapore",
-      "date": "July 12-13, 2026",
-      "venue": "Marina Bay Sands Expo and Convention Centre",
-      "address": "10 Bayfront Avenue, Singapore 018956",
-      "description": "Experience world-class Edge Delivery Services training in Singapore. Master modern web development with Adobe's latest innovations.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner at Gardens by the Bay, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=1200",
-      "registrationUrl": "https://events.adobe.com/singapore-2026",
-      "URL": "/events/singapore"
-    },
-    {
-      "city": "Dubai",
-      "country": "United Arab Emirates",
-      "date": "August 18-19, 2026",
-      "venue": "Dubai World Trade Centre",
-      "address": "Sheikh Zayed Road, Dubai",
-      "description": "Join the premier Edge Delivery Services training event in the Middle East. Two days of intensive hands-on learning in Dubai.",
-      "highlights": "12 expert-led sessions, 8 hands-on labs, Networking dinner at Burj Khalifa, Certificate of completion",
-      "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200",
-      "registrationUrl": "https://events.adobe.com/dubai-2026",
-      "URL": "/events/dubai"
-    }
-  ]
-}
+**Key concept**: The worker matches incoming requests (e.g., `/events/sydney`) to the correct record using the `URL` field, then renders it using your Mustache template.
+
+---
+
+## Step 1: Preview the Generated Pages
+
+Everything is pre-configured. Start by seeing the result!
+
+**Open the list page** (replace `jsmith` with your branch name):
+```
+https://jsmith--nycmasterclass--cloudadoption.aem.page/events/list
 ```
 
-**URL patterns**: Each event has a unique URL path in the `URL` field:
-- `/events/sydney`
-- `/events/london`
-- `/events/bangalore`
-- `/events/berlin`
-- `/events/singapore`
-- `/events/dubai`
+**You should see**:
+- "Upcoming Masterclass Events" heading
+- Event cards in a responsive grid
+  - **Mobile** (< 600px): 1 card per row
+  - **Tablet** (≥ 600px): 2 cards per row
+  - **Desktop** (≥ 900px): 3 cards per row
+- Clicking "View Details" navigates to the detail page
 
-**Key concept**: The JSON2HTML worker will match incoming requests (e.g., `/events/sydney`) to the correct record using the `URL` field, then render it using your Mustache template.
-
-**Note on `highlights` field**: In the Sheet, this is stored as a comma-separated string (e.g., "12 expert-led sessions, 8 hands-on labs, Networking dinner, Certificate"). In the Mustache template, we simply output it as a paragraph: `{{highlights}}`. Mustache is logic-less, so it can't split strings into arrays.
-
----
-
-## Step 1: Create Mustache Template
-
-**In DA.live**, create page: `/drafts/jsmith/templates/event-template` (use your name)
-
-Add this content (Mustache template with HTML):
-
-```html
-<div>
-  <div>
-    <picture>
-      <source media="(min-width: 900px)" srcset="{{image}}?width=1200">
-      <source media="(min-width: 600px)" srcset="{{image}}?width=900">
-      <img src="{{image}}?width=600" alt="{{city}} skyline">
-    </picture>
-  </div>
-  <div>
-    <h1>{{city}} Masterclass 2026</h1>
-    <p>{{date}}</p>
-    <p><a href="{{registrationUrl}}" class="button">Register Now</a></p>
-  </div>
-</div>
-
-<div>
-  <h2>About This Event</h2>
-  <p>{{description}}</p>
-</div>
-
-<div>
-  <h2>Event Details</h2>
-  <ul>
-    <li><strong>Location:</strong> {{venue}}, {{city}}, {{country}}</li>
-    <li><strong>Address:</strong> {{address}}</li>
-    <li><strong>Date:</strong> {{date}}</li>
-  </ul>
-</div>
-
-<div>
-  <h2>What's Included</h2>
-  <p>{{highlights}}</p>
-</div>
-
-<div>
-  <p><a href="{{registrationUrl}}" class="button">Register for {{city}}</a></p>
-</div>
-
-<div class="metadata">
-  <div>
-    <div>
-      <p>Title</p>
-    </div>
-    <div>
-      <p>{{city}} Masterclass 2026 - Edge Delivery Services Training</p>
-    </div>
-  </div>
-  <div>
-    <div>
-      <p>Description</p>
-    </div>
-    <div>
-      <p>{{description}}</p>
-    </div>
-  </div>
-</div>
-```
-
-**Save** the page.
-
-**What this template does**:
-- Uses Mustache syntax: `{{city}}`, `{{date}}`, `{{venue}}`, etc.
-- Hero section with responsive image and CTA
-- Event details section
-- Highlights displayed as paragraph text
-- Metadata block for SEO
-
-**Mustache syntax reference**:
-- `{{variable}}` - Outputs value
-- `{{#array}}...{{/array}}` - Loops over array (when you have array data)
-- `{{.}}` - Current item in loop
-
-**Reference**: [Mustache Documentation](https://mustache.github.io/mustache.5.html)
-
----
-
-## Step 2: Test Template in Simulator
-
-Before configuring the worker, test your template with real data using the **JSON2HTML Simulator**.
-
-**Open**: [https://tools.aem.live/tools/json2html-simulator/](https://tools.aem.live/tools/json2html-simulator/)
-
-### Configure the Simulator:
-
-1. **JSON Data** (left panel):
-   - Fetch the real data: Open `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json` in browser
-   - Copy the entire JSON response
-   - Paste into the "JSON Data" panel
-
-2. **Simulator Options** (click ⚙ Options):
-   - **arrayKey**: `data`
-   - **pathKey**: `URL`
-   - **testPath**: `/events/sydney`
-   - This filters to only the Sydney event record
-
-3. **Mustache Template** (middle panel):
-   - Copy your template content from DA.live
-   - Paste into the "Mustache Template" panel
-
-4. **Click "Render"** or press `Cmd+Enter`
-
-**You should see**: Fully rendered HTML for the Sydney event in the preview panel.
-
-**Test other cities**: Change **testPath** to `/events/london`, `/events/bangalore`, etc. and re-render.
-
-**Fix any issues**: If variables don't render, check spelling in JSON vs template.
-
-**Reference**: [JSON2HTML Simulator Documentation](https://tools.aem.live/tools/json2html-simulator/)
-
----
-
-## Step 3: Configure JSON2HTML Worker
-
-Now that your template works in the simulator, configure the worker to generate pages automatically.
-
-**Open**: [https://tools.aem.live/tools/admin-edit/](https://tools.aem.live/tools/admin-edit/)
-
-### Configure the Admin Edit Tool:
-
-1. **Admin URL**: Enter this exact URL (replace `jsmith` with your branch name):
-   ```
-   https://json2html.adobeaem.workers.dev/config/cloudadoption/nycmasterclass/jsmith
-   ```
-
-2. **Method**: Select **POST**
-
-3. **Body**: Enter this JSON configuration (replace `jsmith` with your name in the template path):
-   ```json
-   [
-     {
-       "path": "/events/",
-       "endpoint": "https://main--nycmasterclass--cloudadoption.aem.page/future-events.json",
-       "arrayKey": "data",
-       "pathKey": "URL",
-       "template": "/drafts/jsmith/templates/event-template"
-     }
-   ]
-   ```
-
-4. **Authorization**: The tool will prompt for your admin token. Enter the token provided by the instructor.
-
-5. **Click "POST"**
-
-**You should see**: Success response (200 OK) confirming the configuration was saved.
-
-**What this configuration does**:
-- **path**: `/events/` - Worker intercepts all requests starting with `/events/`
-- **endpoint**: URL to fetch JSON data
-- **arrayKey**: `data` - Tells worker the events are in the `data` array
-- **pathKey**: `URL` - Tells worker to match incoming path (e.g., `/events/sydney`) against the `URL` field
-- **template**: Path to your Mustache template (branch-aware!)
-
-**Key insight**: The worker is **branch-aware**. Your branch (`jsmith`) will use **your template** while main branch uses a different template. Zero conflicts!
-
----
-
-## Step 4: Preview Generated Pages
-
-Now test that the worker is generating pages from your template!
-
-**Open in browser** (replace `jsmith` with your branch name):
+**Open a detail page**:
 ```
 https://jsmith--nycmasterclass--cloudadoption.aem.page/events/sydney
 ```
 
 **You should see**:
-- Full event page for Sydney rendered from your template
-- Hero image, title, date, registration button
-- Event details, highlights list
-- All data populated from JSON
+- Hero section with image, city name, date, registration button
+- About, Event Details, What's Included sections
+- "Back to All Events" link
 
-**Test all 6 cities**:
-- `https://jsmith--nycmasterclass--cloudadoption.aem.page/events/london`
-- `https://jsmith--nycmasterclass--cloudadoption.aem.page/events/bangalore`
-- `https://jsmith--nycmasterclass--cloudadoption.aem.page/events/berlin`
-- `https://jsmith--nycmasterclass--cloudadoption.aem.page/events/singapore`
-- `https://jsmith--nycmasterclass--cloudadoption.aem.page/events/dubai`
+**Test all cities**: `/events/sydney`, `/events/london`, `/events/bangalore`, `/events/berlin`, `/events/singapore`, `/events/dubai`
 
-**All 6 pages work!** No manual page creation needed - just JSON data + template.
-
-**Debug if needed**:
-- If you see "Not Found", check your config path pattern
-- If template doesn't render, verify template path in config
-- If data is missing, check `arrayKey` and `pathKey` settings
-- View browser DevTools console for errors
+**All pages work!** (1 list + 6 detail) — No manual page creation was needed. These pages are generated entirely by the JSON2HTML worker from a single data source.
 
 ---
 
-## Step 5: Optional - Create Events Landing Page
+## Step 2: Understand the Templates
 
-To make the events discoverable, create a landing page that lists all 6 cities.
+The instructor has created **two** Mustache templates in `labs/exercise5/` in the repository.
 
-**In DA.live**, create page: `/drafts/jsmith/future-events` (use your name)
+### 2a. List Template (`events-template`)
 
+**Location in the repository**: `/labs/exercise5/events-template.html`
+
+This template loops over **all** records using `{{#data}}...{{/data}}` and renders each as an `event` block card:
+
+```html
+<h1>Upcoming Masterclass Events</h1>
+<p>Join us in 2026 for Edge Delivery Services training in cities worldwide.</p>
+
+{{#data}}
+<div class="event">
+  <div>
+    <div>
+      <picture>
+        <img src="{{image}}" alt="{{city}} skyline">
+      </picture>
+    </div>
+  </div>
+  <div>
+    <div>
+      <h3><a href="{{URL}}">{{city}} Masterclass</a></h3>
+      <p><strong>{{date}}</strong></p>
+      <p>{{venue}}, {{country}}</p>
+      <p>{{description}}</p>
+      <p><a href="{{URL}}">View Details</a></p>
+    </div>
+  </div>
+</div>
+{{/data}}
 ```
-# Upcoming Masterclass Events
 
-Join us in 2026 for Edge Delivery Services training in cities worldwide.
+**Critical**: All `{{#data}}` event blocks must be in the **same section** (no `---` between them). This ensures EDS places all `.event-wrapper` elements inside one `.section`, allowing the CSS grid to work.
 
-| Page List |
-|-----------|
-| / |
-| 6 |
+### 2b. Detail Template (`event-template`)
+
+**Location in the repository**: `/labs/exercise5/event-template.html`
+
+This template renders a **single** event's full details. Key snippet:
+
+```html
+<div class="event">
+  <div><div><picture><img src="{{image}}" alt="{{city}} skyline"></picture></div></div>
+  <div><div>
+    <h1>{{city}} Masterclass 2026</h1>
+    <p><strong>{{date}}</strong> · {{venue}}</p>
+    <p><a href="{{registrationUrl}}">Register Now</a></p>
+  </div></div>
+</div>
+---
+## About This Event
+{{description}}
+---
+## Event Details
+- **Location:** {{venue}}, {{city}}, {{country}}
+- **Address:** {{address}}
+- **Date:** {{date}}
 ```
 
-**What you're doing**: Using the Page List block from Exercise 4, but instead of filtering by path, showing all events.
+**Mustache syntax reference**:
+- `{{variable}}` — Outputs value (e.g., `{{city}}` → "Sydney")
+- `{{#array}}...{{/array}}` — Loops over array (list template uses `{{#data}}`)
 
-**Alternative approach**: Create a dynamic cards block that fetches `future-events.json` and renders cards (similar to Exercise 3).
-
-**Open**: `http://localhost:3000/drafts/jsmith/future-events`
-
-**You should see**: 6 event cards (if you have page-list block, or implement similar pattern).
+**Reference**: [Mustache Documentation](https://mustache.github.io/mustache.5.html)
 
 ---
 
-## Step 6: Optional - Add Custom Styling
+## Step 3: Understand the Worker Configuration
 
-If you want to customize the event page styling, create CSS:
+The JSON2HTML worker has been configured with two path rules. Here's the configuration that was POSTed:
 
-**File**: `styles/event-template.css`
+```json
+[
+  {
+    "path": "/events/list",
+    "endpoint": "https://main--nycmasterclass--cloudadoption.aem.page/future-events.json",
+    "arrayKey": "data",
+    "template": "/labs/exercise5/events-template"
+  },
+  {
+    "path": "/events/",
+    "endpoint": "https://main--nycmasterclass--cloudadoption.aem.page/future-events.json",
+    "arrayKey": "data",
+    "pathKey": "URL",
+    "template": "/labs/exercise5/event-template"
+  }
+]
+```
+
+**What this configuration does**:
+
+| Config | List Page | Detail Pages |
+|--------|-----------|--------------|
+| **path** | `/events/list` — exact match | `/events/` — matches all `/events/*` |
+| **pathKey** | *(omitted)* — no filtering | `URL` — filters to matching record |
+| **template** | `events-template` — loops all records | `event-template` — renders single event |
+
+**Important**: `/events/list` must come **before** `/events/` in the array. The worker matches top-to-bottom, and `/events/` would match `/events/list` if it came first.
+
+**Key insight**: The worker is **branch-aware**. Your branch (`jsmith`) uses your config while main uses a different one. Zero conflicts!
+
+**How to view or update the config**: Use the [Admin Edit Tool](https://tools.aem.live/tools/admin-edit/) with a **GET** request to:
+```
+https://json2html.adobeaem.workers.dev/config/cloudadoption/nycmasterclass/jsmith
+```
+
+---
+
+## Step 4: Test Templates in Simulator
+
+Try the **JSON2HTML Simulator** to see exactly how templates are rendered.
+
+**Open**: [https://tools.aem.live/tools/json2html-simulator/](https://tools.aem.live/tools/json2html-simulator/)
+
+### Test the Detail Template:
+
+1. **JSON Data** (left panel):
+   - Open `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json` in browser
+   - Copy the entire JSON response and paste into the panel
+
+2. **Simulator Options** (click ⚙ Options):
+   - **arrayKey**: `data`
+   - **pathKey**: `URL`
+   - **testPath**: `/events/sydney`
+
+3. **Mustache Template** (middle panel):
+   - Paste the **event-template** content from `labs/exercise5/event-template.html`
+
+4. **Click "Render"** or press `Cmd+Enter`
+
+**You should see**: Fully rendered HTML for the Sydney event.
+
+**Try other cities**: Change **testPath** to `/events/london`, `/events/bangalore`, etc.
+
+### Test the List Template:
+
+1. **Simulator Options**: Set **pathKey** to empty, **testPath** to `/events/list`
+2. **Mustache Template**: Paste the **events-template** content
+3. **Click "Render"**
+
+**You should see**: HTML with all event cards rendered.
+
+---
+
+## Step 5: Add New Events to the Data Sheet
+
+Now prove the system is truly dynamic — add new events and watch the pages generate automatically.
+
+### 5a. Open the Future Events Sheet
+
+1. **In DA.live**, navigate to: `/future-events`
+   ```
+   https://da.live/#/cloudadoption/nycmasterclass/future-events
+   ```
+
+2. You should see a spreadsheet with the existing events (Sydney, London, Bangalore, Berlin, Singapore, Dubai).
+
+### 5b. Add 2-3 New Events
+
+Add new rows to the sheet with new cities. For each row, fill in all columns to match the existing data format:
+
+| Field | Example for New York | Example for Tokyo |
+|-------|---------------------|-------------------|
+| `city` | New York | Tokyo |
+| `country` | United States | Japan |
+| `date` | September 20-21, 2026 | October 10-11, 2026 |
+| `venue` | Javits Center | Tokyo Big Sight |
+| `address` | 429 11th Ave, New York, NY 10001 | 3-11-1 Ariake, Koto City, Tokyo |
+| `description` | Two days of hands-on Edge Delivery Services training in the heart of Manhattan. | Experience EDS training in Tokyo with expert-led sessions and hands-on labs. |
+| `highlights` | 10 expert-led sessions, 6 hands-on labs, networking lunch, certification prep | 10 sessions, 6 labs, bento networking lunch, Japanese localization workshop |
+| `image` | *(use any Unsplash city image URL)* | *(use any Unsplash city image URL)* |
+| `registrationUrl` | https://events.adobe.com/newyork-2026 | https://events.adobe.com/tokyo-2026 |
+| `URL` | /events/newyork | /events/tokyo |
+
+> **Tip**: Copy an existing row and modify the values to ensure you have all required columns.
+
+### 5c. Preview and Publish
+
+1. **Preview** the sheet in DA.live (click the Preview button)
+2. Wait a few seconds for the JSON endpoint to update
+
+### 5d. Verify the List Updates
+
+1. **Refresh the list page**:
+   ```
+   https://jsmith--nycmasterclass--cloudadoption.aem.page/events/list
+   ```
+
+2. **You should see**: Your new events appear as additional cards in the grid alongside the original events.
+
+3. **Test a new detail page**:
+   ```
+   https://jsmith--nycmasterclass--cloudadoption.aem.page/events/newyork
+   ```
+
+4. **You should see**: A fully rendered detail page for your new city — generated automatically from the data you just added.
+
+**Key takeaway**: You didn't create any new templates or update any code. You only added data to the sheet, and the worker + templates generated new pages automatically. This is the power of JSON2HTML.
+
+---
+
+## Step 6: Understanding How the Event Block Works
+
+The `event` block (`blocks/event/event.js` and `event.css`) uses **smart CSS selectors** to detect whether it's rendering a list or a detail view.
+
+### EDS DOM Structure
+
+When the worker returns HTML with multiple `<div class="event">` blocks in one section, EDS decorates it like this:
+
+**Input** (from worker):
+```html
+<div>
+  <div class="event">...</div>
+  <div class="event">...</div>
+  <div class="event">...</div>
+</div>
+```
+
+**After EDS decoration**:
+```html
+<div class="section event-container">
+  <div class="event-wrapper">
+    <div class="event block" data-block-name="event">...</div>
+  </div>
+  <div class="event-wrapper">
+    <div class="event block" data-block-name="event">...</div>
+  </div>
+  <div class="event-wrapper">
+    <div class="event block" data-block-name="event">...</div>
+  </div>
+</div>
+```
+
+**Key observations**:
+1. Each `<div class="event">` gets wrapped in a `<div class="event-wrapper">`
+2. The parent `<div>` becomes `<div class="section event-container">`
+3. `.event-wrapper` elements are **direct children** of `.section` (no intermediate div!)
+
+### CSS Detection Pattern
+
+The CSS uses this to differentiate list vs. detail:
 
 ```css
-/* Event template specific styles */
-.event-hero {
-  position: relative;
-  min-height: 400px;
-  display: flex;
-  align-items: flex-end;
-  padding: 40px 20px;
-}
+/* Detail: section has exactly ONE event-wrapper */
+main .section.event-container > .event-wrapper:only-child .event { ... }
 
-.event-hero img {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-}
-
-.event-details ul {
-  list-style: none;
-  padding: 0;
-  margin: 24px 0;
-}
-
-.event-details li {
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.event-details li:last-child {
-  border-bottom: none;
-}
-
-.event-highlights ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  padding: 0;
-  list-style: none;
-}
-
-.event-highlights li {
-  padding: 16px;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-
-@media (max-width: 600px) {
-  .event-hero {
-    min-height: 300px;
-  }
-
-  .event-highlights ul {
-    grid-template-columns: 1fr;
-  }
-}
+/* List: section has MULTIPLE event-wrappers → apply grid */
+main .section.event-container:has(> .event-wrapper ~ .event-wrapper) { ... }
 ```
 
-**To apply**: Add a `<link>` to your template or load via site CSS.
-
-**Note**: The worker generates semantic HTML that's already styled by your site's global styles. Custom styles are optional!
+**Why this matters**: If you target `main .section > div:has(> .event-wrapper)` (with an extra `> div`), nothing will match because `.event-wrapper` elements are direct children of `.section`, not nested inside an intermediate `div`.
 
 ---
 
 ## Step 7: Commit Your Changes
 
-Since the template is authored in DA.live (not local code), you only need to commit if you added custom CSS or other code changes.
-
-**If you added custom CSS**:
+The `event` block is already committed to `main`. If you haven't merged it into your branch yet, do so now:
 
 ```bash
-# Run linting
-npm run lint
+# Ensure your branch has the latest event block
+git pull origin main
 
-# Add changes
-git add styles/event-template.css
+# Verify block files exist
+ls blocks/event/
 
-# Commit
-git commit -m "feat: add custom styling for JSON2HTML event template"
-
-# Push
+# Push to your branch
 git push origin jsmith
 ```
 
 Replace `jsmith` with your branch name.
 
-**If you only created the template in DA.live**: No commit needed! The template is stored in DA.live, and the worker config is stored in the worker service.
+**What's already committed** (in `main`):
+- `blocks/event/event.js` — Block decoration logic
+- `blocks/event/event.css` — Styles for list cards and detail views
+- `/labs/exercise5/events-template` — List page Mustache template
+- `/labs/exercise5/event-template` — Detail page Mustache template
 
+**What lives in DA.live** (set up by instructor):
+- `/future-events` — Data sheet (JSON endpoint)
+
+**What lives in the worker service** (configured by instructor):
+- JSON2HTML worker configuration (path patterns, endpoints, templates)
 
 ---
 
 ## Real-World Applications
 
 **Use Case 1: Multi-City Event Series** (this exercise!)
-- **Scenario**: Masterclass events in 6+ cities
 - **Data**: Single JSON with all event details
-- **Template**: One Mustache template for all cities
-- **Result**: Add new city → just update JSON, page auto-generates
+- **Templates**: List template + detail template
+- **Result**: Add new city → just update JSON, both list and detail auto-generate
 - **Scale**: Hundreds of events without manual authoring
 
 **Use Case 2: Product Catalogs**
-- **Scenario**: E-commerce site with 1000+ products
 - **Data**: Products JSON or API (SKU, price, specs, images)
-- **Template**: Product detail page template
-- **URL Pattern**: `/products/laptop-model-123`
-- **Result**: 1 template → 1000+ product pages
+- **URL Pattern**: `/products/` (grid) + `/products/laptop-model-123` (detail)
+- **Result**: 2 templates → 1000+ product pages + browse pages
 
 **Use Case 3: Speaker/Author Profiles**
-- **Scenario**: Conference with 100+ speakers
 - **Data**: Speakers JSON (name, bio, photo, sessions)
-- **Template**: Speaker profile template
-- **URL Pattern**: `/speakers/john-doe`
+- **URL Pattern**: `/speakers/` (directory) + `/speakers/john-doe` (profile)
 - **Result**: Dynamic speaker pages from central data
 
-**Use Case 4: Blog/Article Archives**
-- **Scenario**: News site with thousands of articles
-- **Data**: Query-index.json + article JSON
-- **Template**: Consistent article layout
-- **URL Pattern**: `/blog/2026/01/article-title`
-- **Result**: Uniform layout across all articles
-
-**Use Case 5: Store Locator**
-- **Scenario**: Retail chain with 500+ locations
+**Use Case 4: Store Locator**
 - **Data**: Locations JSON (address, hours, services)
-- **Template**: Store page template
-- **URL Pattern**: `/stores/new-york-manhattan`
-- **Result**: Individual pages for each store
+- **URL Pattern**: `/stores/` (list) + `/stores/new-york-manhattan` (detail)
+- **Result**: Individual pages for each store + browsable directory
 
-**Common benefits**:
-- **One template, unlimited pages**
-- **Update template once → all pages update**
-- **Add data → page auto-generates**
-- **No custom deployment - hosted worker**
-- **Branch-aware for safe testing**
-
----
-
-## Advanced Patterns
-
-### URL Rewriting (Production)
-
-For cleaner URLs in production, use URL rewriting:
-
-**Current (works in exercise)**: `/events/sydney`
-
-**How it works**: Worker intercepts `/events/*` paths and applies template
-
-**For custom patterns**: Configure regex in worker config. See [JSON2HTML Documentation](https://www.aem.live/developer/json2html) for advanced regex patterns.
-
-### Dynamic Data Sources
-
-The `endpoint` can be:
-- Static JSON file (like this exercise)
-- Edge Delivery Sheet JSON (`.json` from any Sheet)
-- External API (with authentication headers)
-- Worker-transformed data (pre-process JSON)
-
-**Example with external API**:
-```json
-{
-  "endpoint": "https://api.example.com/events/{{id}}.json",
-  "headers": {
-    "X-API-Key": "your-key-here"
-  }
-}
+**Common Pattern**:
 ```
-
-### Multiple Templates
-
-You can configure different templates for different URL patterns:
-
-```json
-[
-  {
-    "path": "/events/",
-    "endpoint": "...",
-    "template": "/templates/event-template"
-  },
-  {
-    "path": "/sessions/",
-    "endpoint": "...",
-    "template": "/templates/session-template"
-  }
-]
+JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decoration → Styled Page
 ```
 
 ---
@@ -629,83 +496,101 @@ You can configure different templates for different URL patterns:
 ## Key Takeaways
 
 - **JSON2HTML worker** transforms JSON data into HTML pages using Mustache templates
-- **One template → unlimited pages** - Add data to JSON, pages generate automatically
-- **Mustache syntax** is logic-less and simple: `{{variable}}`, `{{#array}}...{{/array}}`
-- **Branch-aware** - Test on your branch without affecting production
-- **Hosted service** - No custom deployment or code needed
-- **JSON2HTML Simulator** - Test templates before deploying
-- **Admin Edit tool** - Configure worker via web UI (no curl needed)
-- **Scale effortlessly** - 6 events or 600, same template
+- **Two templates** — list template (loops with `{{#data}}`) and detail template (single record)
+- **One block, two views** — the `event` block decorates both list cards and detail pages
+- **Add data, get pages** — new rows in the sheet automatically generate new list cards and detail pages
+- **CSS `:has()` selector** — detects list vs. detail by counting `.event-wrapper` children
+- **EDS DOM structure** — `.event-wrapper` elements are direct children of `.section` (no intermediate div)
+- **Responsive grid** — 1 column mobile, 2 tablet, 3 desktop
+- **Branch-aware** — Test on your branch without affecting production
+- **Worker config ordering matters** — specific paths before general ones
+- **Scale effortlessly** — 6 events or 600, same templates
 
-**The pattern**:
-1. Data in JSON (Sheet, API, or file)
-2. Template in DA.live (Mustache syntax)
-3. Worker config (path pattern, endpoint, template)
-4. Pages generate automatically
-
-**When to use**:
-- Multiple pages with same structure but different data
-- Data-driven content (products, events, profiles)
-- Content that changes frequently
-- Need to scale beyond manual authoring
+**The pattern**: Data in JSON → Templates in DA.live → Worker config → Pages generate automatically
 
 ---
 
 ## Verification Checklist
 
-- [ ] **Created Mustache template** in DA.live at `/drafts/jsmith/templates/event-template`
-- [ ] **Tested in simulator** with real `future-events.json` data
-- [ ] **Configured worker** using Admin Edit tool with correct branch
-- [ ] **All 6 event pages render** (`/events/sydney`, `/events/london`, etc.)
-- [ ] **Data populates correctly** (city, date, venue, highlights)
-- [ ] **Images display** properly
-- [ ] **Registration buttons** link to correct URLs
-- [ ] **Understand Mustache syntax** (`{{variable}}`, `{{#array}}`, `{{.}}`)
-- [ ] **Understand worker config** (path, endpoint, arrayKey, pathKey, template)
-- [ ] **Branch-aware deployment** - Your branch uses your template
-- [ ] **Optional: Created events landing page** with cards
-- [ ] **Optional: Added custom CSS** and committed changes
+- [ ] **List page renders** at `/events/list` with responsive grid (1/2/3 columns)
+- [ ] **All detail pages render** (`/events/sydney`, `/events/london`, etc.)
+- [ ] **Navigation works** — list → detail via "View Details", detail → list via "Back"
+- [ ] **Understand list template** — loops with `{{#data}}`, all blocks in one section
+- [ ] **Understand detail template** — single record rendering with `{{variable}}` syntax
+- [ ] **Understand worker config** — path ordering, arrayKey, pathKey, template
+- [ ] **Tested in simulator** with real `future-events.json` data (both templates)
+- [ ] **Added new events** to the future-events sheet in DA.live
+- [ ] **New events appear** on list page and generate working detail pages automatically
+- [ ] **Understand EDS DOM** — `.event-wrapper` as direct children of `.section`
+- [ ] **Understand complete flow**: Request → Worker → JSON + Template → HTML → EDS → Styled Page
+- [ ] **Branch has event block** — `blocks/event/event.js` and `event.css` available on your branch
 
 ---
 
-## References
+## Troubleshooting Common Issues
 
-- **[JSON2HTML Documentation](https://www.aem.live/developer/json2html)** - Complete worker documentation
-- **[JSON2HTML Simulator](https://tools.aem.live/tools/json2html-simulator/)** - Test templates with live data
-- **[Admin Edit Tool](https://tools.aem.live/tools/admin-edit/)** - Configure worker settings
-- **[Mustache Documentation](https://mustache.github.io/mustache.5.html)** - Template syntax reference
-- **[EDS Indexing](https://www.aem.live/developer/indexing)** - Using query-index.json as data source
-
----
-
-## Troubleshooting
+**List page shows cards in one column (no grid)**:
+- Verify all `<div class="event">` blocks are inside **one section** (one parent `<div>`)
+- Check that there are no `---` section dividers between event blocks in the list template
+- Confirm `.event-wrapper` elements are direct children of `.section` (inspect in DevTools)
+- The CSS selector requires 2+ wrappers at the same level
 
 **Pages show "Not Found"**:
-- Verify your worker config path pattern matches URL
+- Verify worker config path patterns match the URL
+- Check that `/events/list` config comes **before** `/events/` in the array
 - Check that you're using the correct branch URL
 - Ensure config was POSTed successfully (check response)
+- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R) and/or use *update* from sidekick
 
 **Template doesn't render**:
-- Verify template path in config matches DA.live path
-- Check for typos in Mustache variable names
+- Verify template path in config matches the relative path from the repo exactly
+- Check for typos in Mustache variable names (case-sensitive!)
 - Test in simulator first to isolate issues
 
 **Data missing or wrong**:
-- Verify `arrayKey` points to correct array in JSON
-- Verify `pathKey` matches the field name exactly
+- Verify `arrayKey` points to correct array in JSON (`data`)
+- Verify `pathKey` matches the field name exactly (`URL`)
 - Check that `URL` values in JSON match request paths
 
 **"401 Unauthorized"**:
 - Verify admin token is correct
 - Token must have permissions for config endpoint
 
+**Block not loading**:
+- Verify `blocks/event/event.js` and `blocks/event/event.css` are committed and pushed
+- Check browser DevTools console for JS errors
+- Ensure the block class name in HTML (`event`) matches the folder name (`blocks/event/`)
+
+**New events don't appear on the list page**:
+- Verify you **previewed** the sheet in DA.live after adding rows (click the Preview button)
+- Check the JSON endpoint directly — open `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json` and confirm your new records are in the `data` array
+- Verify the `URL` field in your new row follows the pattern `/events/cityname` (lowercase, no spaces)
+- Worker may cache briefly — wait 1-2 minutes and hard refresh and/or use *update* from sidekick
+
 **Changes don't appear**:
-- Worker config is cached briefly - wait 1-2 minutes
-- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R)
-- Check you're on correct branch URL
+- Worker config is cached briefly — wait 1-2 minutes
+- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R) and/or use *update* from sidekick
+- Check you're on the correct branch URL
+
+**Use Browser DevTools to debug**:
+1. Open DevTools → Elements tab
+2. Inspect the `.section.event-container` to verify `.event-wrapper` structure
+3. Check Console tab for block loading errors
+4. Check Network tab to verify CSS/JS files are loading
+
+---
+
+## References
+
+- [JSON2HTML Documentation](https://www.aem.live/developer/json2html)
+- [JSON2HTML Simulator](https://tools.aem.live/tools/json2html-simulator/)
+- [Admin Edit Tool](https://tools.aem.live/tools/admin-edit/)
+- [Mustache Documentation](https://mustache.github.io/mustache.5.html)
+- [EDS Markup Reference](https://www.aem.live/developer/markup-sections-blocks)
+- [CSS :has() Selector](https://developer.mozilla.org/en-US/docs/Web/CSS/:has)
 
 ---
 
 ## Next Exercise
 
-**Exercise 6**: Workers and API Integration - You'll learn how to use Cloudflare Workers to transform data, secure APIs, and add custom logic to your Edge Delivery Services site.
+**Exercise 6**: Form Submissions with Workers - You'll learn how to build forms that securely submit data through Cloudflare Workers to external services like Slack.
