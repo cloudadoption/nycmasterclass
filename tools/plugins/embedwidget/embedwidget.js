@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 
 const TRADINGVIEW_HOST = 's3.tradingview.com';
@@ -29,7 +30,7 @@ function parseTradingViewEmbedCode(rawEmbedCode) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(rawEmbedCode, 'text/html');
   const scripts = [...doc.querySelectorAll('script[src]')];
-  const tradingViewScript = scripts.find((script) => script.src.includes(TRADINGVIEW_HOST));
+  const tradingViewScript = scripts.find(script => script.src.includes(TRADINGVIEW_HOST));
 
   if (!tradingViewScript) {
     throw new Error('No supported widget script found. Paste the full embed snippet.');
