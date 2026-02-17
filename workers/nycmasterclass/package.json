@@ -1,0 +1,16 @@
+{
+  "name": "nycmasterclass-workers",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev:feedback",
+    "deploy": "npm run deploy:feedback",
+    "dev:feedback": "wrangler dev --config ./feedback/wrangler.toml",
+    "deploy:feedback": "wrangler deploy --config ./feedback/wrangler.toml",
+    "tail:feedback": "wrangler tail --config ./feedback/wrangler.toml"
+  },
+  "devDependencies": {
+    "wrangler": "^4.54.0"
+  }
+}
