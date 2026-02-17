@@ -22,8 +22,8 @@ The instructor has pre-configured the entire JSON2HTML pipeline so you can focus
 | Component | Location | Status |
 |-----------|----------|--------|
 | **Data source** (Sheet) | `/future-events` in DA.live | ✅ Published — available as JSON |
-| **List template** | `/labs/exercise5/events-template` in DA.live + repo | ✅ Ready |
-| **Detail template** | `/labs/exercise5/event-template` in DA.live + repo | ✅ Ready |
+| **List template** | `/labs/exercise5/events-template` in repo | ✅ Committed |
+| **Detail template** | `/labs/exercise5/event-template` in repo | ✅ Committed |
 | **Event block** | `blocks/event/event.js` + `event.css` in repo | ✅ Committed |
 | **Worker config** | JSON2HTML Cloudflare worker | ✅ Configured for `main` branch |
 
