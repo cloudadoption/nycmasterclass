@@ -19,11 +19,11 @@ Required:
 
 The instructor has deployed a Cloudflare Worker that accepts form submissions and sends them to Slack.
 
-**Worker URL** (instructor will provide): `https://feedback-worker.yourorg.workers.dev`
+**Worker URL**: `https://masterclass-feedback.aem-poc-lab.workers.dev`
 
 **Verify worker is running**:
 ```bash
-curl -X POST https://feedback-worker.yourorg.workers.dev \
+curl -X POST https://masterclass-feedback.aem-poc-lab.workers.dev \
   -H "Content-Type: application/json" \
   -d '{"fullName":"Test User","email":"test@example.com","feedback":"Test message"}'
 ```
@@ -130,7 +130,7 @@ Understanding the entire flow from user submission to Slack notification:
 
 Before building the form, understand what data format the worker expects.
 
-**Worker Endpoint**: `POST https://feedback-worker.yourorg.workers.dev`
+**Worker Endpoint**: `POST https://masterclass-feedback.aem-poc-lab.workers.dev`
 
 **Request Headers**:
 ```
@@ -183,305 +183,59 @@ Content-Type: application/json
 
 ---
 
-## Step 1: Create Block Files
+## Step 1: Use the Existing Feedback Block
 
-In your code editor, create:
+In this project, the feedback block is already implemented:
 
 ```
 blocks/
-  feedback-form/
-    feedback-form.js
-    feedback-form.css
+  feedback/
+    feedback.js
+    feedback.css
 ```
+
+Use this block instead of creating `feedback-form` from scratch.
 
 ---
 
-## Step 2: Implement Form Block
+## Step 2: Configure the Block in Your Draft Page
 
-**File**: `blocks/feedback-form/feedback-form.js`
+The block expects:
+- Row 1: Worker endpoint URL
+- Row 2: Rich content with location, address, title, and description
 
-Copy this code:
+Use this block structure in your page:
 
-```javascript
-/**
- * Feedback Form Block
- * Submits user feedback to Slack via Worker endpoint
- */
-
-// Worker endpoint provided by instructor
-// Replace with actual URL provided during the lab
-const WORKER_URL = 'https://feedback-worker.yourorg.workers.dev';
-
-/**
- * Shows success message in form
- */
-function showSuccess(form) {
-  form.innerHTML = `
-    <div class="feedback-form-success">
-      <h3>Thank You!</h3>
-      <p>Your feedback has been submitted successfully.</p>
-      <p>We appreciate you taking the time to share your thoughts.</p>
+```html
+<div class="feedback">
+  <div>
+    <div><a href="https://masterclass-feedback.aem-poc-lab.workers.dev">https://masterclass-feedback.aem-poc-lab.workers.dev</a></div>
+  </div>
+  <div>
+    <div>
+      <p><strong><u>New York City</u></strong></p>
+      <p>1540 Broadway, 18th floor<br>New York, NY 10036</p>
+      <h2>AEM Master Class - NYC | Feedback</h2>
+      <p>Thank you for attending — we'd love your feedback.</p>
     </div>
-  `;
-}
-
-/**
- * Shows error message in form
- */
-function showError(form, message) {
-  const existingError = form.querySelector('.feedback-form-error');
-  if (existingError) {
-    existingError.remove();
-  }
-
-  const error = document.createElement('div');
-  error.className = 'feedback-form-error';
-  error.textContent = message;
-  form.prepend(error);
-
-  // Re-enable submit button
-  const submitButton = form.querySelector('button[type="submit"]');
-  if (submitButton) {
-    submitButton.disabled = false;
-    submitButton.textContent = 'Submit Feedback';
-  }
-}
-
-/**
- * Handles form submission
- */
-async function handleSubmit(event, form) {
-  event.preventDefault();
-
-  // Get form data
-  const formData = new FormData(form);
-  const data = {
-    fullName: formData.get('fullName')?.trim(),
-    email: formData.get('email')?.trim(),
-    feedback: formData.get('feedback')?.trim(),
-  };
-
-  // Client-side validation
-  if (!data.fullName || !data.email || !data.feedback) {
-    showError(form, 'Please fill in all fields.');
-    return;
-  }
-
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(data.email)) {
-    showError(form, 'Please enter a valid email address.');
-    return;
-  }
-
-  // Show loading state
-  const submitButton = form.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  submitButton.textContent = 'Sending...';
-
-  try {
-    // Send to Worker
-    const response = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || 'Submission failed');
-    }
-
-    // Show success message
-    showSuccess(form);
-  } catch (error) {
-    console.error('Form submission error:', error);
-    showError(form, `Error: ${error.message}. Please try again.`);
-  }
-}
-
-/**
- * Decorates the feedback form block
- */
-export default function decorate(block) {
-  // Create form HTML
-  block.innerHTML = `
-    <form class="feedback-form">
-      <h2>Share Your Feedback</h2>
-      <p>Help us improve NYC Masterclass. We value your input!</p>
-
-      <div class="feedback-form-field">
-        <label for="fullName">Full Name *</label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          required
-          placeholder="John Doe"
-        >
-      </div>
-
-      <div class="feedback-form-field">
-        <label for="email">Email *</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          placeholder="john@example.com"
-        >
-      </div>
-
-      <div class="feedback-form-field">
-        <label for="feedback">Your Feedback *</label>
-        <textarea
-          id="feedback"
-          name="feedback"
-          required
-          rows="6"
-          placeholder="Share your thoughts about the masterclass..."
-        ></textarea>
-      </div>
-
-      <button type="submit">Submit Feedback</button>
-    </form>
-  `;
-
-  // Add submit handler
-  const form = block.querySelector('form');
-  form.addEventListener('submit', (e) => handleSubmit(e, form));
-}
+  </div>
+</div>
 ```
 
-**What this does**:
-- Renders form with name, email, feedback fields
-- Validates input client-side
-- Shows loading state during submission
-- POSTs JSON to Worker endpoint
-- Handles success (shows thank you message)
-- Handles errors (shows error message, re-enables button)
+What this does:
+- Renders a structured feedback form UI
+- Captures `fullName`, `email`, and `feedback`
+- POSTs JSON to the Worker endpoint from row 1
+- Handles loading, success, and error states
 
 ---
 
-## Step 3: Add Form Styles
+## Step 3: Confirm Block and Worker Contract
 
-**File**: `blocks/feedback-form/feedback-form.css`
-
-Copy this code:
-
-```css
-.feedback-form {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 32px;
-  background: var(--background-color);
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-}
-
-.feedback-form h2 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
-}
-
-.feedback-form > p {
-  margin: 0 0 24px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-.feedback-form-field {
-  margin-bottom: 20px;
-}
-
-.feedback-form-field label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-color);
-}
-
-.feedback-form-field input,
-.feedback-form-field textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
-}
-
-.feedback-form-field input:focus,
-.feedback-form-field textarea:focus {
-  outline: none;
-  border-color: #1473e6;
-}
-
-.feedback-form-field textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.feedback-form button[type="submit"] {
-  width: 100%;
-  padding: 12px 24px;
-  background: #1473e6;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.feedback-form button[type="submit"]:hover {
-  background: #0d66d0;
-}
-
-.feedback-form button[type="submit"]:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.feedback-form-error {
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  background: #fce8e6;
-  border: 1px solid #d93025;
-  border-radius: 4px;
-  color: #d93025;
-  font-size: 14px;
-}
-
-.feedback-form-success {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.feedback-form-success h3 {
-  margin: 0 0 12px 0;
-  font-size: 24px;
-  color: #137333;
-}
-
-.feedback-form-success p {
-  margin: 8px 0;
-  color: #666;
-  font-size: 16px;
-}
-
-@media (max-width: 600px) {
-  .feedback-form {
-    padding: 24px 16px;
-  }
-}
-```
+No extra block coding is required for this lab setup. Confirm:
+- `blocks/feedback/feedback.js` is present
+- `blocks/feedback/feedback.css` is present
+- Worker URL is `https://masterclass-feedback.aem-poc-lab.workers.dev`
 
 ---
 
@@ -494,8 +248,8 @@ Copy this code:
 
 Help us improve NYC Masterclass by sharing your thoughts.
 
-| Feedback Form |
-|---------------|
+| Feedback |
+|----------|
 
 | Metadata |                        |
 |----------|------------------------|
@@ -699,10 +453,10 @@ try {
 npm run lint
 
 # Add changes
-git add blocks/feedback-form/
+git add blocks/feedback/ labs/exercise6/instructions.md
 
 # Commit
-git commit -m "feat: add feedback form with Slack integration"
+git commit -m "docs: align exercise 6 with feedback block and worker url"
 
 # Push
 git push origin jsmith
@@ -806,9 +560,9 @@ Form → Worker → [Validate + Transform] → [Service 1, Service 2, Service N]
 
 ## Verification Checklist
 
-- [ ] **Created feedback-form block** (`feedback-form.js`, `feedback-form.css`)
+- [ ] **Using existing feedback block** (`blocks/feedback/feedback.js`, `blocks/feedback/feedback.css`)
 - [ ] **Form renders** correctly with all three fields (name, email, feedback)
-- [ ] **Updated WORKER_URL** constant with actual URL from instructor
+- [ ] **Configured row 1 URL** to `https://masterclass-feedback.aem-poc-lab.workers.dev`
 - [ ] **Submit shows loading state** - Button text changes to "Sending..." and is disabled
 - [ ] **Successful submission** shows thank you message (replaces form)
 - [ ] **Slack channel receives** formatted Block Kit message with all data
@@ -844,7 +598,7 @@ Form → Worker → [Validate + Transform] → [Service 1, Service 2, Service N]
 
 **"Failed to fetch" error**:
 - Problem: Worker URL incorrect or worker is down
-- Fix: Verify WORKER_URL constant, test with curl command, ask instructor
+- Fix: Verify row 1 endpoint URL in the `feedback` block, test with curl command
 
 **Success response but no Slack message**:
 - Problem: Worker can't reach Slack webhook
