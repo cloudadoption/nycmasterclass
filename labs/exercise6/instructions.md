@@ -219,9 +219,6 @@ Use this block structure in your page:
       <p>Thank you for attending — we'd love your feedback.</p>
     </div>
   </div>
-  <div><div></div></div>
-  <div><div></div></div>
-  <div><div></div></div>
 </div>
 ```
 
