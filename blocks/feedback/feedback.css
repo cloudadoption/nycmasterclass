@@ -251,7 +251,7 @@
 }
 
 @media (width >= 900px) {
-  .section .feedback-wrapper {
+  .section > .feedback-wrapper {
     padding: 48px;
   }
 }

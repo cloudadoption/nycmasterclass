@@ -2,10 +2,11 @@
  * Feedback block
  * Configuration from block rows:
  * Row 1: Worker endpoint URL
- * Row 2: Location name
- * Row 3: Event address
- * Row 4: (optional) Form title
- * Row 5: (optional) Form description
+ * Row 2: Structured details content:
+ *        - location (preferably in <p><strong>...</strong></p>)
+ *        - address (supports <br>)
+ *        - title (h1/h2/h3)
+ *        - description (paragraph after heading)
  */
 
 function createFieldWrapper(type, className = '') {
@@ -38,22 +39,50 @@ function getRowText(row) {
   return row ? row.textContent.trim() : '';
 }
 
-function getRowHtml(row) {
-  if (!row) return '';
-  const content = row.querySelector(':scope > div');
-  return (content ? content.innerHTML : row.innerHTML).trim();
+function extractFromRichDetails(row) {
+  if (!row) return {};
+
+  const content = row.querySelector(':scope > div') || row;
+  const heading = content.querySelector('h1, h2, h3');
+  const paragraphs = [...content.querySelectorAll('p')];
+
+  const locationStrong = content.querySelector('p strong, p b');
+  const location = (locationStrong?.textContent || paragraphs[0]?.textContent || '').trim();
+
+  const addressParagraph = paragraphs.find((p) => p.innerHTML.includes('<br'))
+    || paragraphs.find((p) => p !== heading?.closest('p') && p.textContent.trim() !== location);
+  const address = (addressParagraph?.innerHTML || '').trim();
+
+  let description = '';
+  if (heading) {
+    let cursor = heading.nextElementSibling;
+    while (cursor && !description) {
+      if (cursor.tagName === 'P' && cursor.textContent.trim()) {
+        description = cursor.textContent.trim();
+      }
+      cursor = cursor.nextElementSibling;
+    }
+  }
+
+  return {
+    location,
+    address,
+    title: heading?.textContent.trim() || '',
+    description,
+  };
 }
 
 function extractConfig(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
   const endpointLink = rows[0]?.querySelector('a[href]');
+  const richDetails = extractFromRichDetails(rows[1]);
 
   return {
     submitUrl: endpointLink?.href || getRowText(rows[0]),
-    location: getRowText(rows[1]),
-    address: getRowHtml(rows[2]),
-    title: getRowText(rows[3]) || 'Share Your Feedback',
-    description: getRowText(rows[4]),
+    location: richDetails.location,
+    address: richDetails.address,
+    title: richDetails.title || 'Share Your Feedback',
+    description: richDetails.description,
   };
 }
 
