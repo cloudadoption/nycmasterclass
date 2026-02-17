@@ -3,7 +3,7 @@
 Complete setup checklist for running the NYC Masterclass lab with 50 participants.
 
 **Time Required**: 4-6 hours (spread over 1 week)
-**Lab Duration**: 3 hours 50 minutes (including 15-minute break)
+**Lab Duration**: 3 hours 15 minutes (9:15 AM – 12:30 PM, including 15-minute break)
 
 ---
 
@@ -11,7 +11,7 @@ Complete setup checklist for running the NYC Masterclass lab with 50 participant
 
 **Key Stats**:
 - 50 participants
-- 8 exercises (3 hours 30 minutes total, including breaks)
+- 8 exercises (9:15 AM – 12:30 PM, 15-min break 11:20–11:35)
 - Multi-site architecture (hands-on repoless setup)
 - Real-world collaborative site building
 

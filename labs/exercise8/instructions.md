@@ -251,7 +251,7 @@ Create another page with your own content to prove sites are independent:
   <table>
     <tbody>
       <tr>
-        <td>9:00 AM</td>
+        <td>9:15 AM</td>
         <td><a href="/sessions/getting-started">Getting Started with EDS</a></td>
         <td>Jane Doe</td>
       </tr>

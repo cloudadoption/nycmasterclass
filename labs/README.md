@@ -1,8 +1,28 @@
 # NYC Masterclass 2026 - Lab Guide
 
-**Duration**: 3 hours 50 minutes (including 15-minute break)
+**Duration**: 3 hours 15 minutes (9:15 AM – 12:30 PM, including 15-minute break)
 
 **Theme**: Build pages and features for a Masterclass event series that can scale to future meetup sites.
+
+---
+
+## Agenda
+
+| Time       | Activity |
+|-----------|----------|
+| 9:15 AM   | Introduction – EDS overview, architecture, lab objectives |
+| 9:30 AM   | Exercise 1 – Authoring Your First Page |
+| 9:50 AM   | Exercise 2 – Block Development (variations) |
+| 10:10 AM  | Exercise 3 – Dynamic Cards with Data Sources |
+| 10:35 AM  | Exercise 4 – Page List with Query Index |
+| 10:55 AM  | Exercise 5 – JSON2HTML Dynamic Pages |
+| **11:20–11:35 AM** | **Break (15 min)** |
+| 11:35 AM  | Exercise 6 – Form Submissions to Slack |
+| 11:55 AM  | Exercise 7 – DA Plugin Development |
+| 12:25 PM  | Exercise 8 – Repoless Multi-Site Setup + Go-Live |
+| 12:30 PM  | End |
+
+*Sessions start at 9:15 AM; 15-minute break 11:20–11:35 AM; lab ends at 12:30 PM.*
 
 ---
 
@@ -128,7 +148,7 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 **Key takeaway**: JSON2HTML worker transforms JSON data into HTML pages via templates. One Sheet + one template = unlimited event pages.
 
-**Break** (15 mins)
+**Break** (15 mins) — 11:20–11:35 AM
 
 ---
 
