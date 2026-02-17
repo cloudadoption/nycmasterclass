@@ -1,0 +1,7 @@
+name = "masterclass-feedback"
+main = "index.js"
+compatibility_date = "2026-02-17"
+account_id = "ac7ee4615628005dc5ba0a22f0aae2a6"
+
+[observability.logs]
+enabled = true
