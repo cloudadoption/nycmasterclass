@@ -88,7 +88,7 @@ The JSON2HTML worker is a generic Edge Delivery Services worker that transforms 
 2. Worker checks config for /events/ pattern
 3. Worker fetches: /future-events.json
 4. Worker filters to: { "city": "Sydney", "URL": "/events/sydney", ... }
-5. Worker fetches template: /drafts/jsmith/templates/event-template
+5. Worker fetches template: /labs/exercise5/event-template
 6. Worker renders: Mustache template + single JSON record = HTML
 7. User sees: Fully rendered event detail page for Sydney
 ```
@@ -99,7 +99,7 @@ The JSON2HTML worker is a generic Edge Delivery Services worker that transforms 
 2. Worker checks config for /events/list pattern
 3. Worker fetches: /future-events.json
 4. Worker passes ALL records (no filtering — list shows everything)
-5. Worker fetches template: /drafts/jsmith/templates/events-template
+5. Worker fetches template: /labs/exercise5/events-template
 6. Worker renders: Mustache template loops over all records = HTML
 7. User sees: Grid of 6 event cards with responsive layout
 ```
@@ -372,7 +372,9 @@ You need **two** templates — one for the list page and one for the detail page
 
 ### 2a. Events List Template
 
-**In DA.live**, create page: `/drafts/jsmith/templates/events-template` (use your name)
+**In DA.live**, create page: `/labs/exercise5/events-template`
+
+The reference template is already in the repository at `labs/exercise5/events-template.html`. Copy this content into DA.live.
 
 This template loops over **all** records using `{{#data}}...{{/data}}` and renders each as an `event` block card.
 
@@ -408,7 +410,9 @@ This template loops over **all** records using `{{#data}}...{{/data}}` and rende
 
 ### 2b. Event Detail Template
 
-**In DA.live**, create page: `/drafts/jsmith/templates/event-template` (use your name)
+**In DA.live**, create page: `/labs/exercise5/event-template`
+
+The reference template is already in the repository at `labs/exercise5/event-template.html`. Copy this content into DA.live.
 
 This template renders a **single** event's full details:
 
@@ -606,14 +610,14 @@ Now that your templates work and your block renders correctly, configure the wor
        "path": "/events/list",
        "endpoint": "https://main--nycmasterclass--cloudadoption.aem.page/future-events.json",
        "arrayKey": "data",
-       "template": "/drafts/jsmith/templates/events-template"
+       "template": "/labs/exercise5/events-template"
      },
      {
        "path": "/events/",
        "endpoint": "https://main--nycmasterclass--cloudadoption.aem.page/future-events.json",
        "arrayKey": "data",
        "pathKey": "URL",
-       "template": "/drafts/jsmith/templates/event-template"
+       "template": "/labs/exercise5/event-template"
      }
    ]
    ```
@@ -717,9 +721,9 @@ Replace `jsmith` with your branch name.
 - `blocks/event/event.js` — Block decoration logic
 - `blocks/event/event.css` — Styles for list cards and detail views
 
-**What lives in DA.live** (not committed):
-- `/drafts/jsmith/templates/events-template` — List page Mustache template
-- `/drafts/jsmith/templates/event-template` — Detail page Mustache template
+**What lives in DA.live** (templates copied from repo):
+- `/labs/exercise5/events-template` — List page Mustache template
+- `/labs/exercise5/event-template` — Detail page Mustache template
 
 **What lives in the worker service** (not committed):
 - JSON2HTML worker configuration (path patterns, endpoints, templates)
@@ -887,8 +891,8 @@ This creates as many columns as fit, with each card being at least 350px wide.
 ## Verification Checklist
 
 - [ ] **Created `event` block** — `blocks/event/event.js` and `blocks/event/event.css`
-- [ ] **Created list Mustache template** in DA.live at `/drafts/jsmith/templates/events-template`
-- [ ] **Created detail Mustache template** in DA.live at `/drafts/jsmith/templates/event-template`
+- [ ] **Created list Mustache template** in DA.live at `/labs/exercise5/events-template`
+- [ ] **Created detail Mustache template** in DA.live at `/labs/exercise5/event-template`
 - [ ] **Tested in simulator** with real `future-events.json` data (both templates)
 - [ ] **Tested locally** with static HTML files in `drafts/events/`
 - [ ] **Configured worker** using Admin Edit tool with both path configs
