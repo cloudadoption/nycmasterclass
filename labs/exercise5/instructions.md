@@ -1,6 +1,6 @@
 # Exercise 5: JSON2HTML - Generate Pages from Data
 
-**Duration**: 30 minutes
+**Duration**: 25 minutes
 
 ---
 
