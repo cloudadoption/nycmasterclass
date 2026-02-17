@@ -564,11 +564,11 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 - Verify you **previewed** the sheet in DA.live after adding rows (click the Preview button)
 - Check the JSON endpoint directly — open `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json` and confirm your new records are in the `data` array
 - Verify the `URL` field in your new row follows the pattern `/events/cityname` (lowercase, no spaces)
-- Worker may cache briefly — wait 1-2 minutes and hard refresh
+- Worker may cache briefly — wait 1-2 minutes and hard refresh and/or use *update* from sidekick
 
 **Changes don't appear**:
 - Worker config is cached briefly — wait 1-2 minutes
-- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R)
+- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R) and/or use *update* from sidekick
 - Check you're on the correct branch URL
 
 **Use Browser DevTools to debug**:
