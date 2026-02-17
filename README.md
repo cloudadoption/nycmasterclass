@@ -1,9 +1,14 @@
-# Your Project's Title...
-Your project's description...
+# NYC Masterclass
+Training materials and exercises for AEM Edge Delivery Services masterclass sessions.
 
 ## Environments
 - Preview: https://main--{repo}--{owner}.aem.page/
 - Live: https://main--{repo}--{owner}.aem.live/
+
+## Labs & Exercises
+- [Labs Overview](labs/README.md) - Complete guide to all exercises
+- [Setup Instructions](labs/SETUP.md) - Get started with the labs
+- [Instructor Setup](labs/INSTRUCTOR_SETUP.md) - Setup guide for instructors
 
 ## Documentation
 
