@@ -176,11 +176,11 @@ https://jsmith--nycmasterclass--cloudadoption.aem.page/events/sydney
 
 ## Step 2: Understand the Templates
 
-The instructor has created **two** Mustache templates in DA.live. Reference copies are also in `labs/exercise5/` in the repository.
+The instructor has created **two** Mustache templates in `labs/exercise5/` in the repository.
 
 ### 2a. List Template (`events-template`)
 
-**Location in DA.live**: `/labs/exercise5/events-template`
+**Location in the repository**: `/labs/exercise5/events-template.html`
 
 This template loops over **all** records using `{{#data}}...{{/data}}` and renders each as an `event` block card:
 
@@ -214,7 +214,7 @@ This template loops over **all** records using `{{#data}}...{{/data}}` and rende
 
 ### 2b. Detail Template (`event-template`)
 
-**Location in DA.live**: `/labs/exercise5/event-template`
+**Location in the repository**: `/labs/exercise5/event-template.html`
 
 This template renders a **single** event's full details. Key snippet:
 
@@ -452,10 +452,10 @@ Replace `jsmith` with your branch name.
 **What's already committed** (in `main`):
 - `blocks/event/event.js` — Block decoration logic
 - `blocks/event/event.css` — Styles for list cards and detail views
-
-**What lives in DA.live** (set up by instructor):
 - `/labs/exercise5/events-template` — List page Mustache template
 - `/labs/exercise5/event-template` — Detail page Mustache template
+
+**What lives in DA.live** (set up by instructor):
 - `/future-events` — Data sheet (JSON endpoint)
 
 **What lives in the worker service** (configured by instructor):
@@ -540,9 +540,10 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 - Check that `/events/list` config comes **before** `/events/` in the array
 - Check that you're using the correct branch URL
 - Ensure config was POSTed successfully (check response)
+- Try hard refresh (Cmd+Shift+R or Ctrl+Shift+R) and/or use *update* from sidekick
 
 **Template doesn't render**:
-- Verify template path in config matches DA.live path exactly
+- Verify template path in config matches the relative path from the repo exactly
 - Check for typos in Mustache variable names (case-sensitive!)
 - Test in simulator first to isolate issues
 
