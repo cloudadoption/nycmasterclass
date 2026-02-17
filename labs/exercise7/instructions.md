@@ -37,15 +37,15 @@ Required:
 
 DA.live library plugins extend the authoring experience with custom content insertion capabilities.
 
-**The challenge**: Authors need to insert metadata blocks, pre-formatted sections, or external data consistently. Copy-pasting is error-prone.
+**The challenge**: Authors often copy/paste third-party embed codes (widgets, scripts, config JSON), but raw custom HTML in documents is an anti-pattern and hard to maintain.
 
-**The solution**: Create plugins that insert pre-formatted content with one click.
+**The solution**: Build a plugin that accepts supported embed snippets and converts them into structured block content.
 
 **Plugins enable**:
-- **Pre-formatted content templates** - Metadata blocks, section layouts
+- **Safe embed conversion** - Turn third-party snippets into block rows
 - **Integration with external data sources** - Fetch from APIs, databases
 - **Automated content generation** - Dynamic content based on rules
-- **Streamlined authoring workflows** - One-click insertion, no copy-paste
+- **Streamlined authoring workflows** - Paste once, insert clean content
 - **Consistency** - Same structure across all pages
 - **Custom tooling** - Build exactly what your authors need
 
@@ -59,13 +59,29 @@ DA.live library plugins extend the authoring experience with custom content inse
 ```
 
 **Real-world use cases**:
-- **Metadata templates** - Insert pre-configured metadata blocks
+- **Widget embed converters** - Convert embed snippets into block config
 - **Section libraries** - Pre-formatted hero sections, CTAs, footers
 - **Product catalog** - Fetch products from PIM, insert as tables
 - **Speaker directory** - Insert speaker bio from API
 - **Asset browser** - Browse DAM, insert images with correct paths
 - **Form builders** - Generate form markup from templates
 - **Legal snippets** - Insert disclaimers, copyright notices
+
+---
+
+## Pattern Showcase: Third-Party Embed Conversion
+
+This exercise demonstrates a practical DA pattern: let authors use familiar copy/paste embed workflows while still preventing raw custom HTML from entering the document.
+
+**Workflow**:
+1. Author copies a third-party widget embed snippet
+2. Plugin parses and validates source + JSON config
+3. Plugin converts values into structured block rows
+4. DA inserts only block content (not raw embed markup)
+
+**Sample widget source**:
+- TradingView widget catalog: `https://www.tradingview.com/widget-docs/widgets/`
+- Company Profile example: `https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/`
 
 ---
 
@@ -92,7 +108,7 @@ DA.live plugins are HTML + JavaScript applications hosted on your Edge Delivery 
                        │
                        │ Loads plugin from:
                        │ https://jsmith--nycmasterclass--cloudadoption.aem.page/
-                       │         tools/metadata-template.html
+                       │         tools/plugins/embedwidget/embedwidget.html
                        ▼
            ┌───────────────────────────┐
            │   Your Plugin (iframe)    │
@@ -113,9 +129,9 @@ DA.live plugins are HTML + JavaScript applications hosted on your Edge Delivery 
 7. DA.live receives message and inserts into document
 
 **URL Structure**:
-- **Your codebase**: `https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/metadata-template.html`
-- **DA.live app URL**: `https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=jsmith`
-- **Local development**: `https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=local`
+- **Your codebase**: `https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget/embedwidget.html`
+- **DA.live app URL**: `https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=jsmith`
+- **Local development**: `https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local`
 
 **Key concept**: DA.live loads your plugin HTML from your AEM site into an iframe, then uses PostMessage for secure cross-origin communication.
 
@@ -191,17 +207,17 @@ await actions.closeLibrary();
 
 ## Plugin Architecture
 
-For this exercise, you'll build a **metadata template plugin** with two files:
+For this exercise, you'll build an **EmbedWidget plugin** with two files:
 
 ### Required Files:
 
-1. **HTML file** (`metadata-template.html`)
+1. **HTML file** (`embedwidget.html`)
    - Imports DA App SDK from `https://da.live/nx/utils/sdk.js`
    - Imports your plugin JavaScript
    - Defines UI (template options)
    - Includes styles
 
-2. **JavaScript file** (`metadata-template.js`)
+2. **JavaScript file** (`embedwidget.js`)
    - Imports DA App SDK
    - Waits for SDK initialization (`await DA_SDK`)
    - Creates interactive UI
@@ -211,180 +227,223 @@ For this exercise, you'll build a **metadata template plugin** with two files:
 
 ```
 tools/
-  metadata-template/
-    metadata-template.html   ← Loaded by DA.live in iframe
-    metadata-template.js     ← Your plugin logic
+  plugins/
+    embedwidget/
+      embedwidget.html   ← Loaded by DA.live in iframe
+      embedwidget.js     ← Your plugin logic
 ```
 
 **URL accessed by authors**:
 ```
-https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=jsmith
+https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=jsmith
 ```
 
 This loads your HTML from:
 ```
-https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/metadata-template/metadata-template.html
+https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget/embedwidget.html
 ```
 
 ---
 
 ## Step 1: Create Plugin HTML
 
-**File**: `tools/metadata-template/metadata-template.html`
+**File**: `tools/plugins/embedwidget/embedwidget.html`
 
 Copy this code:
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Metadata Template Plugin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EmbedWidget</title>
     <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/tools/plugins/embedwidget/embedwidget.css">
     <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
-    <script src="/tools/metadata-template/metadata-template.js" type="module"></script>
-    <style>
-      body {
-        font-family: adobe-clean, sans-serif;
-        padding: 20px;
-        margin: 0;
-      }
-
-      h2 {
-        margin: 0 0 16px 0;
-        font-size: 18px;
-      }
-
-      .template-option {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        transition: border-color 0.2s ease, background 0.2s ease;
-      }
-
-      .template-option:hover {
-        border-color: #1473e6;
-        background: #f5f5f5;
-      }
-
-      .template-option h3 {
-        margin: 0 0 8px 0;
-        font-size: 16px;
-        color: #1473e6;
-      }
-
-      .template-option p {
-        margin: 0;
-        font-size: 14px;
-        color: #666;
-      }
-    </style>
+    <script src="/tools/plugins/embedwidget/embedwidget.js" type="module"></script>
   </head>
   <body>
-    <h2>Insert Metadata Template</h2>
-    <div id="templates"></div>
+    <main class="plugin-shell">
+      <h1>EmbedWidget</h1>
+      <p class="plugin-intro">
+        Paste a supported embed snippet. The plugin converts it into structured block content
+        so no raw custom HTML is inserted into the document.
+      </p>
+
+      <label for="embed-code-input">Embed Code</label>
+      <textarea
+        id="embed-code-input"
+        rows="14"
+        placeholder="Paste full embed HTML here"
+        aria-label="Embed code"
+      ></textarea>
+
+      <div class="plugin-actions">
+        <button id="insert-block-btn" type="button">Insert Widget Block</button>
+      </div>
+
+      <p id="plugin-status" class="plugin-status" role="status" aria-live="polite"></p>
+    </main>
   </body>
 </html>
 ```
 
 ---
 
+## Step 1.5: Create Plugin CSS
+
+**File**: `tools/plugins/embedwidget/embedwidget.css`
+
+Copy this code:
+
+```css
+.plugin-shell {
+  box-sizing: border-box;
+  padding: 16px;
+  margin: 0;
+  font-family: adobe-clean, "Segoe UI", sans-serif;
+  color: #2c2c2c;
+}
+
+.plugin-shell h1 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.plugin-intro {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.plugin-shell label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#embed-code-input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #c6c6c6;
+  border-radius: 8px;
+  padding: 10px 12px;
+  resize: vertical;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
+```
+
+---
+
 ## Step 2: Create Plugin JavaScript
 
-**File**: `tools/metadata-template/metadata-template.js`
+**File**: `tools/plugins/embedwidget/embedwidget.js`
 
 Copy this code:
 
 ```javascript
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 
-/**
- * Metadata Template Plugin
- * Provides pre-formatted metadata templates for consistent page setup
- */
+const TRADINGVIEW_HOST = 's3.tradingview.com';
+const SCRIPT_PREFIX = 'embed-widget-';
+const DEFAULT_HEIGHT = '500px';
 
-const TEMPLATES = [
-  {
-    name: 'Event Page',
-    description: 'Metadata for event landing pages',
-    metadata: {
-      Title: 'Event Name - NYC Masterclass 2026',
-      Description: 'Join us for an intensive workshop on Edge Delivery Services',
-      'og:image': '/images/event-default.jpg',
-      template: 'section-landing',
-      category: 'event',
-    },
-  },
-  {
-    name: 'Speaker Profile',
-    description: 'Metadata for speaker profile pages',
-    metadata: {
-      Title: 'Speaker Name - NYC Masterclass 2026',
-      Description: 'Learn from industry experts',
-      'og:image': '/images/speaker-default.jpg',
-      template: 'profile',
-      category: 'speaker',
-    },
-  },
-  {
-    name: 'Session Page',
-    description: 'Metadata for workshop sessions',
-    metadata: {
-      Title: 'Session Title - NYC Masterclass 2026',
-      Description: 'Deep dive into EDS concepts',
-      'og:image': '/images/session-default.jpg',
-      template: 'session',
-      category: 'workshop',
-      tags: 'development, hands-on',
-    },
-  },
-];
-
-/**
- * Converts metadata object to table markdown
- */
-function metadataToMarkdown(metadata) {
-  let markdown = '| Metadata | |\n';
-  markdown += '|----------|------------------|\n';
-
-  Object.entries(metadata).forEach(([key, value]) => {
-    markdown += `| ${key} | ${value} |\n`;
-  });
-
-  return markdown;
+function setStatus(statusEl, message, type = '') {
+  statusEl.textContent = message;
+  statusEl.className = `plugin-status ${type}`.trim();
 }
 
-/**
- * Initialize plugin
- */
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function normalizeHeight(config) {
+  const { height } = config;
+  if (typeof height === 'number' && Number.isFinite(height)) return `${height}px`;
+  if (typeof height === 'string' && height.trim()) return height.trim();
+  return DEFAULT_HEIGHT;
+}
+
+function parseTradingViewEmbedCode(rawEmbedCode) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(rawEmbedCode, 'text/html');
+  const scripts = [...doc.querySelectorAll('script[src]')];
+  const tradingViewScript = scripts.find((script) => script.src.includes(TRADINGVIEW_HOST));
+
+  if (!tradingViewScript) throw new Error('No supported widget script found. Paste the full embed snippet.');
+
+  const scriptURL = new URL(tradingViewScript.src);
+  if (scriptURL.host !== TRADINGVIEW_HOST) throw new Error('Unsupported script source in embed code.');
+
+  const scriptFilename = scriptURL.pathname.split('/').pop();
+  if (!scriptFilename || !scriptFilename.startsWith(SCRIPT_PREFIX)) {
+    throw new Error('Unsupported widget type in script URL.');
+  }
+
+  const scriptConfigText = tradingViewScript.textContent.trim();
+  if (!scriptConfigText) throw new Error('Widget configuration is empty.');
+
+  let config;
+  try {
+    config = JSON.parse(scriptConfigText);
+  } catch {
+    throw new Error('Widget config must be valid JSON.');
+  }
+
+  if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+    throw new Error('Widget config must be a JSON object.');
+  }
+
+  return { script: scriptFilename, height: normalizeHeight(config), config };
+}
+
+function toTradingViewBlockHTML({ script, height, config }) {
+  const safeScript = escapeHtml(script);
+  const safeHeight = escapeHtml(height);
+  const safeConfig = escapeHtml(JSON.stringify(config, null, 2));
+
+  return `
+<table>
+  <tbody>
+    <tr><td colspan="2"><p>tradingview</p></td></tr>
+    <tr><td><p>script</p></td><td><p>${safeScript}</p></td></tr>
+    <tr><td><p>height</p></td><td><p>${safeHeight}</p></td></tr>
+    <tr><td><p>config</p></td><td><pre><code>${safeConfig}</code></pre></td></tr>
+  </tbody>
+</table>`.trim();
+}
+
 (async function init() {
-  const { context, token, actions } = await DA_SDK;
+  const { actions } = await DA_SDK;
+  const inputEl = document.getElementById('embed-code-input');
+  const insertButton = document.getElementById('insert-block-btn');
+  const statusEl = document.getElementById('plugin-status');
 
-  const container = document.getElementById('templates');
+  insertButton.addEventListener('click', async () => {
+    const rawEmbedCode = inputEl.value.trim();
+    if (!rawEmbedCode) {
+      setStatus(statusEl, 'Paste an embed snippet first.', 'error');
+      return;
+    }
 
-  // Create template options
-  TEMPLATES.forEach((template) => {
-    const option = document.createElement('div');
-    option.className = 'template-option';
-    option.innerHTML = `
-      <h3>${template.name}</h3>
-      <p>${template.description}</p>
-    `;
-
-    option.addEventListener('click', async () => {
-      // Convert metadata to markdown table
-      const markdown = metadataToMarkdown(template.metadata);
-
-      // Insert into document
-      await actions.sendText(markdown);
-
-      // Close library palette
+    try {
+      const parsed = parseTradingViewEmbedCode(rawEmbedCode);
+      await actions.sendHTML(toTradingViewBlockHTML(parsed));
+      setStatus(statusEl, 'Widget block inserted.', 'success');
       await actions.closeLibrary();
-    });
-
-    container.append(option);
+    } catch (error) {
+      setStatus(statusEl, error.message || 'Unable to convert embed code.', 'error');
+    }
   });
 }());
 ```
@@ -392,11 +451,27 @@ function metadataToMarkdown(metadata) {
 **What this does**:
 - Imports DA App SDK
 - Waits for SDK initialization
-- Receives `context`, `token`, `actions` from SDK
-- Creates clickable template options
-- Converts metadata object to markdown table
-- Uses `actions.sendText()` to insert into document
+- Validates and parses supported embed HTML
+- Converts parsed values into structured block table markup
+- Uses `actions.sendHTML()` to insert into document
 - Uses `actions.closeLibrary()` to close palette
+
+---
+
+## Step 2.5: Create TradingView Block Decorator
+
+The plugin inserts a structured `tradingview` block table, so your site also needs a `tradingview` block to render it.
+
+Create:
+
+- `blocks/tradingview/tradingview.js`
+- `blocks/tradingview/tradingview.css`
+
+Use the same pattern you implemented in this repo:
+- read block config with `readBlockConfig(block)`
+- parse `config` JSON from `<pre><code>`
+- inject the TradingView widget script lazily with `IntersectionObserver`
+- apply `height` from block config
 
 ---
 
@@ -407,10 +482,11 @@ function metadataToMarkdown(metadata) {
 npm run lint
 
 # Add changes
-git add tools/metadata-template/
+git add tools/plugins/embedwidget/
+git add blocks/tradingview/
 
 # Commit
-git commit -m "feat: add DA metadata template plugin"
+git commit -m "feat: add DA embedwidget plugin"
 
 # Push
 git push origin jsmith
@@ -428,7 +504,7 @@ Before pushing to your branch, test the plugin loads correctly from localhost.
 
 **Plugin URL for local testing**:
 ```
-https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=local
+https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local
 ```
 
 **To test**:
@@ -437,16 +513,16 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=loc
 3. **Open library**: Click the library icon in the left sidebar (puzzle piece icon)
 4. **Load your plugin**: In a new browser tab, navigate to:
    ```
-   https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=local
+   https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local
    ```
-5. **You should see**: Your plugin UI loads with three template options
-6. **Click "Event Page"**: The metadata table should insert into your document
+5. **You should see**: A textarea for embed code and an "Insert Widget Block" button
+6. **Paste a supported embed snippet and click insert**: A structured `tradingview` block table should be inserted
 7. **Library should close** automatically
 
 **Debugging local issues**:
 - Verify `http://localhost:3000` is running
 - Check browser console for errors
-- Verify file paths: `/tools/metadata-template/metadata-template.html`
+- Verify file paths: `/tools/plugins/embedwidget/embedwidget.html`
 - Check Network tab for failed requests
 
 **How `?ref=local` works**: DA.live fetches your plugin HTML from `http://localhost:3000` instead of the published site. This lets you develop without committing/pushing every change.
@@ -459,7 +535,7 @@ Once local testing works, access your plugin from your pushed branch.
 
 **Your plugin URL** (replace `jsmith` with your branch):
 ```
-https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=jsmith
+https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=jsmith
 ```
 
 **To test on your branch**:
@@ -469,14 +545,14 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/metadata-template?ref=jsm
 4. **Load your plugin URL** with `?ref=jsmith` in a new tab
 5. **Plugin loads from**:
    ```
-   https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/metadata-template/metadata-template.html
+   https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget/embedwidget.html
    ```
-6. **Test all three templates** to verify they work
+6. **Test valid and invalid embed snippets** to verify parsing and validation behavior
 
 **Testing checklist**:
-- [ ] "Event Page" template inserts correct metadata
-- [ ] "Speaker Profile" template inserts correct metadata
-- [ ] "Session Page" template inserts correct metadata with tags
+- [ ] Valid embed inserts a structured `tradingview` block table
+- [ ] Invalid embed shows an error message
+- [ ] Library palette closes after successful insertion
 - [ ] Library palette closes after insertion
 - [ ] Metadata table format is correct (two columns)
 
@@ -492,7 +568,7 @@ For production use, plugins should be registered in the site configuration so au
 2. **Add to library sheet**:
    | title | path |
    |-------|------|
-   | Metadata Templates | https://content.da.live/cloudadoption/nycmasterclass/tools/metadata-template |
+   | EmbedWidget | https://content.da.live/cloudadoption/nycmasterclass/tools/plugins/embedwidget |
 
 3. **Save and publish** the config
 
@@ -512,7 +588,7 @@ For production use, plugins should be registered in the site configuration so au
 **Problem**: Plugin URL shows blank page or 404
 
 **Fixes**:
-1. **Check file paths**: Verify files exist at `/tools/metadata-template/metadata-template.html`
+1. **Check file paths**: Verify files exist at `/tools/plugins/embedwidget/embedwidget.html`
 2. **Check dev server**: Ensure `aem up` is running for `?ref=local`
 3. **Check branch deployment**: Wait 1-2 minutes after `git push` for Code Sync
 4. **Check URL**: Verify `?ref=jsmith` matches your branch name exactly
@@ -693,35 +769,38 @@ buttons.forEach(btn => {
 - **Plugin architecture**: HTML (UI) + JavaScript (logic) + SDK (communication)
 
 **Why plugins?**
-- **Consistency** - Same templates across all pages
+- **Consistency** - Same conversion rules across all pages
 - **Speed** - One-click insertion vs manual copy-paste
 - **Integration** - Pull from external systems (APIs, DAMs, PIMs)
 - **Automation** - Generate content programmatically
 - **Validation** - Enforce structure and rules
 
-**The pattern**: UI → User Click → Generate Content → `actions.sendText()` → DA.live inserts → `actions.closeLibrary()`
+**The pattern**: UI → Paste Embed → Parse + Validate → `actions.sendHTML()` → DA.live inserts → `actions.closeLibrary()`
 
 ---
 
 ## Verification Checklist
 
 - [ ] **Created plugin files**:
-  - `/tools/metadata-template/metadata-template.html`
-  - `/tools/metadata-template/metadata-template.js`
+  - `/tools/plugins/embedwidget/embedwidget.html`
+  - `/tools/plugins/embedwidget/embedwidget.css`
+  - `/tools/plugins/embedwidget/embedwidget.js`
+- [ ] **Created block files**:
+  - `/blocks/tradingview/tradingview.js`
+  - `/blocks/tradingview/tradingview.css`
 - [ ] **Tested locally** with `?ref=local` (dev server running)
 - [ ] **Plugin loads** in library palette (no errors)
-- [ ] **All three templates work**:
-  - "Event Page" inserts correct metadata
-  - "Speaker Profile" inserts correct metadata
-  - "Session Page" inserts correct metadata with tags
-- [ ] **Content inserts correctly** as markdown table (two columns)
+- [ ] **Conversion works**:
+  - valid embed inserts the `tradingview` block table
+  - invalid embed is rejected with clear messaging
+- [ ] **Content inserts correctly** as structured HTML table
 - [ ] **Library closes** automatically after insertion
 - [ ] **Committed and pushed** to feature branch (`git push origin jsmith`)
 - [ ] **Tested on branch** with `?ref=jsmith` parameter
 - [ ] **Understand DA App SDK**:
   - `context` provides document info
   - `token` provides auth for API calls
-  - `actions.sendText()` inserts markdown
+  - `actions.sendHTML()` inserts block markup
   - `actions.closeLibrary()` closes palette
 - [ ] **Understand PostMessage pattern** - Secure iframe communication
 - [ ] **Understand URL structure** - `da.live/app/{org}/{repo}/{path}?ref={branch}`
@@ -734,53 +813,44 @@ buttons.forEach(btn => {
 
 If you finish early, try these enhancements to your plugin:
 
-### Enhancement 1: Add More Templates
+### Enhancement 1: Support More Widget Types
 
-Add templates for other page types:
-- Lab page template
-- Blog post template
-- Landing page template
+Expand the parser to support additional embed providers and widget classes:
+- Additional TradingView widget families
+- Other approved providers
+- Provider-specific validation rules
 
 ```javascript
-{
-  name: 'Lab Page',
-  description: 'Metadata for hands-on lab pages',
-  metadata: {
-    Title: 'Lab Title - NYC Masterclass 2026',
-    Description: 'Hands-on learning experience',
-    'og:image': '/images/lab-default.jpg',
-    category: 'lab',
-    difficulty: 'intermediate',
-  },
+if (scriptURL.host === 's3.tradingview.com') {
+  // current parser branch
 }
 ```
 
-### Enhancement 2: Dynamic Values
+### Enhancement 2: Use Context-Aware Defaults
 
-Use `context` to make templates smarter:
+Use `context` to make inserted config smarter:
 
 ```javascript
 const { context } = await DA_SDK;
 
-// Auto-populate title based on current path
 const pageName = context.path.split('/').pop();
-metadata.Title = `${pageName} - NYC Masterclass 2026`;
+config.container_id = `widget-${pageName}`;
 ```
 
-### Enhancement 3: Fetch External Data
+### Enhancement 3: Fetch Provider Metadata
 
-Fetch templates from an external JSON:
+Fetch supported widget definitions from a JSON file:
 
 ```javascript
-const response = await fetch('/templates/metadata-templates.json');
-const templates = await response.json();
-// Render dynamically fetched templates
+const response = await fetch('/tools/plugins/embedwidget/supported-widgets.json');
+const widgets = await response.json();
+// Validate against dynamically fetched definitions
 ```
 
 ### Enhancement 4: Better UI
 
-- Add search/filter for templates
-- Add preview of generated content
+- Add search/filter for provider and widget type
+- Add preview of generated block table
 - Add form inputs for customization
 - Add validation before insertion
 
@@ -790,10 +860,10 @@ Instead of markdown tables, insert rich HTML:
 
 ```javascript
 const html = `
-<div class="metadata">
+<div class="widget-preview">
   <table>
-    <tr><td>Title</td><td>${metadata.Title}</td></tr>
-    <tr><td>Description</td><td>${metadata.Description}</td></tr>
+    <tr><td>script</td><td>${script}</td></tr>
+    <tr><td>height</td><td>${height}</td></tr>
   </table>
 </div>
 `;
@@ -807,6 +877,9 @@ await actions.sendHTML(html);
 - **[Developing Apps and Plugins](https://docs.da.live/developers/guides/developing-apps-and-plugins)** - Official guide
 - **[DA App SDK Source](https://da.live/nx/utils/sdk.js)** - SDK code (inspect for advanced usage)
 - **[DA.live Documentation](https://docs.da.live/)** - Complete documentation
+- **[TradingView Widgets Collection](https://www.tradingview.com/widget-docs/widgets/)** - Sample widget catalog
+- **[TradingView Company Profile Widget](https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/)** - Example widget used in this lab
+- **[da-blog-tools TradingView README](https://raw.githubusercontent.com/aemsites/da-blog-tools/refs/heads/main/tools/plugins/tradingview/README.md)** - Source pattern for embed conversion
 - **[PostMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)** - Understanding cross-origin communication
 
 ---
