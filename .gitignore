@@ -8,6 +8,7 @@ helix-importer-ui
 *.bak
 .idea
 .claude/settings.local.json
+.claude/skills/**/.cache/
 # Ensure these files are tracked
 !CLAUDE.md
 !AGENTS.md
