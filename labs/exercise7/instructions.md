@@ -207,21 +207,25 @@ await actions.closeLibrary();
 
 ## Plugin Architecture
 
-For this exercise, you'll build an **EmbedWidget plugin** with two files:
+For this exercise, you'll build an **EmbedWidget plugin** with three files:
 
 ### Required Files:
 
 1. **HTML file** (`embedwidget.html`)
    - Imports DA App SDK from `https://da.live/nx/utils/sdk.js`
    - Imports your plugin JavaScript
-   - Defines UI (template options)
+   - Defines UI (embed textarea + insert button)
    - Includes styles
 
-2. **JavaScript file** (`embedwidget.js`)
+2. **CSS file** (`embedwidget.css`)
+   - Styles plugin layout and form controls
+   - Keeps the authoring UI clear and readable
+
+3. **JavaScript file** (`embedwidget.js`)
    - Imports DA App SDK
    - Waits for SDK initialization (`await DA_SDK`)
-   - Creates interactive UI
-   - Handles clicks → sends content → closes library
+   - Parses and validates supported embed HTML
+   - Handles clicks → sends structured block HTML → closes library
 
 ### Plugin Structure:
 
@@ -515,9 +519,13 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embed
    ```
    https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local
    ```
-5. **You should see**: A textarea for embed code and an "Insert Widget Block" button
-6. **Paste a supported embed snippet and click insert**: A structured `tradingview` block table should be inserted
-7. **Library should close** automatically
+5. **Think like an author**: Open the TradingView Company Profile widget page:
+   - `https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/`
+6. **Copy the generated embed HTML** from TradingView
+7. **Return to EmbedWidget**: You should see a textarea for embed code and an "Insert Widget Block" button
+8. **Paste and insert**: A structured `tradingview` block table should be inserted
+9. **Library should close** automatically
+10. **Preview** the DA page to see the rendered TradingView widget
 
 **Debugging local issues**:
 - Verify `http://localhost:3000` is running
@@ -553,8 +561,19 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embed
 - [ ] Valid embed inserts a structured `tradingview` block table
 - [ ] Invalid embed shows an error message
 - [ ] Library palette closes after successful insertion
-- [ ] Library palette closes after insertion
-- [ ] Metadata table format is correct (two columns)
+- [ ] Inserted table includes `script`, `height`, and `config` rows
+
+## Step 5.5: Preview the Page and Verify Widget Rendering
+
+After inserting the block in DA, validate that the `tradingview` block decorator renders the actual widget on the page.
+
+1. **Preview** your DA document containing the inserted block
+2. **Open the preview URL** in your browser (branch or local)
+3. **Verify rendered output**:
+   - widget container is visible (not just a raw table)
+   - TradingView widget loads in that section
+   - configured height is applied
+4. **If widget does not render**, check DevTools Console/Network for blocked script or JSON parsing issues
 
 ---
 
@@ -605,13 +624,14 @@ For production use, plugins should be registered in the site configuration so au
 
 ### Content doesn't insert
 
-**Problem**: Clicking template does nothing
+**Problem**: Clicking "Insert Widget Block" does nothing
 
 **Fixes**:
 1. **Check console**: Look for JavaScript errors
 2. **Verify SDK initialization**: `await DA_SDK` must complete before using `actions`
-3. **Check markdown format**: Ensure table syntax is correct (`| Header |`, `|--------|`)
-4. **Test with simple text**: Try `await actions.sendText('test')` first
+3. **Verify embed source**: Ensure script host is `s3.tradingview.com`
+4. **Verify config JSON**: Ensure the pasted embed contains valid JSON inside the script
+5. **Test HTML insertion path**: Try `await actions.sendHTML('<p>test</p>')` first
 
 ### Library doesn't close
 
@@ -629,7 +649,7 @@ For production use, plugins should be registered in the site configuration so au
 **Fixes**:
 1. **Open browser DevTools**: Check Console tab for errors
 2. **Check file paths**: Verify JavaScript import path matches file location
-3. **Check syntax**: Validate JSON in TEMPLATES array
+3. **Check pasted embed**: Validate JSON in the embed script body
 4. **Test locally first**: Use `?ref=local` to debug before pushing
 
 ### Can't access plugin in DA.live
@@ -794,6 +814,7 @@ buttons.forEach(btn => {
   - valid embed inserts the `tradingview` block table
   - invalid embed is rejected with clear messaging
 - [ ] **Content inserts correctly** as structured HTML table
+- [ ] **Preview rendering works**: inserted block decorates and widget loads on the page
 - [ ] **Library closes** automatically after insertion
 - [ ] **Committed and pushed** to feature branch (`git push origin jsmith`)
 - [ ] **Tested on branch** with `?ref=jsmith` parameter
