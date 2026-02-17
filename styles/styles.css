@@ -15,29 +15,45 @@
   --background-color: white;
   --light-color: #f8f8f8;
   --dark-color: #505050;
+  --dark-background-color: #0b0b10;
   --text-color: #131313;
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --heading-font-family: roboto, roboto-fallback, sans-serif;
+  --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 1.2rem;
+  --body-font-size-s: 1rem;
+  --body-font-size-xs: .875rem;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-xxl: 2.2rem;
+  --heading-font-size-xl: 2rem;
+  --heading-font-size-l: 1.75rem;
+  --heading-font-size-m: 1.25rem;
+  --heading-font-size-s: 1.125rem;
+  --heading-font-size-xs: 1rem;
+
+  /* spacing */
+  --section-spacing: 64px;
 
   /* nav height */
   --nav-height: 64px;
+
+  /* masterclass theme */
+  --masterclass-bg-1: #0b0b10;
+  --masterclass-bg-2: #171429;
+  --ink: #eef0f4;
+  --muted: #c5c8d2;
+  --brand-1: #f97316;
+  --brand-2: #c026d3;
+  --brand-3: #7c3aed;
+  --card: #10121a;
+  --shadow: 0 10px 30px rgb(0 0 0 / 45%);
 }
 
 /* fallback fonts */
@@ -55,18 +71,18 @@
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
     /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
+    --heading-font-size-xxl: 3.75rem;
+    --heading-font-size-xl: 3rem;
+    --heading-font-size-l: 2.25rem;
+    --heading-font-size-m: 1.875rem;
+    --heading-font-size-s: 1.5rem;
+    --heading-font-size-xs: 1.375rem;
+  }
+
+  .section > div {
+    max-width: 1200px;
+    margin: auto;
   }
 }
 
@@ -84,8 +100,17 @@ body.appear {
   display: block;
 }
 
+body.masterclass {
+  background: radial-gradient(1200px 600px at 80% -10%, #ee5a24 0%, transparent 60%),
+              radial-gradient(900px 600px at 10% 10%, #6d28d9 0%, transparent 60%),
+              linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
+  background-attachment: fixed;
+  color: var(--ink);
+}
+
 header {
   height: var(--nav-height);
+  background-color: var(--dark-background-color);
 }
 
 header .header,
@@ -118,6 +143,16 @@ h3 { font-size: var(--heading-font-size-l); }
 h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
+
+body.masterclass h1,
+body.masterclass h2,
+body.masterclass h3,
+body.masterclass h4,
+body.masterclass h5,
+body.masterclass h6 {
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+}
 
 p,
 dl,
@@ -165,7 +200,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* buttons */
+/* buttons - primary by default (gradient) */
 a.button:any-link,
 button {
   box-sizing: border-box;
@@ -173,41 +208,132 @@ button {
   max-width: 100%;
   margin: 12px 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border-radius: 2em;
+  padding: 0.6em 1.5em;
   font-family: var(--body-font-family);
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.25;
   text-align: center;
   text-decoration: none;
-  background-color: var(--link-color);
-  color: var(--background-color);
+  background: linear-gradient(135deg, #f97316 0%, #c026d3 100%);
+  color: white;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 a.button:hover,
 a.button:focus,
 button:hover,
 button:focus {
-  background-color: var(--link-hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgb(249 115 22 / 40%);
   cursor: pointer;
 }
 
 button:disabled,
 button:disabled:hover {
-  background-color: var(--light-color);
+  background: var(--light-color);
   cursor: unset;
+  transform: none;
+  box-shadow: none;
 }
 
 a.button.secondary,
 button.secondary {
-  background-color: unset;
+  background: transparent;
   border: 2px solid currentcolor;
   color: var(--text-color);
+  transform: none;
+  box-shadow: none;
+}
+
+a.button.secondary:hover,
+button.secondary:hover {
+  background: rgb(255 255 255 / 10%);
+  transform: none;
+  box-shadow: none;
+}
+
+/* schedule section - table links as text links, not buttons */
+.section.schedule .table a {
+  color: var(--brand-1);
+  text-decoration: none;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.section.schedule .table a:hover {
+  color: var(--brand-2);
+  background: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  text-decoration: underline;
+}
+
+/* Featured sections - reusable pattern for cards with centered buttons and arrow links */
+
+/* Add top margin to cards in featured sections */
+.section.featured .cards {
+  margin-top: 2rem;
+}
+
+/* Right-align paragraph with link after cards wrapper in featured sections */
+.section.featured .cards-wrapper + .default-content-wrapper p {
+  text-align: right;
+}
+
+/* Style links that come after cards wrapper in featured sections - make them arrow links */
+.section.featured .cards-wrapper + .default-content-wrapper p a {
+  color: var(--brand-1);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  transition: gap 0.2s ease;
+
+  /* Override button styles */
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.section.featured .cards-wrapper + .default-content-wrapper p a::after {
+  content: '→';
+  font-size: 1.2em;
+  transition: transform 0.2s ease;
+}
+
+.section.featured .cards-wrapper + .default-content-wrapper p a:hover {
+  color: var(--brand-2);
+  gap: 0.75em;
+  background: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.section.featured .cards-wrapper + .default-content-wrapper p a:hover::after {
+  transform: translateX(4px);
+}
+
+/* Center buttons in cards within featured sections */
+.section.featured .cards .cards-card-body > p:has(a) {
+  text-align: center;
 }
 
 main img {

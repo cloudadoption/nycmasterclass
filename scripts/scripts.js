@@ -100,6 +100,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
+    document.body.classList.add('masterclass');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 

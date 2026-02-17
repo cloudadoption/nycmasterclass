@@ -1,0 +1,672 @@
+# Exercise 3: Dynamic Cards with Data Sources
+
+**Duration**: 25 minutes
+
+---
+
+## Context: The Speakers Page
+
+If you've been exploring the site, you may have noticed the **Speakers** link in the navigation leads to a placeholder page at http://localhost:3000/speakers
+
+That page currently says "Coming Soon: Dynamic Speaker Profiles" and mentions this exercise!
+
+The speaker data already exists at `/speakers.json` with 6 Adobe experts. In this exercise, you'll build the dynamic-cards block that will eventually power that page.
+
+**You'll work in your own drafts folder** to avoid conflicts with other participants, but the block you build is production-ready and reusable.
+
+---
+
+## Prerequisites
+
+✅ **Complete [SETUP.md](../SETUP.md) if not already done.**
+
+Required:
+- On your feature branch (`jsmith` - your first initial + last name)
+- Local dev server running at `http://localhost:3000`
+- Exercises 1 and 2 completed
+- Code editor open with the repository
+
+**Verify you're on your branch**:
+```bash
+git branch
+# Should show: * jsmith (your name)
+```
+
+---
+
+## What You'll Learn
+
+- How to fetch data from external sources in blocks
+- How Sheets convert to JSON in DA.live
+- How to use Worker endpoints for data transformation
+- How to handle async operations and errors in blocks
+
+---
+
+## Why This Matters
+
+In Exercise 2, you built blocks where authors manually create each card. But what if you need to display:
+- 100+ speaker profiles from a database
+- Product catalog with pricing that updates daily
+- Event listings from an external API
+
+**Manual authoring doesn't scale**. Dynamic blocks solve this by fetching data from external sources.
+
+**The pattern**:
+- Content lives in structured data (Sheet, API, Worker)
+- Block fetches and renders that data
+- Update the data once → all pages update automatically
+
+**Real-world scenario**: The NYC Masterclass has a `/speakers` page that currently shows placeholder text. You saw it in the navigation. The speaker data already exists in `/speakers.json` (6 Adobe experts). Rather than manually authoring cards for each speaker, you'll build a dynamic-cards block that fetches and renders this data automatically.
+
+**What you'll build**: A reusable dynamic-cards block that can fetch speaker data, product catalogs, article listings, or any JSON endpoint and render it as cards.
+
+---
+
+## How It Works
+
+```
+1. Events team maintains speakers in a Google Sheet
+2. DA.live converts Sheet to JSON endpoint
+3. Dynamic Cards block fetches the JSON
+4. Block renders cards from data
+5. When sheet updates, all pages show new data
+```
+
+**Alternative flow with Workers**:
+```
+1. Data in external system (database, API, query-index.json)
+2. Worker fetches and transforms data
+3. Worker returns JSON
+4. Block fetches from Worker endpoint
+5. Block renders cards
+```
+
+**Example - Featured content from query index**:
+```
+1. Worker fetches query-index.json
+2. Worker filters pages tagged "featured"
+3. Worker sorts by publishedDate (newest first)
+4. Worker limits to 3 results
+5. Dynamic Cards block renders featured articles
+```
+
+**Why use Workers?**
+- Keep API keys server-side (secure)
+- Transform/filter data before sending to client
+- Combine multiple data sources
+- Cache expensive operations
+
+**Reference**: [Integrations](https://www.aem.live/developer/integrations)
+
+---
+
+## Understanding Sheets as JSON
+
+DA.live automatically converts Sheets to JSON endpoints.
+
+**Sheet structure**:
+```
+| Name      | Title              | Company | Bio                    | Image          |
+|-----------|--------------------|---------|-----------------------|----------------|
+| John Doe  | Senior Developer   | Adobe   | Expert in EDS         | image-url      |
+| Jane Smith| Product Manager    | Adobe   | Leading AEM innovation| image-url      |
+```
+
+**JSON endpoint**:
+```
+https://main--nycmasterclass--cloudadoption.aem.page/path/to/sheet.json
+```
+
+**JSON structure**:
+```json
+{
+  "total": 2,
+  "offset": 0,
+  "limit": 2,
+  "data": [
+    {
+      "Name": "John Doe",
+      "Title": "Senior Developer",
+      "Company": "Adobe",
+      "Bio": "Expert in EDS",
+      "Image": "image-url"
+    }
+  ]
+}
+```
+
+**Key insight**: Column names become JSON keys, rows become objects in `data` array.
+
+---
+
+## Step 1: Copy Speakers Data to Your Workspace
+
+To avoid conflicts with 50 participants, you'll create your own personal speakers data.
+
+**In DA.live**:
+
+1. Navigate to https://da.live/#/cloudadoption/nycmasterclass/speakers
+2. This is the master speakers.json with 6 Adobe experts
+3. Click the **3-dot menu** → **Copy**
+4. Navigate to `/drafts/jsmith/` (your folder)
+5. **Paste** the speakers file
+6. Rename it to `speakers` (keep it as a .json file)
+
+**Verify**: You should now have `/drafts/jsmith/speakers.json`
+
+---
+
+## Step 2: Add Your Personal Data
+
+Make this exercise meaningful by adding yourself as a speaker!
+
+**In DA.live**, open `/drafts/jsmith/speakers` (the sheet you just copied)
+
+**Add a new row** with your information:
+- **Name**: Your full name (e.g., "John Smith")
+- **Title**: Your job title (e.g., "Senior Developer")  
+- **Company**: Your company name (e.g., "Acme Corp")
+- **Bio**: Write 2-3 sentences about yourself and your experience
+- **Image**: Use `https://i.pravatar.cc/400?img=X` (replace X with a number 1-70 for different avatars)
+- **Session**: Leave blank or add "Participant"
+- **LinkedIn**: Your LinkedIn URL (optional)
+
+**Optional**: Add another row for a teammate sitting near you.
+
+**Save** the sheet in DA.live.
+
+**Verify JSON endpoint** on localhost:
+```
+http://localhost:3000/drafts/jsmith/speakers.json
+```
+
+You should see 7-8 speakers (6 Adobe + your entries) in JSON format.
+
+---
+
+## Step 3: Create Block Files
+
+In your code editor, create:
+
+```
+blocks/
+  dynamic-cards/
+    dynamic-cards.js
+    dynamic-cards.css
+```
+
+---
+
+## Step 4: Implement JavaScript
+
+**File**: `blocks/dynamic-cards/dynamic-cards.js`
+
+Copy this code:
+
+```javascript
+/**
+ * Fetches speaker data and renders cards dynamically
+ *
+ * Author provides (in block):
+ * - Row 1: Data source URL (sheet.json or worker endpoint)
+ */
+export default async function decorate(block) {
+  // Extract data source URL from block content
+  const dataSource = block.querySelector('a')?.href;
+
+  if (!dataSource) {
+    block.textContent = 'Error: No data source specified';
+    return;
+  }
+
+  // Show loading state
+  block.innerHTML = '<p class="loading">Loading speakers...</p>';
+
+  try {
+    // Fetch data from sheet JSON endpoint
+    const response = await fetch(dataSource);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const json = await response.json();
+    const speakers = json.data;
+
+    // Clear loading message
+    block.innerHTML = '';
+
+    if (!speakers || speakers.length === 0) {
+      block.innerHTML = '<p>No speakers found.</p>';
+      return;
+    }
+
+    // Create cards container
+    const ul = document.createElement('ul');
+    ul.className = 'dynamic-cards-list';
+
+    // Generate card for each speaker
+    speakers.forEach((speaker) => {
+      const li = document.createElement('li');
+      li.className = 'dynamic-card';
+
+      li.innerHTML = `
+        <div class="dynamic-card-image">
+          <img src="${speaker.Image}" alt="${speaker.Name}" loading="lazy">
+        </div>
+        <div class="dynamic-card-body">
+          <h3>${speaker.Name}</h3>
+          <p class="dynamic-card-title">${speaker.Title}</p>
+          <p class="dynamic-card-company">${speaker.Company}</p>
+          <p class="dynamic-card-bio">${speaker.Bio}</p>
+        </div>
+      `;
+
+      ul.append(li);
+    });
+
+    block.append(ul);
+  } catch (error) {
+    block.innerHTML = `<p class="error">Error loading speakers: ${error.message}</p>`;
+    console.error('Dynamic Cards error:', error);
+  }
+}
+```
+
+**What this does**:
+1. Extracts data source URL from block content (line 9)
+2. Shows loading state while fetching (line 16)
+3. Fetches JSON from endpoint (line 20-21)
+4. Handles errors gracefully (line 58-61)
+5. Generates card HTML for each speaker (line 40-54)
+6. Uses `loading="lazy"` for images (line 46)
+
+**Error handling**: If fetch fails, shows user-friendly message and logs to console.
+
+---
+
+## Step 5: Implement Styles
+
+**File**: `blocks/dynamic-cards/dynamic-cards.css`
+
+Copy this code:
+
+```css
+.dynamic-cards-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+.dynamic-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background-color);
+  transition: box-shadow 0.3s ease;
+}
+
+.dynamic-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dynamic-card-image img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.dynamic-card-body {
+  padding: 20px;
+}
+
+.dynamic-card-body h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.dynamic-card-title {
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 4px 0;
+}
+
+.dynamic-card-company {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0;
+}
+
+.dynamic-card-bio {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.loading,
+.error {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.error {
+  color: #d93025;
+  background: #fce8e6;
+  border-radius: 4px;
+}
+```
+
+**Key points**:
+- Reuses responsive grid pattern from Cards block
+- All selectors scoped to `.dynamic-card*`
+- Loading and error states styled
+- Uses CSS custom properties for theming
+
+---
+
+## Step 6: Commit Your Changes
+
+```bash
+# Run linting
+npm run lint
+
+# Add changes
+git add blocks/dynamic-cards/
+
+# Commit
+git commit -m "feat: add dynamic-cards block"
+
+# Push
+git push origin jsmith
+```
+
+Replace `jsmith` with your branch name.
+
+---
+
+## Step 7: Create Test Page
+
+**In DA.live**, create a new page: `/drafts/jsmith/speakers-test` (use your name)
+
+Add this content:
+
+```
+# Dynamic Speaker Directory
+
+This page demonstrates fetching speaker data dynamically from JSON.
+
+| Dynamic Cards |
+|---------------|
+| /drafts/jsmith/speakers.json |
+```
+
+**Important**: Use YOUR actual path (replace `jsmith` with your first initial + last name).
+
+**Save** the page in DA.live.
+
+---
+
+## Step 8: Test Locally
+
+**Open**: `http://localhost:3000/drafts/jsmith/speakers-test` (use your name)
+
+**You should see**:
+- "Loading speakers..." message briefly
+- 7-8 speaker cards (6 Adobe experts + your entries)
+- Responsive grid layout
+- Hover effect on cards
+- Your speaker card among the Adobe experts
+
+**Verify your data**:
+- Find your speaker card in the grid
+- Verify your name, title, company, and bio display correctly
+- Check that your avatar image loads
+
+**Test the data flow**:
+1. Keep the page open at `http://localhost:3000/drafts/jsmith/speakers-test`
+2. Go to DA.live and open `/drafts/jsmith/speakers`
+3. Edit YOUR speaker row - change your bio or title
+4. **Save** in DA.live
+5. **Refresh** your local preview
+6. Your changes should appear immediately
+
+**Success criteria**: Dynamic-cards block fetches JSON and renders all speakers including your entry.
+
+---
+
+## Step 9: Test Error Handling
+
+Production blocks must handle failures gracefully. Let's test error scenarios.
+
+**Test 1 - Invalid URL**:
+
+Edit your `/drafts/jsmith/speakers-test` page in DA.live, change the URL to:
+```
+| Dynamic Cards |
+|---------------|
+| https://invalid-url.com/data.json |
+```
+
+Save and refresh localhost. You should see: "Error loading speakers: [error message]" with red background.
+
+**Test 2 - No URL**:
+
+Remove the URL row entirely:
+```
+| Dynamic Cards |
+|---------------|
+```
+
+Save and refresh localhost. You should see: "Error: No data source specified".
+
+**Test 3 - Restore Working State**:
+
+Change it back to your working speakers.json:
+```
+| Dynamic Cards |
+|---------------|
+| /drafts/jsmith/speakers.json |
+```
+
+Save and refresh. Speaker cards should display again.
+
+**Why test errors?** Network can fail, URLs can break, data can be malformed. Your block should always show helpful feedback to users.
+
+---
+
+## Step 10: Optional - Understanding Worker Endpoints
+
+Workers provide a powerful middleware layer between data sources and blocks.
+
+**Why use Workers?**
+- **Security**: Keep API keys server-side (never expose in client code)
+- **Transformation**: Filter, sort, aggregate, or enrich data server-side
+- **Combination**: Merge multiple data sources into one response
+- **Caching**: Cache expensive API calls at the edge
+- **Rate Limiting**: Protect external APIs from high traffic
+
+**Example Worker flow**:
+```
+1. Block fetches: https://worker.example.com/speakers
+2. Worker fetches speakers.json internally
+3. Worker adds computed fields (e.g., initials for avatars)
+4. Worker sorts alphabetically by name
+5. Worker filters by session category
+6. Worker returns transformed JSON
+7. Block renders without knowing about transformations
+```
+
+**Example Worker code** (Cloudflare Workers):
+```javascript
+export default {
+  async fetch(request) {
+    // Fetch the speakers sheet
+    const sheetUrl = 'https://main--nycmasterclass--cloudadoption.aem.page/speakers.json';
+    const response = await fetch(sheetUrl);
+    const data = await response.json();
+
+    // Transform: Add initials, sort alphabetically
+    data.data = data.data
+      .map(speaker => ({
+        ...speaker,
+        Initials: speaker.Name.split(' ').map(n => n[0]).join('')
+      }))
+      .sort((a, b) => a.Name.localeCompare(b.Name));
+
+    return new Response(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=300' // Cache for 5 minutes
+      }
+    });
+  }
+}
+```
+
+**Key benefit**: To use a Worker instead of direct sheet access, authors just change the URL in the block:
+```
+| Dynamic Cards |
+|---------------|
+| https://worker.example.com/speakers |
+```
+
+No block code changes needed! The JSON structure stays the same.
+
+**When you'll use this**: Exercise 6 covers form submissions to Slack via Workers. You'll deploy a real Worker endpoint then.
+
+**Reference**: [Integrations - Edge Workers](https://www.aem.live/developer/integrations)
+
+---
+
+## Step 11: Optional - Apply to Real Speakers Page
+
+Now that your dynamic-cards block is working, you can see how it would complete the real `/speakers` page.
+
+**What you'd do** (don't actually do this - just understand the pattern):
+
+1. **In DA.live**, open `/speakers` (the main speakers page with placeholder)
+2. Replace placeholder content with:
+```
+| Dynamic Cards |
+|---------------|
+| /speakers.json |
+```
+3. Save and preview
+4. The placeholder page becomes a dynamic speaker directory
+
+**Why we don't do this now**: With 50 participants, we'd all be editing the same page simultaneously (conflicts!).
+
+**In real projects**: You'd update the production page once your block is tested and committed to main branch.
+
+**Key insight**: The same dynamic-cards block works for:
+- Your personal test page (`/drafts/jsmith/speakers-test`)
+- The real speakers page (`/speakers`)
+- Any other page that needs to display JSON data as cards
+
+This is the power of reusable blocks with dynamic data sources.
+
+---
+
+## Performance Considerations
+
+**Loading states**: Always show feedback during async operations
+```javascript
+block.innerHTML = '<p class="loading">Loading...</p>';
+```
+
+**Error handling**: Network requests can fail
+```javascript
+try {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error();
+} catch (error) {
+  // Show error to user
+}
+```
+
+**Lazy loading images**: Use `loading="lazy"` for images below fold
+```html
+<img loading="lazy" src="...">
+```
+
+**When to use dynamic blocks**:
+- Large datasets (50+ items)
+- Frequently updated content
+- Shared across multiple pages
+- Data from external systems
+
+**When NOT to use**:
+- Small, static content (use regular blocks)
+- Above-the-fold content (impacts LCP)
+- Rarely changing content
+
+---
+
+## Real-World Applications
+
+**Use Case 1: Featured Articles from Query Index**
+- Fetch from query-index.json (all published pages)
+- Filter by tags (e.g., "featured") or recent publish date
+- Display 3 most recent articles tagged "featured"
+- Same dynamic-cards block, different data source
+
+**Example**:
+```
+| Dynamic Cards |
+|---------------|
+| https://main--yoursite--owner.aem.live/query-index.json?tags=featured&limit=3 |
+```
+
+Note: In Exercise 4, you'll learn how query-index.json works and build a dedicated block for it.
+
+**Use Case 2: E-commerce Product Catalog**
+- Product data in database
+- Worker fetches, filters by category, adds pricing
+- Block displays with live inventory status
+
+**Use Case 3: News/Blog Feeds**
+- Articles in CMS
+- Worker aggregates from multiple sources
+- Block displays with filtering by topic
+
+---
+
+## Key Takeaways
+
+- Sheets automatically convert to JSON endpoints in DA.live
+- Dynamic blocks fetch data instead of decorating authored content
+- Workers provide secure middleware for data transformation
+- Always handle loading states and errors
+- Same JSON structure as Sheets - reusable patterns
+- Performance: consider placement (below fold preferred)
+
+---
+
+## Verification Checklist
+
+- [ ] Copied speakers.json to personal drafts folder
+- [ ] Added 1-2 personal speaker entries (yourself + teammate)
+- [ ] Verified JSON endpoint works on localhost
+- [ ] Created dynamic-cards block files (JS + CSS)
+- [ ] Created test page with dynamic-cards block
+- [ ] Block displays all speakers (Adobe experts + your entries)
+- [ ] Tested editing sheet data - changes reflected on refresh
+- [ ] Tested error handling (invalid URL, no URL, restore)
+- [ ] Understand when to use Workers vs direct sheet fetch
+- [ ] Committed and pushed block code changes
+
+---
+
+## References
+
+- [Integrations](https://www.aem.live/developer/integrations)
+- [DA.live Sheets](https://docs.da.live/administrators/guides/sheets)
+- [DA.live API](https://docs.da.live/developers/api)
+
+---
+
+## Next Exercise
+
+**Exercise 4**: Page List with Query Index - You'll build a block that queries published pages using EDS's built-in query index, learning how to create dynamic page listings with filtering and sorting.
