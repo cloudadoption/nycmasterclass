@@ -179,7 +179,7 @@ main .section.event-container:has(> .event-wrapper ~ .event-wrapper) .event .eve
    ------------------------------------------------ */
 @media (width >= 900px) {
   main .section.event-container:has(> .event-wrapper ~ .event-wrapper) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); 
   }
 
   main .section.event-container:has(> .event-wrapper ~ .event-wrapper) .event .event-image {
