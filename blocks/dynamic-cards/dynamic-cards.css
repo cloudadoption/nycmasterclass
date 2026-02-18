@@ -60,14 +60,14 @@
   margin-top: 12px;
 }
 
-.loading,
-.error {
+.dynamic-cards .loading,
+.dynamic-cards .error {
   padding: 40px 20px;
   text-align: center;
   color: var(--muted);
 }
 
-.error {
+.dynamic-cards .error {
   color: #d93025;
   background: rgb(217 48 37 / 10%);
   border-radius: 8px;

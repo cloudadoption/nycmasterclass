@@ -1,6 +1,6 @@
-# Exercise 4: Page List Block with Query Index
+# Exercise 4: Extend Search Block from Block Collection
 
-**Duration**: 20 minutes
+**Duration**: 25 minutes
 
 ---
 
@@ -11,52 +11,39 @@
 Required:
 - On your feature branch (`jsmith` - your first initial + last name)
 - Local dev server running at `http://localhost:3000`
-- Exercises 1-3 completed
-- **query-index.json available** (instructor will have published main branch content)
-
-**Verify query-index.json is available**:
-
-Open in browser:
-```
-http://localhost:3000/query-index.json
-```
-
-**You should see**: JSON with all published sessions and labs (15+ pages) including their metadata (title, description, category, tags, session-time, etc.)
-
-**If you see 404**: Run `git pull origin main` to get the latest published content, then restart your dev server (`aem up`).
+- Exercises 1–3 completed
+- Exercise 1 page published to `/labs/jsmith/` (done at end of Exercise 3)
+- DA.live access
 
 ---
 
 ## What You'll Learn
 
-- How the query index works in EDS
-- How to configure custom metadata indexing with `helix-query.yaml`
-- How to build a block that fetches and displays pages dynamically
-- How to filter and sort pages using metadata
+- How the AEM Block Collection provides reusable reference blocks
+- How to extend a Block Collection block for your project
+- How `query-index.json` works as a search data source
+- How live search (input event, min 3 chars) differs from form-submit search
+- How `<mark>` highlighting works for matched terms
+- How URL state persistence works via `?q=` params
+- How block composition works — Search imports and calls Cards' `decorate()` to render results
 
 ---
 
 ## Why This Matters
 
-The query index combined with **auto-blocking** solves a common problem: **How do you build dynamic page listings without authors creating blocks?**
+**The AEM Block Collection** (`github.com/adobe/aem-block-collection`) is a library of production-ready reference blocks maintained by Adobe. It is separate from the boilerplate — blocks are not included automatically, but you can extend them for your project.
 
 **The pattern**:
-- Authors organize pages naturally in folders (`/developers/`, `/blog/`, `/events/`)
-- Authors set page metadata (template, category)
-- Developer writes auto-blocking logic in `scripts.js`
-- Block automatically appears on pages based on rules
-- Block shows relevant content based on page context
+- Find a Block Collection block that is close to what you need
+- Copy it into your project as a starting point
+- Adapt it: remove dependencies your project doesn't have, restyle to match your theme, configure for your data source
 
-**Example**: A page at `/developers/getting-started` automatically shows latest articles from `/developers/**` - no manual block creation needed.
+**Why extend rather than write from scratch?**
+- Production patterns already handled (accessibility, ARIA, keyboard nav, URL state)
+- Faster to adapt than to reinvent
+- Your adaptations are explicit and reviewable
 
-**The contract**:
-- **Authors**: Organize pages logically, set metadata
-- **Developers**: Write auto-blocking rules, handle filtering
-
-**Common use cases**:
-- Blog category pages automatically showing articles in that category
-- Landing pages automatically showing featured content
-- Section pages showing latest content from that section
+**The search block you'll extend** uses `query-index.json` — a flat JSON file EDS pre-generates at publish time from all indexed pages. No runtime database, no third-party search service.
 
 ---
 
@@ -64,345 +51,590 @@ The query index combined with **auto-blocking** solves a common problem: **How d
 
 ```
 1. Author publishes page to .aem.live
-2. EDS extracts metadata using CSS selectors
-3. Data stored in query-index.json
-4. Your block fetches and renders the data
+2. EDS extracts metadata using CSS selectors defined in the index config
+3. Data stored in /query-index.json
+4. Your block fetches and filters the data client-side
 ```
 
-**Default indexed fields**: path, title, description, image, lastModified
+**Important**: Only **published** pages (`.aem.live`) are indexed — not preview (`.aem.page`) or drafts.
 
-**Custom fields**: Configure in `helix-query.yaml` using CSS selectors
+### This project's index configuration
 
-**Important**: Only published pages (`.aem.live`) are indexed, not preview (`.aem.page`)
+The index for this site is configured with the following `query.yaml`:
+
+```yaml
+version: 1
+
+indices:
+  default:
+    include:
+      - /sessions/**
+      - /labs/**
+    exclude:
+      - /drafts/**
+    target: /query-index.json
+    properties:
+      speaker-name:
+        select: head > meta[name="speaker-name"]
+        value: attribute(el, "content")
+      instructor:
+        select: head > meta[name="instructor"]
+        value: attribute(el, "content")
+      category:
+        select: head > meta[name="category"]
+        value: attribute(el, "content")
+      tags:
+        select: head > meta[name="tags"]
+        value: attribute(el, "content")
+      published-date:
+        select: head > meta[name="published-date"]
+        value: parseTimestamp(attribute(el, "content"), "MM/DD/YYYY")
+      session-level:
+        select: head > meta[name="session-level"]
+        value: attribute(el, "content")
+      session-time:
+        select: head > meta[name="session-time"]
+        value: attribute(el, "content")
+      difficulty-level:
+        select: head > meta[name="difficulty-level"]
+        value: attribute(el, "content")
+      duration:
+        select: head > meta[name="duration"]
+        value: attribute(el, "content")
+```
+
+**What this tells you**:
+- **Only `/sessions/**` and `/labs/**` are indexed** — other paths (including `/drafts/**`) are excluded
+- **Custom properties** are extracted from `<meta>` tags in the page `<head>` — these are the same metadata fields you set in Exercise 1
+- **`parseTimestamp`** converts the `MM/DD/YYYY` date string authors write into a Unix timestamp for sorting
+- The built-in fields (`path`, `title`, `description`, `image`, `lastModified`) are always included automatically
 
 **Reference**: [Indexing Reference](https://www.aem.live/docs/indexing-reference)
 
 ---
 
-## Understanding Query Index Structure
+## Step 1: Verify query-index.json
 
-The query index has the same JSON structure as Sheets (from Exercise 3):
+Verify your `/labs/jsmith/` page from the end of Exercise 3 appears in the index:
 
-```json
-{
-  "total": 10,
-  "offset": 0,
-  "limit": 10,
-  "data": [
-    {
-      "path": "/events/session-1",
-      "title": "Building Blocks Workshop",
-      "description": "Learn to build custom blocks",
-      "tags": "development,blocks",
-      "category": "workshop",
-      "publishedDate": "1739836800",
-      "lastModified": "1739836800"
-    }
-  ]
-}
-```
-
-**Key insight**: Same structure as Sheets means you can reuse the same block patterns!
-
----
-
-## Understanding the Available Data
-
-The query-index.json already contains all published sessions and labs from the NYC Masterclass site.
-
-**Inspect the data** by opening in browser:
 ```
 http://localhost:3000/query-index.json
 ```
 
-**You'll see** 15+ pages including:
-- `/sessions/what-is-edge-delivery`
-- `/sessions/architecture-deep-dive`
-- `/sessions/authoring-approaches`
-- `/labs/authoring-first-page`
-- `/labs/block-development`
-- And more...
+Look for your `/labs/jsmith/my-session` path in the `data` array.
 
-**Metadata included**:
-- `path`, `title`, `description`
-- `category` (technical, authoring, development, configuration)
-- `tags` (authoring, blocks, development, etc.)
-- `session-time` or `lab-time`
-- `session-level` or `difficulty`
-- `lastModified`, `published-date`
-
-**Browse the full index** using the Index Admin Tool:
-1. Go to https://tools.aem.live/tools/index-admin
-2. Enter: `cloudadoption/nycmasterclass/main`
-3. View all indexed pages and their metadata fields
-
-**Key principle**: Only **published** pages (on `.aem.live`) appear in query-index.json. Preview-only pages won't show up.
+> **Note**: Index updates can take a few minutes after publishing. If you don't see your page yet, continue — it will be there by the time you test.
 
 ---
 
-## Step 1: Create Block Files
+## Step 2: Look at the Block Collection Reference
+
+The search block we're extending lives at:
+
+```
+https://github.com/adobe/aem-block-collection/tree/main/blocks/search
+```
+
+Open it and take a quick look. The Block Collection version has two variants:
+- **Default** — full search box with results rendered as cards
+- **Minimal** — search box only (results handled externally)
+
+**What we're adapting for this project**:
+- Remove `fetchPlaceholders` dependency — this project doesn't have `scripts/placeholders.js`, so we'll hardcode the strings
+- Remove the minimal variant — not needed here
+- Render results via the **Cards block** (block composition) instead of custom card markup
+- Restyle CSS to match the masterclass dark theme
+- Configure default data source to `/query-index.json`
+- Expand search fields to include `instructor`, `speaker-name`, `category`, and `tags`
+
+---
+
+## Step 3: Create Block Files
 
 In your code editor, create:
 
 ```
 blocks/
-  page-list/
-    page-list.js
-    page-list.css
+  search/
+    search.js
+    search.css
 ```
 
 ---
 
-## Step 2: Implement Block JavaScript
+## Step 4: Implement JavaScript
 
-**File**: `blocks/page-list/page-list.js`
+**File**: `blocks/search/search.js`
 
 Copy this code:
 
 ```javascript
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import {
+  createOptimizedPicture,
+  decorateIcons,
+  loadCSS,
+} from '../../scripts/aem.js';
+import decorateCards from '../cards/cards.js';
 
 /**
- * Displays pages from query index as filterable cards
+ * Search block — extended from the AEM Block Collection search block.
+ * https://github.com/adobe/aem-block-collection/tree/main/blocks/search
  *
- * Auto-blocking will inject this block with configuration.
- * Config is passed via data attributes or block content.
+ * Adaptations for this project:
+ * - Removed fetchPlaceholders dependency (strings hardcoded below)
+ * - Removed minimal variant
+ * - Styled to match masterclass dark theme
+ * - Results rendered via Cards block (block composition pattern)
+ *
+ * Content model:
+ *   | Search |
+ *   |--------|
+ *   | /query-index.json |   ← optional: URL to query-index. Defaults to /query-index.json
  */
-export default async function decorate(block) {
-  // Extract configuration from block content
-  const rows = [...block.children];
-  const pathFilter = rows[0]?.textContent.trim() || '';
-  const secondRow = rows[1]?.textContent.trim() || '';
-  const thirdRow = rows[2]?.textContent.trim() || '';
-  
-  // Determine if second row is category or limit
-  const isNumeric = !Number.isNaN(parseInt(secondRow, 10));
-  const categoryFilter = !isNumeric ? secondRow : '';
-  const limit = parseInt(isNumeric ? secondRow : thirdRow || '10', 10);
 
-  block.innerHTML = '<p>Loading pages...</p>';
+const SEARCH_PLACEHOLDER = 'Search sessions and labs...';
+const NO_RESULTS_TEXT = 'No results found.';
+const MIN_SEARCH_LENGTH = 3;
 
-  try {
-    const response = await fetch('/query-index.json');
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+const searchParams = new URLSearchParams(window.location.search);
+let cssLoaded = false;
 
-    const json = await response.json();
-    let pages = json.data;
+function ensureCardsCSS() {
+  if (!cssLoaded) {
+    const base = window.hlx?.codeBasePath || '';
+    loadCSS(`${base}/blocks/cards/cards.css`);
+    cssLoaded = true;
+  }
+}
 
-    // Filter by path (e.g., show only /sessions/** pages)
-    if (pathFilter) {
-      pages = pages.filter((page) => page.path.startsWith(pathFilter));
-    }
+function highlightTextElements(terms, elements) {
+  elements.forEach((element) => {
+    if (!element || !element.textContent) return;
 
-    // Filter by category
-    if (categoryFilter) {
-      pages = pages.filter(
-        (page) => page.category && page.category.toLowerCase() === categoryFilter.toLowerCase()
-      );
-    }
-
-    // Sort by date (newest first)
-    pages.sort((a, b) => {
-      const dateA = a.publishedDate ? parseInt(a.publishedDate, 10) : 0;
-      const dateB = b.publishedDate ? parseInt(b.publishedDate, 10) : 0;
-      return dateB - dateA;
+    const matches = [];
+    const { textContent } = element;
+    terms.forEach((term) => {
+      let start = 0;
+      let offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
+      while (offset >= 0) {
+        matches.push({ offset, term: textContent.substring(offset, offset + term.length) });
+        start = offset + term.length;
+        offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
+      }
     });
 
-    // Apply limit
-    pages = pages.slice(0, limit);
+    if (!matches.length) return;
 
-    block.innerHTML = '';
+    matches.sort((a, b) => a.offset - b.offset);
+    let currentIndex = 0;
+    const fragment = matches.reduce((acc, { offset, term }) => {
+      if (offset < currentIndex) return acc;
+      const textBefore = textContent.substring(currentIndex, offset);
+      if (textBefore) acc.appendChild(document.createTextNode(textBefore));
+      const markedTerm = document.createElement('mark');
+      markedTerm.textContent = term;
+      acc.appendChild(markedTerm);
+      currentIndex = offset + term.length;
+      return acc;
+    }, document.createDocumentFragment());
+    const textAfter = textContent.substring(currentIndex);
+    if (textAfter) fragment.appendChild(document.createTextNode(textAfter));
+    element.replaceChildren(fragment);
+  });
+}
 
-    if (pages.length === 0) {
-      block.innerHTML = '<p>No pages found.</p>';
+export async function fetchData(source) {
+  const response = await fetch(source);
+  if (!response.ok) {
+    // eslint-disable-next-line no-console
+    console.error('error loading API response', response);
+    return null;
+  }
+  const json = await response.json();
+  if (!json) {
+    // eslint-disable-next-line no-console
+    console.error('empty API response', source);
+    return null;
+  }
+  const data = json.data ?? null;
+  return Array.isArray(data) ? data : null;
+}
+
+/**
+ * Builds the pre-decoration DOM structure that cards.decorate() expects.
+ * Each result becomes one row:
+ *   div (row = one card)
+ *     div (image column — only if result.image exists)
+ *       picture
+ *     div (body column)
+ *       p > strong > a[href]  — title link (highlighted)
+ *       p                     — description (highlighted)
+ */
+function buildCardsBlock(results, searchTerms) {
+  const cardsDiv = document.createElement('div');
+  cardsDiv.className = 'cards';
+
+  results.forEach((result) => {
+    const row = document.createElement('div');
+
+    if (result.image) {
+      const imageDiv = document.createElement('div');
+      const pic = createOptimizedPicture(result.image, result.title || '', false, [{ width: '750' }]);
+      imageDiv.append(pic);
+      row.append(imageDiv);
+    }
+
+    const body = document.createElement('div');
+
+    const titleP = document.createElement('p');
+    const strong = document.createElement('strong');
+    const link = document.createElement('a');
+    link.href = result.path;
+    link.textContent = result.title || result.path;
+    highlightTextElements(searchTerms, [link]);
+    strong.append(link);
+    titleP.append(strong);
+    body.append(titleP);
+
+    if (result.description) {
+      const descP = document.createElement('p');
+      descP.textContent = result.description;
+      highlightTextElements(searchTerms, [descP]);
+      body.append(descP);
+    }
+
+    row.append(body);
+    cardsDiv.append(row);
+  });
+
+  return cardsDiv;
+}
+
+function clearSearchResults(block) {
+  block.querySelector('.search-results').replaceChildren();
+}
+
+function clearSearch(block) {
+  clearSearchResults(block);
+  if (window.history.replaceState) {
+    const url = new URL(window.location.href);
+    url.search = '';
+    searchParams.delete('q');
+    window.history.replaceState({}, '', url.toString());
+  }
+}
+
+function compareFound(hit1, hit2) {
+  return hit1.minIdx - hit2.minIdx;
+}
+
+function filterData(searchTerms, data) {
+  const foundInHeader = [];
+  const foundInMeta = [];
+
+  data.forEach((result) => {
+    let minIdx = -1;
+
+    searchTerms.forEach((term) => {
+      const idx = (result.header || result.title || '').toLowerCase().indexOf(term);
+      if (idx < 0) return;
+      if (minIdx < idx) minIdx = idx;
+    });
+
+    if (minIdx >= 0) {
+      foundInHeader.push({ minIdx, result });
       return;
     }
 
-    // Build cards
-    const ul = document.createElement('ul');
-    ul.className = 'page-list-cards';
-
-    pages.forEach((page) => {
-      const li = document.createElement('li');
-      li.className = 'page-card';
-
-      let imageHTML = '';
-      if (page.image) {
-        const pic = createOptimizedPicture(page.image, page.title, false, [{ width: '400' }]);
-        imageHTML = `<div class="page-card-image">${pic.outerHTML}</div>`;
-      }
-
-      let tagsHTML = '';
-      if (page.tags) {
-        const tagList = page.tags
-          .split(',')
-          .map((t) => `<span class="tag">${t.trim()}</span>`)
-          .join('');
-        tagsHTML = `<div class="page-card-tags">${tagList}</div>`;
-      }
-
-      let metaHTML = '';
-      // For sessions: show speaker and time
-      if (page['speaker-name'] && page['session-time']) {
-        metaHTML = `<p class="page-card-meta">${page['speaker-name']} • ${page['session-time']}</p>`;
-      }
-      // For labs: show instructor and time
-      if (page['instructor-name'] && page['lab-time']) {
-        metaHTML = `<p class="page-card-meta">${page['instructor-name']} • ${page['lab-time']}</p>`;
-      }
-
-      li.innerHTML = `
-        ${imageHTML}
-        <div class="page-card-body">
-          <h3><a href="${page.path}">${page.title}</a></h3>
-          ${page.description ? `<p class="page-card-description">${page.description}</p>` : ''}
-          ${tagsHTML}
-          ${metaHTML}
-        </div>
-      `;
-
-      ul.append(li);
+    const pathSuffix = (result.path || '').split('/').pop() || '';
+    const metaContents = [
+      result.title,
+      result.description,
+      result.instructor,
+      result['speaker-name'],
+      result.category,
+      result.tags,
+      pathSuffix,
+    ].filter(Boolean).join(' ').toLowerCase();
+    searchTerms.forEach((term) => {
+      const idx = metaContents.indexOf(term);
+      if (idx < 0) return;
+      if (minIdx < idx) minIdx = idx;
     });
 
-    block.append(ul);
-  } catch (error) {
-    block.innerHTML = `<p class="error">Error loading pages: ${error.message}</p>`;
-    console.error('Page List error:', error);
+    if (minIdx >= 0) foundInMeta.push({ minIdx, result });
+  });
+
+  return [
+    ...foundInHeader.sort(compareFound),
+    ...foundInMeta.sort(compareFound),
+  ].map((item) => item.result);
+}
+
+async function renderResults(block, config, filteredData, searchTerms) {
+  clearSearchResults(block);
+  const searchResults = block.querySelector('.search-results');
+
+  if (filteredData.length) {
+    ensureCardsCSS();
+    const cardsDiv = buildCardsBlock(filteredData, searchTerms);
+    decorateCards(cardsDiv);
+    searchResults.append(cardsDiv);
+  } else {
+    const noResultsMessage = document.createElement('p');
+    noResultsMessage.className = 'search-status';
+    noResultsMessage.textContent = NO_RESULTS_TEXT;
+    searchResults.append(noResultsMessage);
   }
+}
+
+async function handleSearch(e, block, config) {
+  const searchValue = e.target.value;
+  searchParams.set('q', searchValue);
+  if (window.history.replaceState) {
+    const url = new URL(window.location.href);
+    url.search = searchParams.toString();
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  if (searchValue.length < MIN_SEARCH_LENGTH) {
+    clearSearch(block);
+    return;
+  }
+
+  const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
+  const data = await fetchData(config.source);
+  if (data) await renderResults(block, config, filterData(searchTerms, data), searchTerms);
+}
+
+function searchResultsContainer() {
+  const results = document.createElement('div');
+  results.className = 'search-results';
+  results.setAttribute('role', 'status');
+  results.setAttribute('aria-live', 'polite');
+  results.setAttribute('aria-atomic', true);
+  return results;
+}
+
+function searchBox(block, config) {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'search');
+  input.className = 'search-input';
+  input.placeholder = SEARCH_PLACEHOLDER;
+  input.setAttribute('aria-label', SEARCH_PLACEHOLDER);
+
+  input.addEventListener('input', (e) => handleSearch(e, block, config));
+  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') clearSearch(block); });
+
+  const icon = document.createElement('span');
+  icon.classList.add('icon', 'icon-search');
+
+  const box = document.createElement('div');
+  box.classList.add('search-box');
+  box.append(icon, input);
+  return box;
+}
+
+/**
+ * loads and decorates the block
+ * @param {Element} block The block element
+ */
+export default async function decorate(block) {
+  const source = block.querySelector('a[href]')?.href || '/query-index.json';
+  block.replaceChildren(
+    searchBox(block, { source }),
+    searchResultsContainer(),
+  );
+
+  if (searchParams.get('q')) {
+    const input = block.querySelector('input');
+    input.value = searchParams.get('q');
+    input.dispatchEvent(new Event('input'));
+  }
+
+  decorateIcons(block);
 }
 ```
 
-**What this does**:
-- Extracts configuration from authored block content (path, category, limit)
-- Fetches `/query-index.json` from the server
-- Filters by path (e.g., only `/sessions/**` pages)
-- Optionally filters by category
-- Sorts by published date (newest first)
-- Limits results
-- Generates card HTML for each page with metadata
-- Shows speaker/instructor info if available
+**What you just copied — key adaptations from Block Collection**:
 
-**Key concept**: Block reads configuration directly from the table rows that authors create. Simple, flexible, and testable.
+- **`ensureCardsCSS()`** — loads `cards.css` on demand the first time results render. The Cards block stylesheet may not be present if there's no Cards block on the page, so we load it ourselves
+- **`buildCardsBlock(results, searchTerms)`** — block composition: builds the pre-decoration DOM that `cards.decorate()` expects, with `<mark>` highlighting applied to titles and descriptions *before* Cards transforms the DOM (marks survive the transformation)
+- **`filterData(searchTerms, data)`** — two-pass ranking: title/header matches rank first, then `title + description + instructor + speaker-name + category + tags + path` matches. Custom fields from the index config are all searchable
+- **`handleSearch()`** — fires on every `input` event (live search, no submit button). Updates `?q=` URL param so searches are bookmarkable. Skips fetch for queries under 3 characters
+- **`decorate(block)`** — reads optional data source URL from the block's first link, defaults to `/query-index.json`. Restores search from `?q=` param on page load
 
-**Reference**: [Query Index Documentation](https://www.aem.live/developer/indexing)
+**Note on `innerHTML`**: You'll notice this code never uses `innerHTML` to insert user-controlled content. `highlightTextElements` uses `DocumentFragment` and `createElement` instead — this prevents XSS vulnerabilities.
 
 ---
 
-## Step 3: Implement Styles
+## Step 5: Implement Styles
 
-**File**: `blocks/page-list/page-list.css`
+**File**: `blocks/search/search.css`
 
 Copy this code:
 
 ```css
-.page-list-cards {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Search block — extended from AEM Block Collection */
+
+.search .search-box {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 32px;
+  grid-template-columns: auto 1fr;
+  gap: 1ch;
+  align-items: center;
 }
 
-.page-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--background-color);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
+.search .search-box .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
 }
 
-.page-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+.search .search-box .icon img {
+  filter: invert(1) opacity(0.5);
 }
 
-.page-card-image {
-  line-height: 0;
-}
-
-.page-card-image img {
+.search .search-box input {
+  box-sizing: border-box;
+  display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 5%);
+  color: var(--ink);
+  font-size: var(--body-font-size-s);
+  font-family: var(--body-font-family);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.page-card-body {
-  padding: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.search .search-box input::placeholder {
+  color: var(--muted);
 }
 
-.page-card-body h3 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
-  line-height: 1.3;
+.search .search-box input:focus {
+  border-color: var(--brand-1);
+  background: rgb(255 255 255 / 8%);
 }
 
-.page-card-body h3 a {
-  color: var(--text-color);
-  text-decoration: none;
+/* search results wrapper — Cards block handles individual card styles */
+.search .search-results {
+  display: block;
+  margin-top: 2rem;
 }
 
-.page-card-body h3 a:hover {
-  text-decoration: underline;
+/* ensure cards grid is visible when nested in search */
+.search .search-results .cards {
+  display: block;
 }
 
-.page-card-description {
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0 0 12px 0;
-  color: #666;
-  flex: 1;
+/* status messages (no results, errors) */
+.search .search-status {
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--body-font-size-s);
+  padding: 2rem 0;
 }
 
-.page-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0;
+/* highlight matched terms */
+.search mark {
+  background: transparent;
+  color: var(--brand-1);
+  font-weight: 700;
 }
 
-.page-card-tags .tag {
-  display: inline-block;
-  padding: 4px 12px;
-  background: #f0f0f0;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #333;
-}
-
-.page-card-meta {
-  font-size: 13px;
-  color: #999;
-  margin: 8px 0 0 0;
-  font-weight: 500;
-}
-
-@media (max-width: 600px) {
-  .page-list-cards {
-    grid-template-columns: 1fr;
+@media (width >= 600px) {
+  .search .search-box input {
+    font-size: var(--body-font-size-m);
+    padding: 0.875rem 1.25rem;
   }
 }
 ```
 
+**Key points**:
+- Search box uses CSS Grid (`auto 1fr`) — icon stays fixed width, input fills remaining space
+- **No card styles here** — because the Cards block (`cards.css`) handles all card layout, dark backgrounds, hover effects. This is the benefit of block composition: no duplication
+- `.search-status` — centered muted text for "No results found."
+- `mark` styling overrides the browser default (yellow highlight) with the site brand color
+
 ---
 
-## Step 4: Commit Your Changes
+## Step 6: Create Test Page in DA.live
+
+In [DA.live](https://da.live), create page: `/drafts/jsmith/search-test` (use your name)
+
+Add this content:
+
+```
+# Search
+
+| Search |
+|--------|
+| /query-index.json |
+```
+
+**What you're authoring**:
+- Block name: `Search`
+- Row 1: URL of the data source (`/query-index.json`)
+
+The URL row is optional — if omitted, the block defaults to `/query-index.json`. Authors can point the block at any JSON endpoint that returns `{ data: [...] }`.
+
+**Save** the page in DA.live.
+
+---
+
+## Step 7: Test the Search Block
+
+Open: `http://localhost:3000/drafts/jsmith/search-test`
+
+**You should see**:
+- A search icon + input field with placeholder "Search sessions and labs..."
+- No results until you type at least 3 characters
+
+**Run these searches**:
+
+| Query | Expected |
+|-------|----------|
+| `session` | Pages with "session" in title/description/tags |
+| `lab` | Pages with "lab" in title/description |
+| An instructor name | Pages where that instructor is listed |
+| A speaker name | Pages where that speaker is listed |
+| A category (e.g. `infrastructure`) | Pages tagged with that category |
+| Your session title (or part of it) | Your `/labs/jsmith/` page |
+| `xyz123` | No results message |
+
+Results render as Cards block cards — same dark cards with hover effect you saw in Exercise 2.
+
+**Check URL state**: Type a query and look at the browser URL bar — you should see `?q=yourquery`. Copy that URL, open a new tab, paste it — the search runs automatically on load.
+
+**Escape key**: Press Escape while the input is focused to clear the search and results.
+
+---
+
+## Step 8: Test Edge Cases
+
+| Scenario | Expected behavior |
+|----------|-------------------|
+| Query shorter than 3 chars | Results cleared, no fetch |
+| Query with no matches (`xyz123`) | "No results found." |
+| Escape key | Results cleared, URL param removed |
+| Page load with `?q=session` in URL | Search runs automatically |
+
+---
+
+## Step 9: Commit Your Changes
 
 ```bash
-# Run linting
+# Lint before committing
 npm run lint
 
-# Add changes
-git add blocks/page-list/
+# Stage changes
+git add blocks/search/
 
 # Commit
-git commit -m "feat: add page-list block for query index"
+git commit -m "feat: extend search block from block collection"
 
 # Push
 git push origin jsmith
@@ -412,265 +644,39 @@ Replace `jsmith` with your branch name.
 
 ---
 
-## Step 5: Create Test Page - All Sessions
-
-**In DA.live**, create page: `/drafts/jsmith/sessions-list` (use your name)
-
-Add this content:
-
-```
-# All Sessions
-
-Explore all masterclass sessions organized by topic.
-
-| Page List |
-|-----------|
-| /sessions/ |
-| 10 |
-```
-
-**What you're doing**:
-- Row 1: Path to filter by (`/sessions/`)
-- Row 2: Maximum number of results to show (`10`)
-
-**Save** the page in DA.live.
-
----
-
-## Step 6: Test with Sessions Data
-
-**Open**: `http://localhost:3000/drafts/jsmith/sessions-list` (use your name)
-
-**You should see**:
-- Your heading "All Sessions"
-- 7 session cards displaying automatically
-- Each card shows:
-  - Session title (linked to session page)
-  - Description
-  - Speaker name
-  - Session time and level
-  - Category and tags
-
-**What happened**:
-1. Block read configuration from authored content (`/sessions/`, limit `10`)
-2. Fetched `query-index.json` from localhost
-3. Filtered to pages where `path` starts with `/sessions/`
-4. Sorted by published date (newest first)
-5. Limited to 10 results (only 7 exist)
-6. Rendered as cards
-
-**Verify the data**:
-- Click a session title link - should navigate to that session page
-- Check that tags display correctly
-- Verify speaker names show
-
----
-
-## Step 7: Test with Labs Data
-
-Create another test page: `/drafts/jsmith/labs-list` (use your name)
-
-```
-# All Labs
-
-Hands-on labs to build your EDS skills.
-
-| Page List |
-|-----------|
-| /labs/ |
-| 10 |
-```
-
-**Save** and open: `http://localhost:3000/drafts/jsmith/labs-list`
-
-**You should see**: 8 lab cards from `/labs/` path!
-
-**Key insight**: Same block, different configuration → different filtered results. The block is reusable for any path.
-
----
-
-## Step 8: Test Filtering by Category
-
-Create a test page for only "development" content: `/drafts/jsmith/dev-content`
-
-```
-# Development Content
-
-Sessions and labs focused on building with EDS.
-
-| Page List |
-|-----------|
-| / |
-| development |
-| 10 |
-```
-
-**What you're doing**:
-- Row 1: Path filter (`/` = all paths)
-- Row 2: Category filter (`development`)
-- Row 3: Limit (`10`)
-
-**Save** and open: `http://localhost:3000/drafts/jsmith/dev-content`
-
-**You should see**: Only pages with `category: development` from both sessions and labs.
-
-**Try other categories**:
-- `technical` - Show only technical sessions
-- `authoring` - Show only authoring content
-- `configuration` - Show only configuration labs
-
----
-
-## Step 9: Understanding Auto-Blocking (Optional)
-
-The current exercise uses manually authored Page List blocks. In production, you'd use **auto-blocking** to inject blocks automatically.
-
-**Auto-blocking pattern**:
-```javascript
-// In scripts.js buildAutoBlocks function
-const template = getMetadata('template');
-if (template === 'section-landing') {
-  // Auto-inject page-list block
-  // Determine path from current URL
-  // No manual block authoring needed
-}
-```
-
-**Why auto-blocking?**
-- Authors just set metadata, no block authoring
-- Block automatically shows relevant content
-- Consistent pattern across all section pages
-
-**When you'd use this**:
-- Blog category pages (all have same structure)
-- Product category pages
-- Section landing pages
-- Any repeated pattern
-
-**For this exercise**: We're focusing on query index concepts, not auto-blocking implementation. You'll see auto-blocking patterns demonstrated by instructors later.
-
----
-
-## Configuring Custom Metadata
-
-### Adding Custom Fields to Index
-
-To index custom metadata fields, create `helix-query.yaml` at repo root:
-
-```yaml
-indices:
-  default:
-    include:
-      - /events/**
-    exclude:
-      - /drafts/**
-    target: /query-index.json
-    properties:
-      author:
-        select: head > meta[name="author"]
-        value: attribute(el, "content")
-      category:
-        select: head > meta[name="category"]
-        value: attribute(el, "content")
-      tags:
-        select: head > meta[name="tags"]
-        value: attribute(el, "content")
-      publishedDate:
-        select: head > meta[name="published-date"]
-        value: parseTimestamp(attribute(el, "content"), "MM/DD/YYYY")
-```
-
-**Key concepts**:
-- `select`: CSS selector to find the element in HTML
-- `value`: Function to extract the value (attribute, textContent, etc.)
-- `include`/`exclude`: Control what paths get indexed
-
-**How it works**:
-1. EDS scans published pages (.aem.live)
-2. Uses CSS selectors to find meta tags
-3. Extracts values using specified functions
-4. Stores in query-index.json
-
-**Reference**: [Indexing Reference](https://www.aem.live/docs/indexing-reference)
-
-### Verify with Index Admin Tool
-
-After configuring:
-1. Publish pages to `.aem.live`
-2. Wait 5-10 minutes for index to update
-3. Go to https://tools.aem.live/tools/index-admin
-4. Enter: `cloudadoption/nycmasterclass/main`
-5. Check that your custom fields appear
-
-**Troubleshooting**:
-- Page missing? Check if published to `.aem.live` (not just `.aem.page`)
-- Property missing? Verify CSS selector matches your HTML
-- Wrong value? Check value expression function
-
----
-
-## Real-World Applications
-
-**Use Case 1: Blog with Category Pages**
-- **Index fields**: author, category, publishDate, tags, readingTime
-- **Page-List block**: Filter by category, sort by publishDate (newest first)
-- **Display on**: Category landing pages (e.g., `/blog/development`)
-- **Author experience**: Create article, set category in metadata, auto-appears on category page
-
-**Use Case 2: Event Calendar/Sessions**
-- **Index fields**: eventDate, speaker, location, eventType, session-time
-- **Page-List block**: Filter by future dates, eventType, or speaker
-- **Display on**: Main events page or speaker profile pages
-- **Author experience**: Publish session, appears on calendar and speaker page automatically
-
-**Use Case 3: Product Catalog**
-- **Index fields**: price, availability, category, sku, brand
-- **Page-List block**: Filter by category + availability, sort by price
-- **Display on**: Category pages (e.g., `/products/laptops`)
-- **Author experience**: Add product page, set metadata, appears on category page
-
-**Use Case 4: Documentation Site**
-- **Index fields**: section, difficulty, lastModified, version
-- **Page-List block**: Filter by section, sort by difficulty or date
-- **Display on**: Section landing pages and "What's New" pages
-- **Author experience**: Publish doc page, auto-indexed and listed
-
-**Common pattern**: Publish once → appears everywhere relevant automatically
-
----
-
 ## Key Takeaways
 
-- **Query index** automatically maintains metadata for all published pages
-- **Pre-generated at publish time** - no runtime database queries needed
-- **Same JSON structure as Sheets** - reuse block patterns you already know
-- **Filter by path** (e.g., `/sessions/**`) or **category** or both
-- **Sort and limit** results in JavaScript for flexible displays
-- **Configure custom fields** with `helix-query.yaml` using CSS selectors
-- **Only published pages** (`.aem.live`) are indexed, not preview pages
-- **Index Admin tool** helps verify configuration and data
-- **Auto-blocking** (optional) can inject page-list blocks based on metadata templates
+- **Block Collection** is a library of reference blocks — not boilerplate, but a starting point to extend
+- **Extending** means: copy → remove unnecessary dependencies → adapt styling → configure for your data
+- **Block composition** — Search imports and calls Cards' `decorate()` rather than duplicating card markup; `loadCSS` loads the Cards stylesheet on demand
+- **`query-index.json`** pre-generates search data at publish time — no runtime database
+- **Only published pages** on `.aem.live` under `/sessions/**` or `/labs/**` are indexed
+- **Live search** (input event, min 3 chars) gives immediate feedback without a submit button
+- **`<mark>` highlighting** shows users exactly why a result matched their query — applied before Cards decoration so marks persist through DOM transformation
+- **URL state** (`?q=`) makes searches bookmarkable and shareable
+- **No `innerHTML` for user input** — `DocumentFragment` + `createElement` prevents XSS
 
 ---
 
 ## Verification Checklist
 
-- [ ] **Created page-list block files** (`page-list.js`, `page-list.css`)
-- [ ] **Block fetches** `query-index.json` successfully from localhost
-- [ ] **Block displays** session and lab cards correctly
-- [ ] **Filtering by path** works (`/sessions/`, `/labs/`)
-- [ ] **Filtering by category** works (`development`, `technical`, `authoring`)
-- [ ] **Limit parameter** restricts results properly
-- [ ] **Metadata displays** (speaker/instructor names, times, tags)
-- [ ] **Cards link** to correct session/lab pages
-- [ ] **Understand** how query-index.json is generated and updated
-- [ ] **Understand** optional auto-blocking pattern (Step 9)
-- [ ] **Committed and pushed** changes to feature branch
+- [ ] `/labs/jsmith/my-session` visible in `query-index.json`
+- [ ] `blocks/search/search.js` and `blocks/search/search.css` created
+- [ ] Search input renders on `http://localhost:3000/drafts/jsmith/search-test`
+- [ ] Typing at least 3 characters triggers a search
+- [ ] Results render as Cards block cards
+- [ ] Your own `/labs/jsmith/` page is findable by searching its title
+- [ ] Matched terms are highlighted in brand color
+- [ ] "No results found" message shows for unmatched query
+- [ ] URL updates with `?q=` param as you type
+- [ ] Escape key clears the search
+- [ ] `npm run lint` passes
 
 ---
 
 ## References
 
+- [AEM Block Collection — Search](https://github.com/adobe/aem-block-collection/tree/main/blocks/search)
 - [Indexing Reference](https://www.aem.live/docs/indexing-reference)
 - [Index Admin Tool](https://tools.aem.live/tools/index-admin)
 - [EDS Indexing Concepts](https://www.aem.live/developer/indexing)
@@ -679,4 +685,4 @@ After configuring:
 
 ## Next Exercise
 
-**Exercise 5**: JSON2HTML - Generate hundreds of pages from JSON data using templates. You'll learn how to create dynamic pages at scale without manually authoring each one.
+**Exercise 5**: JSON2HTML — Generate hundreds of pages from JSON data using Mustache templates. You'll learn how to create dynamic pages at scale without manually authoring each one.

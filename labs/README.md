@@ -14,7 +14,7 @@
 | 9:30 AM   | Exercise 1 – Authoring Your First Page |
 | 9:50 AM   | Exercise 2 – Block Development (variations) |
 | 10:10 AM  | Exercise 3 – Dynamic Cards with Data Sources |
-| 10:35 AM  | Exercise 4 – Page List with Query Index |
+| 10:35 AM  | Exercise 4 – Block Development - Search Block using Query Index |
 | 10:55 AM  | Exercise 5 – JSON2HTML Dynamic Pages |
 | **11:20–11:35 AM** | **Break (15 min)** |
 | 11:35 AM  | Exercise 6 – Form Submissions to Slack |
@@ -115,20 +115,21 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ---
 
-**Exercise 4** (20 mins): [Page List with Query Index](exercise4/instructions.md)
+**Exercise 4** (20 mins): [Block Development - Search Block using Query Index](exercise4/instructions.md)
 
 **What you'll learn**:
-- How query index works in EDS
-- Custom metadata indexing with helix-query.yaml
-- Manual block configuration with data attributes
-- Filtering and sorting by metadata fields
+- How query-index.json works as a search data source
+- Block composition — reusing the Cards block inside Search
+- Building a live search UI with fetch + filter + render
+- Using `loadCSS` for runtime stylesheet loading
+- DA.live publish workflow for making pages discoverable
 
 **What you'll build**:
-- Page List block that displays pages from query-index.json
-- Manual block configuration (data-path, data-category, data-limit)
-- Display speaker and instructor metadata from indexed pages
+- Search block that fetches and filters query-index.json
+- Results rendered using the Cards block (block composition pattern)
+- Publish your own page to `/labs/jsmith/` and find it via search
 
-**Key takeaway**: Query index enables content discovery across your site. Index custom metadata to power dynamic page lists and filters.
+**Key takeaway**: Block composition lets blocks reuse each other's rendering logic. Query index enables client-side search with zero backend infrastructure.
 
 ---
 
@@ -221,7 +222,7 @@ Each exercise builds on previous concepts:
 **Exercises 3-4**: Data Integration
 - External data (Sheets/personal workspace) -> Internal data (query index)
 - API-first architecture in practice
-- Manual configuration -> Metadata-driven display
+- Dynamic data fetch -> Block composition (Search reuses Cards)
 
 **Exercise 5**: Content Scale
 - Manual pages -> Worker-generated pages

@@ -352,14 +352,14 @@ Copy this code:
   margin-top: 12px;
 }
 
-.loading,
-.error {
+.dynamic-cards .loading,
+.dynamic-cards .error {
   padding: 40px 20px;
   text-align: center;
   color: var(--muted);
 }
 
-.error {
+.dynamic-cards .error {
   color: #d93025;
   background: rgb(217 48 37 / 10%);
   border-radius: 8px;
@@ -693,6 +693,25 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 
 ---
 
+## Before You Move On
+
+**Do this now — it takes 2 minutes and unlocks Exercise 4.**
+
+Exercise 4 has you search for your own page. But the search index only includes `/sessions/**` and `/labs/**` — not `/drafts/**`. Your Exercise 1 page needs to be published to `/labs/jsmith/` before you start Ex4, otherwise it won't appear in search results.
+
+### Steps
+
+1. Go to [DA.live](https://da.live) and navigate to `/drafts/jsmith/`
+2. Find your Exercise 1 page (e.g., `my-session` or `my-lab`)
+3. Click the **3-dot menu → Copy**
+4. Navigate to `/labs/` → **New → Folder** → name it `jsmith`
+5. Inside `/labs/jsmith/`, paste the page
+6. Open the page → **Preview** → **Publish**
+
+That's it. The index updates in the background — by the time you get to Ex4 testing, your page will be findable.
+
+---
+
 ## Next Exercise
 
-**Exercise 4**: Page List with Query Index - You'll build a block that queries published pages using EDS's built-in query index, learning how to create dynamic page listings with filtering and sorting.
+**Exercise 4**: Extend Search Block from Block Collection — You'll configure and test a Search block that fetches `query-index.json` and renders results using the Cards block. You'll learn how EDS indexes published content, how block composition works, and find your own `/labs/jsmith/` page via live search.
