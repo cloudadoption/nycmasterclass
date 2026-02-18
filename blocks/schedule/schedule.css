@@ -1,0 +1,96 @@
+/* ===== Schedule Block ===== */
+
+main .schedule ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each session row */
+main .schedule .schedule-session {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+main .schedule .schedule-session:first-child {
+  border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+/* Time slot */
+main .schedule .schedule-time {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brand-1);
+}
+
+/* Session details area */
+main .schedule .schedule-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Session title */
+main .schedule .schedule-title {
+  margin: 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  color: var(--ink, var(--text-color));
+  line-height: 1.3;
+}
+
+/* Speaker names */
+main .schedule .schedule-speakers {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+  color: var(--muted, var(--dark-color));
+}
+
+/* Room / track badge */
+main .schedule .schedule-room {
+  display: inline-block;
+  align-self: start;
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 15%);
+  font-size: var(--body-font-size-xs);
+  color: var(--muted, var(--dark-color));
+  white-space: nowrap;
+}
+
+/* ===== Tablet (≥600px): two-column layout ===== */
+@media (width >= 600px) {
+  main .schedule .schedule-session {
+    grid-template-columns: 10rem 1fr auto;
+    grid-template-rows: auto;
+    align-items: start;
+    padding: 1.5rem 0;
+  }
+
+  main .schedule .schedule-time {
+    padding-top: 0.15em; /* optical alignment with title */
+  }
+
+  main .schedule .schedule-room {
+    margin-top: 0.15em;
+  }
+}
+
+/* ===== Desktop (≥900px): more breathing room ===== */
+@media (width >= 900px) {
+  main .schedule .schedule-session {
+    grid-template-columns: 12rem 1fr auto;
+    padding: 1.75rem 0;
+    gap: 0.25rem 2.5rem;
+  }
+
+  main .schedule .schedule-title {
+    font-size: var(--heading-font-size-xs);
+  }
+}
