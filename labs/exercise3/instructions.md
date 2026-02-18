@@ -296,51 +296,59 @@ Copy this code:
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 32px;
+  gap: 2rem;
 }
 
 .dynamic-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  background-color: var(--card);
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--background-color);
-  transition: box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  border: 1px solid rgb(255 255 255 / 5%);
 }
 
 .dynamic-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgb(0 0 0 / 60%);
+  border-color: rgb(255 255 255 / 10%);
 }
 
 .dynamic-card-image img {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  display: block;
 }
 
 .dynamic-card-body {
-  padding: 20px;
+  padding: 1.5rem;
 }
 
 .dynamic-card-body h3 {
-  margin: 0 0 8px 0;
-  font-size: 20px;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  line-height: 1.3;
 }
 
 .dynamic-card-title {
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--brand-1);
   margin: 4px 0;
 }
 
 .dynamic-card-company {
   font-size: 14px;
-  color: #666;
+  color: var(--muted);
   margin: 4px 0;
 }
 
 .dynamic-card-bio {
   font-size: 14px;
   line-height: 1.6;
+  color: var(--muted);
   margin-top: 12px;
 }
 
@@ -348,20 +356,38 @@ Copy this code:
 .error {
   padding: 40px 20px;
   text-align: center;
+  color: var(--muted);
 }
 
 .error {
   color: #d93025;
-  background: #fce8e6;
-  border-radius: 4px;
+  background: rgb(217 48 37 / 10%);
+  border-radius: 8px;
+}
+
+@media (width >= 600px) {
+  .dynamic-cards-list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (width >= 900px) {
+  .dynamic-cards-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dynamic-card-body {
+    padding: 2rem;
+  }
 }
 ```
 
 **Key points**:
-- Reuses responsive grid pattern from Cards block
+- Matches the dark theme used by the Cards block (uses `var(--card)`, `var(--shadow)`, `var(--brand-1)`, `var(--muted)`)
+- Same hover effect (lift + glow) as Cards block
+- Responsive grid with breakpoints at 600px and 900px
 - All selectors scoped to `.dynamic-card*`
 - Loading and error states styled
-- Uses CSS custom properties for theming
 
 ---
 

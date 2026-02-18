@@ -1,4 +1,4 @@
-# Exercise 2: Block Development - Simple Block Variations
+# Exercise 2: Block Development - Enhancements & Variations
 
 **Duration**: 20 minutes
 
@@ -24,9 +24,10 @@ git branch
 ## What You'll Learn
 
 - How the block decoration lifecycle works
-- How to implement block variations (eyebrow, stacked)
+- How to enhance a block by detecting content patterns (eyebrow from `<em>`)
+- How to implement a block variation (list layout)
 - How to write mobile-first responsive CSS
-- How to maintain proper CSS scoping for blocks
+- The difference between a block **enhancement** and a block **variation**
 
 ---
 
@@ -36,12 +37,19 @@ In Exercise 1, you created content as an author. Now you'll see the developer si
 
 **The Block Contract**: Authors create tables with a specific structure. Developers write JavaScript to decorate (transform) that HTML into the final presentation.
 
-**Block Variations** let you reuse one block with multiple presentations:
-- Same Cards block → Different layouts (eyebrow, stacked, grid)
-- Authors choose the variation they need
-- Developers write the code once
+There are two ways to extend a block's capabilities:
 
-**Real-world scenario**: A Cards block can display speakers (eyebrow style), sponsors (stacked style), or sessions (grid style) - all from one codebase.
+**Block Enhancements** make the block smarter by detecting content patterns:
+- Authors use familiar formatting (bold, italic, links) in their content
+- The block recognizes these patterns and renders them specially
+- No extra configuration needed — it just works
+
+**Block Variations** can be used to change the block's layout via a class:
+- Authors add variation names in parentheses: `Cards (List)`
+- CSS/JS targets the variation class for a different presentation
+- Same block codebase → multiple layouts
+
+**Real-world scenario**: A Cards block can detect italic text and render it as an eyebrow label (enhancement), or switch to a single-column list layout (variation).
 
 ---
 
@@ -49,29 +57,40 @@ In Exercise 1, you created content as an author. Now you'll see the developer si
 
 ```
 1. Author creates table in DA.live
-   | Cards (Eyebrow) |
-   |-----------------|
-   | Speaker         |
-   | John Doe        |
+   | Cards |                            |
+   |-------|----------------------------|
+   | [image] | *Speaker* (italic)       |
+   |         | John Doe                 |
+   |         | Senior Developer         |
 
 2. EDS converts to HTML (before decoration)
-   <div class="cards eyebrow">
-     <div><div>Speaker</div></div>
-     <div><div>John Doe</div></div>
+   <div class="cards">
+     <div>
+       <div><picture>...</picture></div>
+       <div>
+         <p><em>Speaker</em></p>
+         <p>John Doe</p>
+         <p>Senior Developer</p>
+       </div>
+     </div>
    </div>
 
 3. Your decorate() function transforms it
-   - Reads the structure
-   - Creates new elements
-   - Adds classes
-   - Replaces original content
+   - Classifies divs as image or body
+   - Detects <em> in body → extracts as eyebrow label
+   - Removes the <em> paragraph from body
+   - Prepends eyebrow div to card body
 
 4. Final HTML (after decoration)
-   <div class="cards eyebrow">
+   <div class="cards">
      <ul>
        <li>
-         <div class="cards-card-eyebrow">Speaker</div>
-         <div class="cards-card-body">John Doe</div>
+         <div class="cards-card-image"><picture>...</picture></div>
+         <div class="cards-card-body">
+           <div class="cards-card-eyebrow">Speaker</div>
+           <p>John Doe</p>
+           <p>Senior Developer</p>
+         </div>
        </li>
      </ul>
    </div>
@@ -98,15 +117,15 @@ blocks/
 
 **Variation classes**: Authors add variations in parentheses:
 ```
-| Cards (Eyebrow, Stacked) |
+| Cards (List) |
 ```
 
 Becomes:
 ```html
-<div class="cards eyebrow stacked">
+<div class="cards list">
 ```
 
-Your CSS/JS can then target `.cards.eyebrow` or `.cards.stacked`.
+Your CSS/JS can then target `.cards.list` for variation-specific styling.
 
 **Reference**: [Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
 
@@ -175,28 +194,42 @@ Add this content:
 | Jane Smith |
 | Product Manager at Adobe |
 
-## Eyebrow Variation
+## Cards with Eyebrow
 
-| Cards (Eyebrow) |
-|-----------------|
-| Speaker |
+| Cards | |
+|---|---|
+| ![Speaker](https://placehold.co/600x400) | *Speaker* |
+| | John Doe |
+| | Senior Developer |
+| ![Speaker](https://placehold.co/600x400) | *Speaker* |
+| | Jane Smith |
+| | Product Manager |
+
+> **DA.live tip**: Each row in the table above is one card. Column 1 has the image. Column 2 has multiple paragraphs in the same cell — italicize the first paragraph (*Speaker*) to mark it as the eyebrow label. No variation class needed!
+
+## List Variation
+
+| Cards (List) |
+|--------------|
 | ![Speaker](https://placehold.co/600x400) |
 | John Doe |
-| Senior Developer |
+| Senior Developer at Adobe |
 | ![Speaker](https://placehold.co/600x400) |
 | Jane Smith |
-| Product Manager |
+| Product Manager at Adobe |
 
-## Stacked Variation
+## View Switcher Variation
 
-| Cards (Stacked) |
-|-----------------|
-| ![Logo](https://placehold.co/200x200) |
-| Adobe |
-| Gold Sponsor |
-| ![Logo](https://placehold.co/200x200) |
-| Microsoft |
-| Silver Sponsor |
+| Cards (View Switcher) | |
+|---|---|
+| ![Speaker](https://placehold.co/600x400) | *Speaker* |
+| | John Doe |
+| | Senior Developer at Adobe |
+| ![Speaker](https://placehold.co/600x400) | *Speaker* |
+| | Jane Smith |
+| | Product Manager at Adobe |
+| ![Speaker](https://placehold.co/600x400) | Mike Johnson |
+| | Solutions Architect at Adobe |
 ```
 
 **Save** the page in DA.live.
@@ -208,20 +241,22 @@ Add this content:
 **Open**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
 
 **You should see**:
-- Default Cards section showing 2 cards in a grid
-- Eyebrow and Stacked sections showing cards (but no special styling yet)
+- Default Cards section showing cards in a grid
+- Eyebrow, List, and View Switcher sections showing cards (but no special styling yet)
 
-**Why?** The variations (eyebrow, stacked) don't have CSS/JS yet. We'll add that now.
+**Why?** The eyebrow enhancement and variations don't have CSS/JS yet. We'll add those now.
 
 ---
 
-## Step 3: Implement Eyebrow Variation
+## Step 3: Implement Eyebrow Enhancement
 
-The eyebrow variation adds a label above card content.
+The eyebrow adds a label above card content. Authors simply **italicize** the label text in the card body, and the block automatically detects and extracts it as the eyebrow. No variation class needed — this is a smart default behavior.
 
-**Author structure**:
-- Row 1: Eyebrow text (e.g., "Speaker")
-- Row 2+: Card content
+**Author structure** (each row = one card, 2 columns):
+- Column 1: Image
+- Column 2: Body text — italicize the eyebrow label (e.g., *Speaker*)
+
+**How it works**: In DA.live, italic text becomes `<em>` in HTML. The block finds `<em>` in each card's body, extracts it, and renders it as an eyebrow label. If there's no `<em>`, nothing changes — the card renders normally.
 
 ### Update JavaScript
 
@@ -234,34 +269,31 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 
 export default function decorate(block) {
   const ul = document.createElement('ul');
-  const isEyebrow = block.classList.contains('eyebrow');
-  let eyebrowText = '';
-
-  // If eyebrow variation, first row contains the eyebrow text
-  if (isEyebrow && block.children.length > 0) {
-    eyebrowText = block.children[0].textContent.trim();
-    block.children[0].remove(); // Remove eyebrow row from content
-  }
 
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
-
-    // Add eyebrow if this variation is enabled
-    if (isEyebrow && eyebrowText) {
-      const eyebrow = document.createElement('div');
-      eyebrow.className = 'cards-card-eyebrow';
-      eyebrow.textContent = eyebrowText;
-      li.append(eyebrow);
-    }
-
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
       if (div.children.length === 1 && div.querySelector('picture')) {
         div.className = 'cards-card-image';
-      } else if (!div.classList.contains('cards-card-eyebrow')) {
+      } else {
         div.className = 'cards-card-body';
       }
     });
+
+    // Detect italic text in body and extract as eyebrow label
+    const body = li.querySelector('.cards-card-body');
+    const em = body?.querySelector('em');
+    if (em) {
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'cards-card-eyebrow';
+      eyebrow.textContent = em.textContent;
+      const p = em.closest('p');
+      if (p) p.remove();
+      else em.remove();
+      body.prepend(eyebrow);
+    }
+
     ul.append(li);
   });
 
@@ -275,10 +307,12 @@ export default function decorate(block) {
 ```
 
 **What changed**:
-- Checks for `eyebrow` class on block
-- Extracts eyebrow text from first row
-- Removes that row from DOM
-- Adds eyebrow div to each card
+- After classifying divs, looks for `<em>` in each card's body
+- If found, extracts the italic text as the eyebrow label
+- Removes the `<p>` containing the `<em>` from the body
+- Prepends an eyebrow div at the top of the card body
+- No variation class needed — works automatically on any Cards block
+- Cards without italic text are unaffected
 
 ### Add Eyebrow Styles
 
@@ -287,94 +321,181 @@ export default function decorate(block) {
 Add at the end of the file:
 
 ```css
-/* Eyebrow variation */
-.cards.eyebrow .cards-card-eyebrow {
-  font-size: 12px;
+.cards .cards-card-eyebrow {
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-color);
-  opacity: 0.7;
   margin-bottom: 8px;
+  color: var(--brand-1);
 }
 ```
 
 **Key points**:
-- `.cards.eyebrow` scopes to eyebrow variation only
-- Uses CSS custom property `var(--text-color)` for theming
+- `.cards .cards-card-eyebrow` — scoped to the block, no variation class needed
 - All selectors start with `.cards` (proper scoping)
 
 ---
 
-## Step 4: Test Eyebrow Variation
+## Step 4: Test Eyebrow Enhancement
 
 **Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
 
 **You should see**:
-- Eyebrow section now shows "SPEAKER" label above each card
+- "Cards with Eyebrow" section now shows "SPEAKER" label at the top of each card's body
 - Label is uppercase, smaller font, slightly transparent
+- The italic text you authored is no longer displayed inline — it's been extracted into the eyebrow
+- Default Cards section is unaffected (no italic text = no eyebrow)
 
 ---
 
-## Step 5: Implement Stacked Variation
+## Step 5: Implement List Variation
 
-The stacked variation displays cards in a single column, centered.
+The list variation displays cards in a single column with centered text. Authors opt in by writing `Cards (List)` as the block name.
 
-### Add Stacked Styles
+### Add List Styles
 
 **File**: `blocks/cards/cards.css`
 
 Add at the end of the file:
 
 ```css
-/* Stacked variation */
-.cards.stacked > ul {
+/* List layout — used by Cards (List) variant and View Switcher toggle */
+.cards.list > ul {
   grid-template-columns: 1fr;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
-.cards.stacked > ul > li {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.cards.list .cards-card-body {
   text-align: center;
-  padding: 32px;
-}
-
-.cards.stacked .cards-card-image {
-  margin-bottom: 16px;
-}
-
-.cards.stacked > ul > li img {
-  width: auto;
-  max-width: 200px;
-  aspect-ratio: 1 / 1;
 }
 ```
 
 **What this does**:
 - Forces single column layout (overrides default grid)
-- Centers content horizontally
-- Constrains image to 200px square
-- Centers text
+- Centers body text
+- Images stay full-width (inherited from base styles)
 
 **No JavaScript needed** - this variation is CSS-only!
 
 ---
 
-## Step 6: Test Stacked Variation
+## Step 6: Test List Variation
 
 **Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
 
 **You should see**:
-- Stacked section displays as centered single column
-- Images are square (200x200)
+- List section displays as a single column
+- Cards are full width with full-width images
 - Text is centered
 
 ---
 
-## Step 7: Commit Your Changes
+## Step 7: Implement View Switcher Variation
+
+Now let's add a variation that combines **JavaScript and CSS**. The view switcher adds toggle buttons that let users switch between grid and list views on the fly.
+
+**This is different from list**: List is a fixed layout chosen by the author. View switcher gives the **end user** control over the layout.
+
+### Update JavaScript
+
+**File**: `blocks/cards/cards.js`
+
+Add this code at the end of the `decorate` function, **after** `block.replaceChildren(ul)`:
+
+```javascript
+  if (block.classList.contains('view-switcher')) {
+    const toolbar = document.createElement('div');
+    toolbar.className = 'cards-toolbar';
+
+    const isList = block.classList.contains('list');
+
+    const gridBtn = document.createElement('button');
+    gridBtn.textContent = 'Grid';
+    gridBtn.className = `cards-toolbar-btn${isList ? '' : ' active'}`;
+
+    const listBtn = document.createElement('button');
+    listBtn.textContent = 'List';
+    listBtn.className = `cards-toolbar-btn${isList ? ' active' : ''}`;
+
+    gridBtn.addEventListener('click', () => {
+      block.classList.remove('list');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    });
+
+    listBtn.addEventListener('click', () => {
+      block.classList.add('list');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    });
+
+    toolbar.append(gridBtn, listBtn);
+    block.prepend(toolbar);
+  }
+```
+
+**What this does**:
+- Checks for the `view-switcher` variation class
+- Detects whether `list` is already on the block (e.g. `Cards (List, View Switcher)`) and highlights the correct default button
+- Grid button removes the `list` class → grid layout
+- List button adds the `list` class → single column layout (same CSS as `Cards (List)`)
+- Active button is highlighted
+
+### Add View Switcher Styles
+
+**File**: `blocks/cards/cards.css`
+
+Add the toolbar styles at the end of the file:
+
+```css
+/* View switcher toolbar */
+.cards.view-switcher .cards-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.cards.view-switcher .cards-toolbar-btn {
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 20%);
+  color: var(--muted);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.cards.view-switcher .cards-toolbar-btn:hover {
+  border-color: rgb(255 255 255 / 40%);
+}
+
+.cards.view-switcher .cards-toolbar-btn.active {
+  background: var(--brand-1);
+  color: white;
+  border-color: var(--brand-1);
+}
+```
+
+**Key insight**: The view switcher toggles the `list` class — the same class used by `Cards (List)`. No duplicate layout CSS needed. When the user clicks "List", the `.cards.list` styles from Step 5 kick in automatically.
+
+---
+
+## Step 8: Test View Switcher Variation
+
+**Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+
+**You should see**:
+- View Switcher section shows a toolbar with **Grid** and **List** buttons (top right)
+- Grid button is active by default — cards display in a grid
+- Click **List** → cards switch to a single-column layout with centered text
+- Click **Grid** → cards switch back to the grid layout
+- The eyebrow enhancement still works (italic text → eyebrow label) in both views
+
+---
+
+## Step 9: Commit Your Changes
 
 ```bash
 # Run linting
@@ -384,7 +505,7 @@ npm run lint
 git add blocks/cards/
 
 # Commit
-git commit -m "feat: add eyebrow and stacked variations to cards block"
+git commit -m "feat: add eyebrow enhancement, list and view-switcher variations to cards block"
 
 # Push
 git push origin jsmith
@@ -414,9 +535,9 @@ Replace `jsmith` with your branch name.
 }
 ```
 
-**Better (scoped to variation)**:
+**Better (scoped to variation, when applicable)**:
 ```css
-.cards.eyebrow .card-title {
+.cards.list .card-title {
   font-size: 20px;
 }
 ```
@@ -460,39 +581,41 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 
 ## Real-World Applications
 
-**Use Case 1: Event Speakers**
-- Use eyebrow variation with "Speaker" label
-- Displays speaker bio with consistent labeling
+**Use Case 1: Event Speakers** (enhancement)
+- Author italicizes "Speaker" in card body → eyebrow label appears automatically
+- Displays speaker bio with consistent labeling, no special configuration
 
-**Use Case 2: Sponsor Logos**
-- Use stacked variation for centered logo display
-- Perfect for sponsor tiers (Gold, Silver, Bronze)
+**Use Case 2: Sponsor Logos** (variation)
+- Use list variation for a single-column sponsor list
+- Clean, full-width layout
 
-**Use Case 3: Product Catalog**
-- Use default grid for product listings
-- Responsive grid adapts to screen size
+**Use Case 3: Product Catalog** (variation with interactivity)
+- Use view-switcher variation so users can toggle between grid and list views
+- Combine with eyebrow enhancement for category labels
 
 ---
 
 ## Key Takeaways
 
-- Block variations use CSS classes (added by authors in parentheses)
-- One block codebase → multiple presentations
+- **Enhancements** detect content patterns (like `<em>`) and render them specially — no variant class needed
+- **Variations** use CSS classes (added by authors in parentheses) for different layouts
+- Variations can be CSS-only (list) or require JavaScript (view-switcher)
 - JavaScript decorates HTML structure, CSS styles it
 - Always scope CSS to the block (`.blockname .selector`)
-- Mobile-first CSS uses modern layout (Grid, Flexbox)
-- Variations can be CSS-only or require JavaScript
+- Reuse CSS classes across variations — view-switcher toggles the same `list` class
+- Enhancements and variations can be combined — they're independent features
 
 ---
 
 ## Verification Checklist
 
-- [ ] Created test page with three card variations
-- [ ] Implemented eyebrow variation (JavaScript + CSS)
-- [ ] Implemented stacked variation (CSS only)
-- [ ] Both variations display correctly
-- [ ] Understand CSS scoping rules
-- [ ] Understand mobile-first responsive design
+- [ ] Created test page with card examples (default, eyebrow, list, view-switcher)
+- [ ] Implemented eyebrow enhancement (JavaScript + CSS) — works on any Cards block
+- [ ] Implemented list variation (CSS only) — requires `Cards (List)` class
+- [ ] Implemented view-switcher variation (JavaScript + CSS) — requires `Cards (View Switcher)` class
+- [ ] View-switcher toggles between grid and list views using the same `list` class
+- [ ] Understand the difference between enhancements and variations
+- [ ] Understand how to reuse CSS classes across variations
 - [ ] Committed and pushed changes
 
 ---
