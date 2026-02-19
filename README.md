@@ -2,8 +2,8 @@
 Training materials and exercises for AEM Edge Delivery Services masterclass sessions.
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
+- Preview: https://main--nycmasterclass--cloudadoption.aem.page/
+- Live: https://main--nycmasterclass--cloudadoption.aem.live/
 
 ## Labs & Exercises
 - [Labs Overview](labs/README.md) - Complete guide to all exercises
