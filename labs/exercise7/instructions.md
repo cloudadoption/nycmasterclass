@@ -27,7 +27,7 @@ Required:
 
 - How DA.live plugins work as library integrations
 - How to use the DA App SDK (context, token, actions)
-- How to insert content into documents programmatically via PostMessage API
+- How to insert content into documents programmatically via DA SDK
 - How to develop plugins locally and deploy to your branch
 - How plugins are accessed through the library palette
 
@@ -53,7 +53,7 @@ DA.live library plugins extend the authoring experience with custom content inse
 ```
 1. Developer builds plugin (HTML + JavaScript)
 2. Plugin uses DA App SDK (context, token, actions)
-3. Plugin hosted on your AEM site (committed to Git)
+3. Plugin is committed to Git repository
 4. Authors access via library palette in DA.live
 5. Plugin inserts content into document via SDK actions
 ```
@@ -80,8 +80,8 @@ This exercise demonstrates a practical DA pattern: let authors use familiar copy
 4. DA inserts only block content (not raw embed markup)
 
 **Sample widget source**:
-- TradingView widget catalog: `https://www.tradingview.com/widget-docs/widgets/`
 - Company Profile example: `https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/`
+- TradingView widget catalog: `https://www.tradingview.com/widget-docs/widgets/`
 
 ---
 
@@ -176,12 +176,6 @@ const response = await fetch('https://admin.da.live/source/org/repo/path', {
 });
 ```
 
-**Use cases**:
-- Fetch data from DA.live Admin API
-- Read other documents
-- Access media index
-- Query content
-
 ### 3. **actions** - Document Interaction Methods
 
 Methods to insert content into the active document:
@@ -252,6 +246,9 @@ https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget
 ## Step 1: Create Plugin HTML
 
 **File**: `tools/plugins/embedwidget/embedwidget.html`
+
+**NOTE** : You can choose to copy the `embedwidget` plugin from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/tools/plugins/embedwidget)
+ branch in github
 
 Copy this code:
 
@@ -471,6 +468,8 @@ Create:
 - `blocks/tradingview/tradingview.js`
 - `blocks/tradingview/tradingview.css`
 
+**NOTE** : You can choose to copy the `tradingview` block from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/tradingview) branch in github
+
 Use the same pattern you implemented in this repo:
 - read block config with `readBlockConfig(block)`
 - parse `config` JSON from `<pre><code>`
@@ -511,13 +510,13 @@ Before pushing to your branch, test the plugin loads correctly from localhost.
 https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local
 ```
 
-**To test**:
+**To Test : EmbedWidget Plugin and TradingView Block**:
 1. **Open DA.live**: Go to `https://da.live/edit#/cloudadoption/nycmasterclass/drafts/jsmith/` (use your name)
 2. **Open any existing page** (or create `/drafts/jsmith/plugin-test`)
 3. **Open library**: Click the library icon in the left sidebar (puzzle piece icon)
 4. **Load your plugin**: In a new browser tab, navigate to:
    ```
-   https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local
+https://da.live/edit?ref=local#/cloudadoption/nycmasterclass/drafts/jsmith/plugin-test
    ```
 5. **Think like an author**: Open the TradingView Company Profile widget page:
    - `https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/`
@@ -579,15 +578,18 @@ After inserting the block in DA, validate that the `tradingview` block decorator
 
 ## Step 6: Optional - Register Plugin in Library
 
+
 For production use, plugins should be registered in the site configuration so authors can discover them automatically.
+
+**Note** : For this lab excerise, the plugin has already been added to the DA Library.
 
 **To register your plugin** (instructor may do this):
 
-1. **Edit site config**: Open `https://da.live/edit#/cloudadoption/nycmasterclass/config.json`
+1. **Edit site config**: Open `https://da.live/config#/cloudadoption/nycmasterclass/`
 2. **Add to library sheet**:
-   | title | path |
-   |-------|------|
-   | EmbedWidget | https://content.da.live/cloudadoption/nycmasterclass/tools/plugins/embedwidget |
+   | title | path | experience |
+   |-------|------|------------|
+   | EmbedWidget | https://content.da.live/cloudadoption/nycmasterclass/tools/plugins/embedwidget | dialog |
 
 3. **Save and publish** the config
 
@@ -596,7 +598,6 @@ For production use, plugins should be registered in the site configuration so au
 - Authors don't need to know the URL
 - Works on main branch for production use
 
-**For this exercise**: Manual URL loading is sufficient. Registration is optional.
 
 ---
 

@@ -15,26 +15,11 @@ Required:
 
 **Your Personal Workspace**: All work in `/drafts/jsmith/` (use your name: first initial + last name, lowercase)
 
-**Worker Endpoint**:
-
-The instructor has deployed a Cloudflare Worker that accepts form submissions and sends them to Slack.
-
-**Worker URL**: `https://masterclass-feedback.aem-poc-lab.workers.dev`
-
-**Verify worker is running**:
-```bash
-curl -X POST https://masterclass-feedback.aem-poc-lab.workers.dev \
-  -H "Content-Type: application/json" \
-  -d '{"fullName":"Test User","email":"test@example.com","feedback":"Test message"}'
-```
-
-**Expected response**: `{"success": true, "message": "Feedback submitted successfully"}`
-
 ---
 
 ## What You'll Learn
 
-- How to build forms in Edge Delivery Services blocks
+- How to build a sample feedback form in form of an Edge Delivery Services block
 - How to handle form submissions with JavaScript (prevent default, capture data)
 - **POST request structure** for worker endpoints
 - How Workers integrate with external services (Slack)
@@ -67,6 +52,23 @@ Forms are critical for user engagement: registrations, feedback, contact forms, 
 - Lead capture → CRM (HubSpot, Salesforce)
 
 ---
+**Worker Endpoint**:
+
+The instructor has already deployed a Cloudflare Worker that accepts form submissions and sends them to Slack.
+
+**Worker URL**: `https://masterclass-feedback.aem-poc-lab.workers.dev`
+
+**Verify worker is running**:
+
+Using the terminal, Run the following CURL command : 
+```bash
+curl -X POST https://masterclass-feedback.aem-poc-lab.workers.dev \
+  -H "Content-Type: application/json" \
+  -d '{"fullName":"Test User","email":"test@example.com","feedback":"Test message"}'
+```
+
+**Expected response**: `{"success": true, "message": "Feedback submitted successfully"}`
+
 
 ## The Complete Data Flow
 
@@ -183,9 +185,9 @@ Content-Type: application/json
 
 ---
 
-## Step 1: Use the Existing Feedback Block
+## Step 1: Create a Feedback Block
 
-In this project, the feedback block is already implemented:
+Create a feedback block with the following structure
 
 ```
 blocks/
@@ -194,7 +196,7 @@ blocks/
     feedback.css
 ```
 
-Use this block instead of creating `feedback-form` from scratch.
+**NOTE** : You can choose to copy the `feedback` block from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/feedback) branch in github
 
 ---
 
@@ -222,7 +224,11 @@ Use this block structure in your page:
 </div>
 ```
 
-What this does:
+See how this block looks like in DA edit mode
+
+![Feedback Form | Block Structure](../images/da-feedback-form.png)
+
+What this blcok does:
 - Renders a structured feedback form UI
 - Captures `fullName`, `email`, and `feedback`
 - POSTs JSON to the Worker endpoint from row 1
@@ -230,39 +236,14 @@ What this does:
 
 ---
 
-## Step 3: Confirm Block and Worker Contract
+## Step 3: Create Test Page
 
-No extra block coding is required for this lab setup. Confirm:
-- `blocks/feedback/feedback.js` is present
-- `blocks/feedback/feedback.css` is present
-- Worker URL is `https://masterclass-feedback.aem-poc-lab.workers.dev`
-
----
-
-## Step 4: Create Test Page
-
-**In DA.live**, create page: `/drafts/jsmith/feedback` (use your name)
-
-```
-# We Value Your Feedback
-
-Help us improve NYC Masterclass by sharing your thoughts.
-
-| Feedback |
-|----------|
-
-| Metadata |                        |
-|----------|------------------------|
-| Title    | Feedback - NYC Masterclass |
-```
-
-**Save** the page.
-
----
-
-## Step 5: Test Form Locally
-
-**Open**: `http://localhost:3000/drafts/jsmith/feedback` (use your name)
+**In DA.live**, 
+1. create page: `/drafts/jsmith/feedback` (use your name)
+2. Use the DA BlockLibrary to add 'Feedback Form' block to your page
+3. You can preview the page using the 'Preview' the Feedback form
+4. **Preview** the page
+5. Test the Form Locally by opening  `http://localhost:3000/drafts/jsmith/feedback` (use your name)
 
 **You should see**:
 - Form with three fields (name, email, feedback)
@@ -283,7 +264,7 @@ Help us improve NYC Masterclass by sharing your thoughts.
 
 ---
 
-## Step 6: Understanding What the Worker Does
+## Step 4: Understanding What the Worker Does
 
 The worker acts as secure middleware between your form and Slack. Here's what it does step-by-step:
 
@@ -446,7 +427,7 @@ try {
 
 ---
 
-## Step 7: Commit Your Changes
+## Step 5: Commit Your Changes
 
 ```bash
 # Run linting
