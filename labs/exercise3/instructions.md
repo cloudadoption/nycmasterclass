@@ -10,15 +10,22 @@
   - [Why This Matters](#why-this-matters)
   - [How It Works](#how-it-works)
 - **Hands-on Lab**
-  - [Copy Speakers Data](#step-1-copy-speakers-data-to-your-workspace)
-  - [Create Block Files](#step-3-create-block-files)
-  - [Implement JavaScript](#step-4-implement-javascript)
-  - [Test Locally](#step-8-test-locally)
+  - [Step 1: Copy Speakers Data](#step-1-copy-speakers-data-to-your-workspace)
+  - [Step 2: Add Your Personal Data](#step-2-add-your-personal-data)
+  - [Step 3: Create Block Files](#step-3-create-block-files)
+  - [Step 4: Implement JavaScript](#step-4-implement-javascript)
+  - [Step 5: Implement Styles](#step-5-implement-styles)
+  - [Step 6: Commit Your Changes](#step-6-commit-your-changes)
+  - [Step 7: Create Test Page](#step-7-create-test-page)
+  - [Step 8: Test Locally](#step-8-test-locally)
+  - [Step 9: Test Error Handling](#step-9-test-error-handling)
+  - [Step 10: Optional - Understanding Worker Endpoints](#step-10-optional---understanding-worker-endpoints)
+  - [Step 11: Optional - Apply to Real Speakers Page](#step-11-optional---apply-to-real-speakers-page)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
-## Context: The Speakers Page
+## The Speakers Page
 
 If you've been exploring the site, you may have noticed the **Speakers** link in the navigation leads to a placeholder page at http://localhost:3000/speakers
 
@@ -32,7 +39,7 @@ The speaker data already exists at `/speakers.json` with 6 Adobe experts. In thi
 
 ## Prerequisites
 
-✅ **Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.**
 
 Required:
 - On your feature branch (`jsmith` - your first initial + last name)
@@ -74,6 +81,8 @@ In Exercise 2, you built blocks where authors manually create each card. But wha
 **Real-world scenario**: The NYC Masterclass has a `/speakers` page that currently shows placeholder text. You saw it in the navigation. The speaker data already exists in `/speakers.json` (6 Adobe experts). Rather than manually authoring cards for each speaker, you'll build a dynamic-cards block that fetches and renders this data automatically.
 
 **What you'll build**: A reusable dynamic-cards block that can fetch speaker data, product catalogs, article listings, or any JSON endpoint and render it as cards.
+
+**Different rhythm from Exercise 2**: Here you'll commit the block code (Step 6) before creating the test page and testing (Steps 7–8). In Ex2 you built test content first and committed at the end. In Ex3 the block is committed first, then you add a page that uses it and verify.
 
 ---
 
@@ -188,9 +197,7 @@ Make this exercise meaningful by adding yourself as a speaker!
 
 **Optional**: Add another row for a teammate sitting near you.
 
-**Save** the sheet in DA.live.
-
-**Verify JSON endpoint** on localhost:
+DA.live auto-saves. **Verify JSON endpoint** on localhost:
 ```
 http://localhost:3000/drafts/jsmith/speakers.json
 ```
@@ -286,12 +293,13 @@ export default async function decorate(block) {
 ```
 
 **What this does**:
-1. Extracts data source URL from block content (line 9)
-2. Shows loading state while fetching (line 16)
-3. Fetches JSON from endpoint (line 20-21)
-4. Handles errors gracefully (line 58-61)
-5. Generates card HTML for each speaker (line 40-54)
-6. Uses `loading="lazy"` for images (line 46)
+1. The block's entrypoint is the default-exported `decorate(block)` function — same as any block; EDS calls it with the block root element.
+2. Extracts data source URL from block content (line 9)
+3. Shows loading state while fetching (line 16)
+4. Fetches JSON from endpoint (line 20-21)
+5. Handles errors gracefully (line 58-61)
+6. Generates card HTML for each speaker (line 40-54)
+7. Uses `loading="lazy"` for images (line 46)
 
 **Error handling**: If fetch fails, shows user-friendly message and logs to console.
 
@@ -407,6 +415,8 @@ Copy this code:
 
 ## Step 6: Commit Your Changes
 
+You're committing the block code now, before creating the test page (Step 7). This order keeps the block in version control first; then you'll add a page that uses it and verify.
+
 ```bash
 # Run linting
 npm run lint
@@ -443,13 +453,15 @@ This page demonstrates fetching speaker data dynamically from JSON.
 
 **Important**: Use YOUR actual path (replace `jsmith` with your first initial + last name).
 
-**Save** the page in DA.live.
+DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ---
 
 ## Step 8: Test Locally
 
 **Open**: `http://localhost:3000/drafts/jsmith/speakers-test` (use your name)
+
+**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to switch to responsive mode, then resize the viewport or pick a device preset to verify layout at different widths. Use this for all test steps in this exercise.
 
 **You should see**:
 - "Loading speakers..." message briefly
@@ -467,9 +479,8 @@ This page demonstrates fetching speaker data dynamically from JSON.
 1. Keep the page open at `http://localhost:3000/drafts/jsmith/speakers-test`
 2. Go to DA.live and open `/drafts/jsmith/speakers`
 3. Edit YOUR speaker row - change your bio or title
-4. **Save** in DA.live
-5. **Refresh** your local preview
-6. Your changes should appear immediately
+4. DA.live auto-saves. **Refresh** your local preview
+5. Your changes should appear immediately
 
 **Success criteria**: Dynamic-cards block fetches JSON and renders all speakers including your entry.
 
@@ -488,7 +499,7 @@ Edit your `/drafts/jsmith/speakers-test` page in DA.live, change the URL to:
 | https://invalid-url.com/data.json |
 ```
 
-Save and refresh localhost. You should see: "Error loading speakers: [error message]" with red background.
+Refresh localhost. You should see: "Error loading speakers: [error message]" with red background.
 
 **Test 2 - No URL**:
 
@@ -498,7 +509,7 @@ Remove the URL row entirely:
 |---------------|
 ```
 
-Save and refresh localhost. You should see: "Error: No data source specified".
+Refresh localhost. You should see: "Error: No data source specified".
 
 **Test 3 - Restore Working State**:
 
@@ -509,7 +520,7 @@ Change it back to your working speakers.json:
 | /drafts/jsmith/speakers.json |
 ```
 
-Save and refresh. Speaker cards should display again.
+Refresh. Speaker cards should display again.
 
 **Why test errors?** Network can fail, URLs can break, data can be malformed. Your block should always show helpful feedback to users.
 
@@ -593,7 +604,7 @@ Now that your dynamic-cards block is working, you can see how it would complete 
 |---------------|
 | /speakers.json |
 ```
-3. Save and preview
+3. Preview to see the page
 4. The placeholder page becomes a dynamic speaker directory
 
 **Why we don't do this now**: With 50 participants, we'd all be editing the same page simultaneously (conflicts!).
@@ -630,6 +641,8 @@ try {
 ```html
 <img loading="lazy" src="...">
 ```
+
+**Image optimization**: For production, consider rendering images from JSON with [createOptimizedPicture()](../../scripts/aem.js) from `aem.js` to get responsive srcset and format optimization. The exercise uses plain `<img>` for simplicity.
 
 **When to use dynamic blocks**:
 - Large datasets (50+ items)
@@ -694,6 +707,7 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 - [ ] Block displays all speakers (Adobe experts + your entries)
 - [ ] Tested editing sheet data - changes reflected on refresh
 - [ ] Tested error handling (invalid URL, no URL, restore)
+- [ ] Tested in Chrome DevTools responsive view (desktop and mobile)
 - [ ] Understand when to use Workers vs direct sheet fetch
 - [ ] Committed and pushed block code changes
 
