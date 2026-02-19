@@ -104,7 +104,7 @@ All in `/labs/` folder, published to `.aem.live`:
 - [ ] `/labs/authoring-first-page`
 - [ ] `/labs/block-development`
 - [ ] `/labs/dynamic-cards`
-- [ ] `/labs/page-list-block`
+- [ ] `/labs/search-block`
 - [ ] `/labs/json2html`
 - [ ] `/labs/form-submissions`
 - [ ] `/labs/da-plugin-development`
@@ -153,6 +153,12 @@ curl https://main--nycmasterclass--cloudadoption.aem.live/future-events.json | j
 ---
 
 ## Phase 3: Participant Branch Setup
+
+### 3.0 Preserve the `answers` Branch
+
+The `answers` branch contains complete solution code for all exercises (`blocks/search/`, `blocks/dynamic-cards/`, `blocks/feedback/`, `blocks/tradingview/`, `tools/plugins/embedwidget/`, etc.). Exercise instructions link directly to it so participants can copy block code.
+
+**Do not delete or force-push the `answers` branch.** It is a permanent reference, not a feature branch.
 
 ### 3.1 Create Participant List
 
@@ -404,8 +410,8 @@ gh pr merge {pr-number}
 - Create own repoless site (Exercise 8)
 
 **Exercise changes from original**:
-- Exercise 3: Personal workspace approach
-- Exercise 4: Manual configuration, no auto-blocking
+- Exercise 3: Dynamic Cards fetching from a personal `speakers.json` (personal workspace approach)
+- Exercise 4: Extend Search Block from Block Collection using `query-index.json` as data source
 - Exercise 5: JSON2HTML worker (not speaker profiles)
 - Exercise 7: Extended to 30 minutes
 - Exercise 8: Hands-on site creation (not pre-configured observation)
