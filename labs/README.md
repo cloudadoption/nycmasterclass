@@ -14,12 +14,12 @@
 | 9:30 AM   | Exercise 1 – Authoring Your First Page |
 | 9:50 AM   | Exercise 2 – Block Development (variations) |
 | 10:10 AM  | Exercise 3 – Dynamic Cards with Data Sources |
-| 10:35 AM  | Exercise 4 – Block Development - Search Block using Query Index |
-| 10:55 AM  | Exercise 5 – JSON2HTML Dynamic Pages |
+| 10:35 AM  | Exercise 4 – Extend Search Block from Block Collection |
+| 10:55 AM  | Exercise 5 – JSON2HTML Generate Pages from Data |
 | **11:20–11:35 AM** | **Break (15 min)** |
-| 11:35 AM  | Exercise 6 – Form Submissions to Slack |
-| 11:55 AM  | Exercise 7 – DA Plugin Development |
-| 12:25 PM  | Exercise 8 – Repoless Multi-Site Setup + Go-Live |
+| 11:35 AM  | Exercise 6 – Form Submissions with Workers |
+| 11:55 AM  | Exercise 7 – DA.live Plugin Development |
+| 12:25 PM  | Exercise 8 – Repoless Multi-Site & Multi-Brand |
 | 12:30 PM  | End |
 
 *Sessions start at 9:15 AM; 15-minute break 11:20–11:35 AM; lab ends at 12:30 PM.*
@@ -49,7 +49,9 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ## Before You Begin
 
-**Complete setup**: [SETUP.md](SETUP.md) - Git, development environment, access verification
+**Complete setup**: [SETUP.md](SETUP.md) — Git, development environment, access verification.
+
+**Solutions**: Complete solutions for all exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise links to it in its Solution section.
 
 **Your environment**:
 - Repository: https://github.com/cloudadoption/nycmasterclass
@@ -81,19 +83,19 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ---
 
-**Exercise 2** (20 mins): [Block Development - Simple Variations](exercise2/instructions.md)
+**Exercise 2** (20 mins): [Block Development - Enhancements & Variations](exercise2/instructions.md)
 
 **What you'll learn**:
-- Block decoration lifecycle
-- Implementing block variations (eyebrow, stacked)
-- Mobile-first responsive CSS
-- CSS scoping for blocks
+- Block decoration lifecycle and `decorate(block)` entrypoint
+- Block enhancements (eyebrow from `<em>`) vs variations (list, view switcher)
+- Mobile-first responsive CSS and CSS scoping
 
 **What you'll build**:
-- Eyebrow variation for Cards block (adds label above content)
-- Stacked variation for Cards block (centered single column)
+- Eyebrow enhancement for Cards block (italic text → label)
+- List variation (single-column layout)
+- View Switcher variation (Grid/List toggle)
 
-**Key takeaway**: One block codebase can support multiple presentations through variations. Authors choose the variation they need.
+**Key takeaway**: One block codebase supports enhancements (content patterns) and variations (layout classes). Test on desktop and mobile with Chrome DevTools responsive view.
 
 ---
 
@@ -115,7 +117,7 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ---
 
-**Exercise 4** (20 mins): [Block Development - Search Block using Query Index](exercise4/instructions.md)
+**Exercise 4** (20 mins): [Extend Search Block from Block Collection](exercise4/instructions.md)
 
 **What you'll learn**:
 - How query-index.json works as a search data source
@@ -133,7 +135,7 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ---
 
-**Exercise 5** (25 mins): [JSON2HTML - Dynamic Pages](exercise5/instructions.md)
+**Exercise 5** (25 mins): [JSON2HTML - Generate Pages from Data](exercise5/instructions.md)
 
 **What you'll learn**:
 - JSON2HTML worker service for dynamic page generation
@@ -155,7 +157,7 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ## Session 2: Advanced Topics (1 hour 30 minutes)
 
-**Exercise 6** (20 mins): [Form Submissions to Slack](exercise6/instructions.md)
+**Exercise 6** (20 mins): [Form Submissions with Workers](exercise6/instructions.md)
 
 **What you'll learn**:
 - Building forms in EDS blocks
@@ -172,24 +174,24 @@ By the end of this lab, you'll understand how to build production-ready websites
 
 ---
 
-**Exercise 7** (30 mins): [DA Plugin Development](exercise7/instructions.md)
+**Exercise 7** (30 mins): [DA.live Plugin Development](exercise7/instructions.md)
 
 **What you'll learn**:
-- How DA.live plugins extend authoring capabilities
-- Plugin architecture and API
-- Installing and testing plugins
-- Interacting with document content programmatically
+- How DA.live plugins work as library integrations (DA App SDK)
+- Plugin architecture (HTML + JS in iframe, PostMessage)
+- Developing plugins locally and deploying to your branch
+- Inserting content into documents via SDK actions
 
 **What you'll build**:
-- Metadata Generator plugin
-- Custom toolbar button
-- Auto-generation of description and tags from content
+- EmbedWidget plugin (paste TradingView embed → structured block)
+- TradingView block decorator to render the widget on the page
+- Plugin accessible from library palette with `?ref=local` or `?ref=jsmith`
 
-**Key takeaway**: Plugins extend DA.live with custom functionality. Automate repetitive tasks, enforce standards, integrate with external systems.
+**Key takeaway**: Plugins let authors use familiar paste workflows while keeping only block markup in the document. One plugin, reusable across pages.
 
 ---
 
-**Exercise 8** (30 mins): [Repoless Multi-Site Setup](exercise8/instructions.md)
+**Exercise 8** (30 mins): [Repoless Multi-Site & Multi-Brand](exercise8/instructions.md)
 
 **What you'll learn**:
 - Repoless architecture in EDS
@@ -229,7 +231,7 @@ Each exercise builds on previous concepts:
 - JSON2HTML service: Data + Mustache templates = Unlimited pages
 
 **Exercises 6-7**: Real-World Integrations
-- Output (Forms -> Slack) + Input (Widgets -> Pages)
+- Forms → Worker → Slack; Plugins → paste embed → block content
 
 **Exercise 8**: Enterprise Scale
 - Single site -> Multi-site architecture (hands-on repoless setup)
@@ -261,6 +263,8 @@ Each exercise builds on previous concepts:
 ---
 
 ## Resources
+
+**Solutions**: [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers) — complete solutions for all lab exercises.
 
 **Documentation**:
 - [AEM.live Docs](https://www.aem.live/)

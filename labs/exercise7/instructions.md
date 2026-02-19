@@ -8,31 +8,37 @@
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
   - [How DA.live Plugins Work](#how-dalive-plugins-work)
+  - [Understanding the DA App SDK](#understanding-the-da-app-sdk)
+  - [Plugin Architecture](#plugin-architecture)
 - **Hands-on Lab**
-  - [Create an EmbedWidget Plugin](#step-1-create-plugin-html)
-  - [Create a TradingView Block](#step-25-create-tradingview-block-decorator)
-  - [Test Plugin Locally First](#step-4-test-plugin-locally-first)
-  - [Create page, Use Plugin, Preview and Test](#step-6-preview-the-page-and-verify-widget-rendering)
+  - [Step 1: Create Plugin HTML](#step-1-create-plugin-html)
+  - [Step 1.5: Create Plugin CSS](#step-15-create-plugin-css)
+  - [Step 2: Create Plugin JavaScript](#step-2-create-plugin-javascript)
+  - [Step 2.5: Create TradingView Block Decorator](#step-25-create-tradingview-block-decorator)
+  - [Step 3: Commit Plugin Files](#step-3-commit-plugin-files)
+  - [Step 4: Test Plugin Locally First](#step-4-test-plugin-locally-first)
+  - [Step 5: Access Plugin on Your Branch](#step-5-access-plugin-on-your-branch)
+  - [Step 6: Preview the Page and Verify Widget Rendering](#step-6-preview-the-page-and-verify-widget-rendering)
+  - [Step 7: Optional - Register Plugin in Library](#step-7-optional---register-plugin-in-library)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
-- Exercises 1-6 completed
-- Access to DA.live (you should already be authoring there)
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
+- Code editor open with the repository
+- Exercises 1–6 completed (if doing in sequence)
+- DA.live access
+- **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
 
-**Your Personal Workspace**: All work in `/drafts/jsmith/` (use your name: first initial + last name, lowercase)
+**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
 
-**Understanding DA.live Context**:
-- You've been authoring content in DA.live (Exercises 1-6)
-- Now you'll extend DA.live itself with custom tools
-- Plugins help authors insert pre-formatted content consistently
+**Context:** You've been authoring in DA.live (Exercises 1–6); this exercise extends DA.live with custom plugins so authors can insert pre-formatted content from the library.
 
 ---
 
@@ -260,7 +266,7 @@ https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget
 
 **File**: `tools/plugins/embedwidget/embedwidget.html`
 
-**NOTE** : You can choose to copy the `embedwidget` plugin from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/tools/plugins/embedwidget)
+**NOTE**: You can copy the `embedwidget` plugin from the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers/tools/plugins/embedwidget).
  branch in github
 
 Copy this code:
@@ -481,7 +487,7 @@ Create:
 - `blocks/tradingview/tradingview.js`
 - `blocks/tradingview/tradingview.css`
 
-**NOTE** : You can choose to copy the `tradingview` block from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/tradingview) branch in github
+**NOTE**: You can copy the `tradingview` block from the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/tradingview).
 
 Use the same pattern you implemented in this repo:
 - read block config with `readBlockConfig(block)`
@@ -577,13 +583,14 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embed
 
 After inserting the block in DA, validate that the `tradingview` block decorator renders the actual widget on the page.
 
-1. **Preview** your DA document containing the inserted block
+1. **Preview** your DA document containing the inserted block (DA.live auto-saves)
 2. **Open the preview URL** in your browser (branch or local)
-3. **Verify rendered output**:
+3. **Test on desktop and mobile**: Use Chrome DevTools responsive view (F12 → device toolbar Cmd+Shift+M / Ctrl+Shift+M) to verify the widget layout at different widths.
+4. **Verify rendered output**:
    - widget container is visible (not just a raw table)
    - TradingView widget loads in that section
    - configured height is applied
-4. **If widget does not render**, check DevTools Console/Network for blocked script or JSON parsing issues
+5. **If widget does not render**, check DevTools Console/Network for blocked script or JSON parsing issues
 
 ---
 
@@ -592,7 +599,7 @@ After inserting the block in DA, validate that the `tradingview` block decorator
 
 For production use, plugins should be registered in the site configuration so authors can discover them automatically.
 
-**Note** : For this lab excerise, the plugin has already been added to the DA Library.
+**Note**: For this lab exercise, the plugin has already been added to the DA Library.
 
 **To register your plugin** (instructor may do this):
 
@@ -602,7 +609,7 @@ For production use, plugins should be registered in the site configuration so au
    |-------|------|------------|
    | EmbedWidget | https://content.da.live/cloudadoption/nycmasterclass/tools/plugins/embedwidget | dialog |
 
-3. **Save and publish** the config
+3. Config auto-saves; **publish** the config when ready.
 
 **Once registered**:
 - Plugin appears automatically in library palette
@@ -827,6 +834,7 @@ buttons.forEach(btn => {
   - invalid embed is rejected with clear messaging
 - [ ] **Content inserts correctly** as structured HTML table
 - [ ] **Preview rendering works**: inserted block decorates and widget loads on the page
+- [ ] **Tested in Chrome DevTools responsive view** (desktop and mobile)
 - [ ] **Library closes** automatically after insertion
 - [ ] **Committed and pushed** to feature branch (`git push origin jsmith`)
 - [ ] **Tested on branch** with `?ref=jsmith` parameter
@@ -914,6 +922,12 @@ await actions.sendHTML(html);
 - **[TradingView Company Profile Widget](https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/)** - Example widget used in this lab
 - **[da-blog-tools TradingView README](https://raw.githubusercontent.com/aemsites/da-blog-tools/refs/heads/main/tools/plugins/tradingview/README.md)** - Source pattern for embed conversion
 - **[PostMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)** - Understanding cross-origin communication
+
+---
+
+## Solution
+
+The complete solution for this exercise (embedwidget plugin, tradingview block) is on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 

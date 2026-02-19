@@ -10,24 +10,27 @@
   - [Why This Matters](#why-this-matters)
   - [The Complete Data Flow](#the-complete-data-flow)
 - **Hands-on Lab**
-  - [Preview Generated Pages](#step-1-preview-the-generated-pages)
-  - [Test Templates in Simulator](#step-4-test-templates-in-simulator)
-  - [Add New Events](#step-5-add-new-events-to-the-data-sheet)
-  - [Commit Your Changes](#step-7-commit-your-changes)
+  - [Step 1: Preview the Generated Pages](#step-1-preview-the-generated-pages)
+  - [Step 2: Understand the Templates](#step-2-understand-the-templates)
+  - [Step 3: Understand the Worker Configuration](#step-3-understand-the-worker-configuration)
+  - [Step 4: Test Templates in Simulator](#step-4-test-templates-in-simulator)
+  - [Step 5: Add New Events to the Data Sheet](#step-5-add-new-events-to-the-data-sheet)
+  - [Step 6: Understanding How the Event Block Works](#step-6-understanding-how-the-event-block-works)
+  - [Step 7: Add the Event Block to Your Branch](#step-7-add-the-event-block-to-your-branch)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
-- Exercises 1-4 completed
-
-**Your Personal Workspace**: All work in `/drafts/jsmith/` (use your name: first initial + last name, lowercase)
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
+- Code editor open with the repository
+- Exercises 1–4 completed (if doing in sequence)
+- **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
 
 **What's already set up for you**:
 
@@ -35,11 +38,11 @@ The instructor has pre-configured the entire JSON2HTML pipeline so you can focus
 
 | Component | Location | Status |
 |-----------|----------|--------|
-| **Data source** (Sheet) | `/future-events` in DA.live | ✅ Published — available as JSON |
-| **List template** | `/labs/exercise5/events-template` in repo | ✅ Committed |
-| **Detail template** | `/labs/exercise5/event-template` in repo | ✅ Committed |
-| **Event block** | `blocks/event/event.js` + `event.css` in repo | ✅ Committed |
-| **Worker config** | JSON2HTML Cloudflare worker | ✅ Configured for `main` branch |
+| **Data source** (Sheet) | `/future-events` in DA.live | Published — available as JSON |
+| **List template** | `/labs/exercise5/events-template` in repo | Committed |
+| **Detail template** | `/labs/exercise5/event-template` in repo | Committed |
+| **Event block** | `blocks/event/event.js` + `event.css` in repo | Committed |
+| **Worker config** | JSON2HTML Cloudflare worker | Configured for `main` branch |
 
 **Verify data source exists**:
 
@@ -186,6 +189,8 @@ The instructor has created a **Sheet in DA.live** at `/future-events` with upcom
 ## Step 1: Preview the Generated Pages
 
 Everything is pre-configured. The instructor has already generated the pages on edge. Start by seeing the result!
+
+**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to verify the grid at different widths (1/2/3 columns). Use this when checking list and detail pages in this exercise.
 
 **Open the list page** (replace `jsmith` with your branch name):
 ```
@@ -481,7 +486,7 @@ main .section.event-container:has(> .event-wrapper ~ .event-wrapper) { ... }
 
 ## Step 7: Add the Event Block to Your Branch
 
-The `event` block code exists in the `answers` branch. Copy it into your branch so EDS can load it.
+The `event` block code exists on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Copy it into your branch so EDS can load it.
 
 ```bash
 # From your branch, copy the event block files from answers
@@ -575,6 +580,7 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 - [ ] **New events appear** on list page and generate working detail pages automatically
 - [ ] **Understand EDS DOM** — `.event-wrapper` as direct children of `.section`
 - [ ] **Understand complete flow**: Request → Worker → JSON + Template → HTML → EDS → Styled Page
+- [ ] **Tested in Chrome DevTools responsive view** (desktop and mobile) for list and detail pages
 - [ ] **Branch has event block** — `blocks/event/event.js` and `event.css` available on your branch
 
 ---
@@ -640,6 +646,12 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 - [Mustache Documentation](https://mustache.github.io/mustache.5.html)
 - [EDS Markup Reference](https://www.aem.live/developer/markup-sections-blocks)
 - [CSS :has() Selector](https://developer.mozilla.org/en-US/docs/Web/CSS/:has)
+
+---
+
+## Solution
+
+The complete solution for this exercise (event block, templates) is on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 

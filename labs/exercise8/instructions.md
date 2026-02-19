@@ -9,26 +9,34 @@
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
   - [Understanding Repoless](#understanding-repoless)
+  - [How It Works](#how-it-works)
 - **Hands-on Lab**
-  - [Clone Site Configuration](#step-1-clone-the-site-configuration)
-  - [Create Content & Preview](#step-4-preview-your-site)
-  - [Multi-Brand Theming](#step-7-multi-brand-theming)
-  - [Explore Others' Sites](#step-8-explore-other-participants-sites)
+  - [Step 1: Clone the Site Configuration](#step-1-clone-the-site-configuration)
+  - [Step 2: Create Your Content Folder](#step-2-create-your-content-folder)
+  - [Step 3: Copy Content from NYC Masterclass](#step-3-copy-content-from-nyc-masterclass)
+  - [Step 4: Preview Your Site](#step-4-preview-your-site)
+  - [Step 5: Verify Repoless is Working](#step-5-verify-repoless-is-working)
+  - [Step 6: Customize Your Content](#step-6-customize-your-content)
+  - [Step 7: Multi-Brand Theming](#step-7-multi-brand-theming)
+  - [Step 8: Explore Other Participants' Sites](#step-8-explore-other-participants-sites)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Exercises 1-7 completed
-- Access to DA.live (you should already be authoring there)
-- Logged into AEM Sidekick extension (for Site Admin tool auth)
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000` (if testing locally)
+- Code editor open with the repository
+- Exercises 1–7 completed (if doing in sequence)
+- DA.live access
+- AEM Sidekick logged in (for Site Admin tool auth)
+- **Personal workspace**: your own site `cloudadoption/jsmith-mc` (use your name, lowercase)
 
-**Your Personal Workspace**: All work in your own site: `cloudadoption/jsmith-mc` (use your name: first initial + last name, lowercase)
+**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
 
 ---
 
@@ -225,7 +233,9 @@ Imported content needs to be previewed and published before it's available on yo
 
 1. Open your site: `https://main--jsmith-mc--cloudadoption.aem.page/`
 
-2. **You should see**: The full NYC Masterclass homepage — same hero, same cards, same styling
+2. **Test on desktop and mobile**: Use Chrome DevTools responsive view (F12 → device toolbar Cmd+Shift+M / Ctrl+Shift+M) to verify the site at different widths.
+
+3. **You should see**: The full NYC Masterclass homepage — same hero, same cards, same styling
 
 **What's happening**:
 - **Content** is coming from `cloudadoption/jsmith-mc` (your DA.live folder)
@@ -272,7 +282,7 @@ Now make the site yours by editing content. This proves that each site's content
 
 3. Change the `<h1>` to: **Jsmith's Masterclass** (use your name)
 
-4. **Preview** the page
+4. DA.live auto-saves. Click **Preview** to see the page.
 
 **Verify**:
 - Your site (`jsmith-mc`) shows YOUR heading
@@ -315,7 +325,7 @@ In AEM Edge Delivery Services, **bulk metadata** lets you set default metadata v
 - The `URL` column uses glob patterns to match pages — `/**` matches every page on the site
 - The `theme` column sets the metadata value that `decorateTemplateAndTheme()` reads
 
-4. **Preview** the metadata sheet so it becomes available as JSON
+4. DA.live auto-saves. **Preview** the metadata sheet so it becomes available as JSON.
 
 **What this does**: Every page on your site now has `theme: jsmith` in its metadata. The `decorateTemplateAndTheme()` function in `aem.js` reads this value and adds `class="jsmith"` to the `<body>` element. No page-level editing needed — one sheet controls the entire site.
 
@@ -498,6 +508,7 @@ Ask other participants to share their site URLs and compare.
 - [ ] Created content folder in DA.live (`cloudadoption/jsmith-mc`)
 - [ ] Copied content using Traverse and Import tools
 - [ ] Previewed your site and saw it working
+- [ ] **Tested in Chrome DevTools responsive view** (desktop and mobile)
 - [ ] Verified code loading from `nycmasterclass` (DevTools Network tab)
 - [ ] Customized the homepage heading (content independence)
 - [ ] Created metadata sheet in DA.live to set theme site-wide
@@ -554,4 +565,4 @@ Thank you for participating in NYC Masterclass 2026!
 
 ## Solution
 
-The complete solution for this exercise is available on the `answers` branch.
+The complete solution for this exercise is available on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.

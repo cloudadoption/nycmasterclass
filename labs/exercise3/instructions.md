@@ -39,13 +39,13 @@ The speaker data already exists at `/speakers.json` with 6 Adobe experts. In thi
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
-- Exercises 1 and 2 completed
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
 - Code editor open with the repository
+- Exercises 1–2 completed (if doing in sequence)
 
 **Verify you're on your branch**:
 ```bash
@@ -742,7 +742,7 @@ That's it. The index updates in the background — by the time you get to Ex4 te
 
 ## Solution
 
-The complete solution for this exercise is available on the `answers` branch.
+The complete solution for this exercise is available on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 
