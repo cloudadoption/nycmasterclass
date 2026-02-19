@@ -1,4 +1,4 @@
-# Exercise 8: Repoless Multi-Site Setup
+# Exercise 8: Repoless Multi-Site & Multi-Brand
 
 **Duration**: 30 minutes
 
@@ -22,10 +22,11 @@ Required:
 
 - How repoless architecture works in Edge Delivery Services
 - How to share code across multiple sites (one codebase, many sites)
-- How to use the Site Admin tool to configure sites
-- How to create your own DA.live project as a new site
+- How to use the Site Admin tool to clone site configurations
+- How to use DA.live Traverse and Import tools to copy content
+- How to create your own branded site in minutes
+- How multi-brand theming works with body class selectors and CSS custom properties
 - How Configuration Service manages code and content separation
-- How to verify code is loading from a shared repository
 
 ---
 
@@ -42,12 +43,17 @@ Required:
 - **Code updates** to `nycmasterclass` apply to all sites automatically
 - **Zero code duplication** - Launch new sites in minutes
 
+**Multi-brand theming**:
+- Same code, different visual identities per site
+- CSS custom properties scoped to body classes
+- Theme applied via metadata — no code changes needed per site
+
 **Benefits**:
-- Maintain code once -> all sites get updates instantly
+- Maintain code once → all sites get updates instantly
 - Launch new sites in minutes (not hours or days)
 - Consistent functionality and quality across sites
 - Bug fixes apply everywhere automatically
-- Scale from 1 to 100+ sites effortlessly
+- Each site can have its own visual identity
 
 ---
 
@@ -86,7 +92,7 @@ DA.live Projects (each uses nycmasterclass code):
 └── cloudadoption/jsmith-mc (YOUR content)
 ```
 
-**Solution**: Update hero block once in `nycmasterclass` -> all 4 sites get it instantly.
+**Solution**: Update hero block once in `nycmasterclass` → all 4 sites get it instantly.
 
 **Reference**: [Repoless Architecture](https://www.aem.live/docs/repoless)
 
@@ -108,117 +114,108 @@ Each site in DA.live can specify:
 
 ### What Gets Loaded From Where
 
-When someone visits `https://main--jsmith-mc--cloudadoption.aem.page/schedule`:
+When someone visits `https://main--jsmith-mc--cloudadoption.aem.page/`:
 
-1. EDS checks `jsmith-mc` configuration -> sees code source is `nycmasterclass`
-2. Gets **content** (schedule.html) from `cloudadoption/jsmith-mc` in DA.live
+1. EDS checks `jsmith-mc` configuration → sees code source is `nycmasterclass`
+2. Gets **content** (index.html) from `cloudadoption/jsmith-mc` in DA.live
 3. Gets **code** (hero.js, hero.css, scripts.js) from `cloudadoption/nycmasterclass` in GitHub
-4. Combines them -> your page with your content, shared functionality
+4. Combines them → your page with your content, shared functionality
 
 **Reference**: [Configuration Service Setup](https://www.aem.live/docs/config-service-setup)
 
 ---
 
-## Step 1: Create Your DA.live Project
+## Step 1: Clone the Site Configuration
 
-You'll create your own DA.live project for your personal masterclass site.
+The Site Admin tool lets you clone an existing site's configuration to create a new site instantly.
 
-1. Open DA.live: `https://da.live/`
-2. Click "+" or "New Project"
-3. Create project:
-   - **Org**: `cloudadoption` (should be pre-filled if you have access)
-   - **Project Name**: `jsmith-mc` (your first initial + last name + `-mc`)
-   - Example: John Smith -> `jsmith-mc`, Sarah Johnson -> `sjohnson-mc`
+1. Open **Site Admin**: [https://tools.aem.live/tools/site-admin/index.html](https://tools.aem.live/tools/site-admin/index.html)
 
-4. Click "Create"
+2. **IMPORTANT**: You must be logged in via AEM Sidekick extension first
 
-**Verification**: You should now see `cloudadoption/jsmith-mc` in your DA.live projects list.
-
----
-
-## Step 2: Create Initial Content
-
-Create a homepage for your site to prove content independence:
-
-1. In DA.live, open your project (`cloudadoption/jsmith-mc`)
-2. Create a new page: `index.html`
-3. Add content (customize with your name/city):
-
-```html
-<div>
-  <div>
-    <picture>
-      <source type="image/webp" srcset="https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1200&fm=webp" media="(min-width: 600px)">
-      <source type="image/webp" srcset="https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&fm=webp">
-      <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" alt="Tech Conference">
-    </picture>
-  </div>
-  <div>
-    <h1>San Francisco Masterclass</h1>
-    <p>May 2026 • Your City Here</p>
-  </div>
-</div>
-```
-
-4. Add a Metadata block at the end:
-
-```html
-<div class="metadata">
-  <div>
-    <div>Title</div>
-    <div>SF Masterclass 2026</div>
-  </div>
-  <div>
-    <div>Description</div>
-    <div>Edge Delivery Services training in San Francisco</div>
-  </div>
-</div>
-```
-
-5. **Preview** the page in DA.live
-
-**At this point**: You have content, but no code (blocks won't work yet).
-
----
-
-## Step 3: Configure Code Source (The Repoless Magic!)
-
-Now connect your site to the shared `nycmasterclass` codebase:
-
-1. Open **Site Admin Tool**: `https://tools.aem.live/tools/site-admin/index.html`
-
-2. **IMPORTANT**: You must be logged in via AEM Sidekick extension first (should already be from earlier exercises)
-
-3. In Site Admin:
+3. In the form:
    - **Organization**: `cloudadoption`
-   - **Repository**: `jsmith-mc` (your project name)
-   - Click "Load Config"
+   - **Site**: `nycmasterclass`
+   - Click **List** to load the existing configuration
 
-4. If no config exists, you'll see an empty form or option to add site
+4. Clone the configuration to create your new site:
+   - **New site name**: `jsmith-mc` (your first initial + last name + `-mc`)
+   - Example: John Smith → `jsmith-mc`, Sarah Johnson → `sjohnson-mc`
 
-5. Configure the code source:
-   - Look for **Code Source** or **Code** section
-   - **Code Owner**: `cloudadoption`
-   - **Code Repository**: `nycmasterclass`
-   - **Code Branch**: `main` (or leave empty for default)
+5. Confirm the clone
 
-6. **Save** the configuration
-
-**What you just did**: Told the Configuration Service that `jsmith-mc` should load all code (blocks, scripts, styles) from `cloudadoption/nycmasterclass` repository.
+**What you just did**: Created a new site entry in the Configuration Service that inherits all settings from `nycmasterclass` — including the code source. Your new site already knows to load code from the shared `nycmasterclass` repository.
 
 ---
 
-## Step 4: Verify Repoless is Working
+## Step 2: Create Your Content Folder
 
-Test that your site loads code from the shared `nycmasterclass` repository:
+Now create a place for your site's content in DA.live.
+
+1. Go to DA.live: [https://da.live/#/cloudadoption](https://da.live/#/cloudadoption)
+
+2. You should see the `cloudadoption` org with its existing sites (including `nycmasterclass`)
+
+3. Create a new folder called `jsmith-mc` (your name)
+
+**Result**: You now have an empty content folder at `cloudadoption/jsmith-mc`.
+
+---
+
+## Step 3: Copy Content from NYC Masterclass
+
+Instead of creating content from scratch, use the DA.live tools to copy all existing content from the NYC Masterclass site.
+
+### 3a: Traverse the Source Site
+
+1. Open the **Traverse** tool: [https://da.live/apps/traverse](https://da.live/apps/traverse)
+
+2. Enter the source site path: `cloudadoption/nycmasterclass`
+
+3. Run the traverse — this crawls the site and builds a list of all content pages and assets
+
+4. Wait for it to complete
+
+### 3b: Import Content to Your Site
+
+1. Open the **Import** tool: [https://da.live/apps/import](https://da.live/apps/import)
+
+2. Set the **source**: `cloudadoption/nycmasterclass`
+
+3. Set the **destination**: `cloudadoption/jsmith-mc` (your site)
+
+4. Run the import — this copies all content (pages, images, metadata) to your site
+
+5. Wait for it to complete
+
+**Result**: Your site now has a full copy of all NYC Masterclass content.
+
+---
+
+## Step 4: Preview Your Site
 
 1. Open your site: `https://main--jsmith-mc--cloudadoption.aem.page/`
 
-2. Open browser DevTools (F12) -> Network tab
+2. **You should see**: The full NYC Masterclass homepage — same hero, same cards, same styling
+
+**What's happening**:
+- **Content** is coming from `cloudadoption/jsmith-mc` (your DA.live folder)
+- **Code** is coming from `cloudadoption/nycmasterclass` (shared GitHub repo)
+- The site looks identical to NYC because you copied the content and share the code
+
+---
+
+## Step 5: Verify Repoless is Working
+
+Prove that code is loading from the shared repository, not your site.
+
+1. On your site (`https://main--jsmith-mc--cloudadoption.aem.page/`), open browser **DevTools** (F12)
+
+2. Go to the **Network** tab
 
 3. Refresh the page
 
-4. Filter by "JS" or "CSS" and look at the file URLs
+4. Filter by **JS** or **CSS** and look at the file URLs
 
 **You should see**:
 ```
@@ -236,192 +233,173 @@ https://main--nycmasterclass--cloudadoption.aem.page/styles/styles.css
 
 ---
 
-## Step 5: Prove Content Independence
+## Step 6: Customize Your Content
 
-Create another page with your own content to prove sites are independent:
+Now make the site yours by editing content. This proves that each site's content is independent.
 
-1. In DA.live (`cloudadoption/jsmith-mc`), create `schedule.html`
+1. In DA.live, navigate to your site: [https://da.live/#/cloudadoption/jsmith-mc](https://da.live/#/cloudadoption/jsmith-mc)
 
-2. Add a simple table block with YOUR city's schedule:
+2. Open the homepage (`index`)
 
-```html
-<div class="section schedule">
-  <h1>My City Schedule</h1>
-  
-  <table>
-    <tbody>
-      <tr>
-        <td>9:15 AM</td>
-        <td><a href="/sessions/getting-started">Getting Started with EDS</a></td>
-        <td>Jane Doe</td>
-      </tr>
-      <tr>
-        <td>10:30 AM</td>
-        <td><a href="/sessions/blocks">Building Blocks</a></td>
-        <td>John Smith</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+3. Change the `<h1>` to: **Jsmith's Masterclass** (use your name)
 
-<div class="metadata">
-  <div>
-    <div>Title</div>
-    <div>My City Schedule</div>
-  </div>
-</div>
+4. **Preview** the page
+
+**Verify**:
+- Your site (`jsmith-mc`) shows YOUR heading
+- NYC site (`nycmasterclass`) still shows the original heading
+- Both sites have identical styling, blocks, and functionality
+
+**This proves**: Content is completely independent between sites while all code is shared.
+
+---
+
+## Step 7: Multi-Brand Theming
+
+Your site works, but it looks identical to NYC Masterclass. In a real multi-brand setup, each site needs its own visual identity. You'll add a custom theme using **body class selectors** — one of the simplest approaches to multi-brand theming.
+
+**Reference**: [Multi-Brand EDS Implementation Using Repoless](https://main--helix-website--adobe.aem.page/drafts/ravuthu/multi-brand-eds-implementation-using-repoless#option-1-single-file-with-body-class-selectors)
+
+### How Themes Work
+
+1. Authors set a `theme` value in page metadata (e.g., `theme: masterclass`)
+2. The `decorateTemplateAndTheme()` function in `aem.js` reads this value and adds it as a class on `<body>`
+3. CSS rules scoped to `body.masterclass` apply the visual identity
+4. Different sites set different theme values → different visual identities from the same CSS file
+
+The NYC Masterclass site currently uses `theme: masterclass`, which produces the orange/purple gradient. You'll create your own theme.
+
+### 7a: Set Your Theme via the Metadata Sheet
+
+In AEM Edge Delivery Services, **bulk metadata** lets you set default metadata values for all pages on a site using a spreadsheet. This is how you apply a theme site-wide without editing every page individually.
+
+1. In DA.live, navigate to your site: [https://da.live/#/cloudadoption/jsmith-mc](https://da.live/#/cloudadoption/jsmith-mc)
+
+2. Open the **sheet** called `metadata` at the root of your site
+
+3. Set up the sheet with these columns and values:
+
+| URL | theme |
+|-----|-------|
+| `/**` | `jsmith` |
+
+- The `URL` column uses glob patterns to match pages — `/**` matches every page on the site
+- The `theme` column sets the metadata value that `decorateTemplateAndTheme()` reads
+
+4. **Preview** the metadata sheet so it becomes available as JSON
+
+**What this does**: Every page on your site now has `theme: jsmith` in its metadata. The `decorateTemplateAndTheme()` function in `aem.js` reads this value and adds `class="jsmith"` to the `<body>` element. No page-level editing needed — one sheet controls the entire site.
+
+> **Tip**: Bulk metadata is a powerful tool beyond theming. You can set any metadata key (title, description, og:image, template, etc.) for groups of pages using URL patterns like `/blog/**` or `/events/**`.
+
+### 7b: Add Your Theme CSS
+
+On your branch, add a new theme in `styles/styles.css`. Add this **after** the existing `body.masterclass` rule:
+
+```css
+body.jsmith {
+  --brand-1: #06b6d4;
+  --brand-2: #2563eb;
+  background: radial-gradient(1200px 600px at 80% -10%, #06b6d4 0%, transparent 60%),
+              radial-gradient(900px 600px at 10% 10%, #2563eb 0%, transparent 60%),
+              linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
+  background-attachment: fixed;
+  color: var(--ink);
+}
 ```
 
-3. Add **Section Metadata** (between table and metadata block):
+> **Use your name** as the class name (e.g., `body.sjohnson`, `body.kwang`). Pick any colors you like!
 
-```html
----
-Section Metadata
+**What this does**:
+- Overrides `--brand-1` (accent color used in cards, links, eyebrows) from orange to cyan
+- Overrides `--brand-2` (secondary accent) from purple to blue
+- Changes the background gradient to match the new brand colors
+- All blocks that use `var(--brand-1)` and `var(--brand-2)` automatically pick up the new colors
 
-Style
-schedule
----
+### 7c: Test Locally
+
+Before pushing, test your theme locally. Use the `--pagesUrl` flag to tell the local dev server to load **content** from your new site while using your **local code**:
+
+```bash
+aem up --pagesUrl https://main--jsmith-mc--cloudadoption.aem.page/
 ```
 
-4. **Preview**: `https://main--jsmith-mc--cloudadoption.aem.page/schedule`
+Replace `jsmith-mc` with your site name.
 
-**What you should see**:
-- Your custom schedule content (different from NYC)
-- Same table styling as NYC site (from shared CSS)
-- Links styled as text, not buttons (from shared `.section.schedule` CSS)
-- **Same functionality, different content!**
+Open `http://localhost:3000/` and **you should see**:
+- Your site's content (your custom heading from Step 6)
+- Your new theme colors applied (cyan/blue instead of orange/purple)
+- The full site running with your local code + your remote content
 
-**Compare with NYC schedule**:
-- Visit: `https://main--nycmasterclass--cloudadoption.aem.page/schedule`
-- Notice: Different content (NYC dates vs yours), same code (styling, blocks)
+**This is a key repoless development pattern**: run local code against any site's content for testing.
 
----
+> **Pro tip**: You can run both sites in parallel by using the `--port` flag. In one terminal run the original site (`aem up`) on the default port 3000, and in another run your new site on a different port:
+> ```bash
+> aem up --port 3001 --pagesUrl https://main--jsmith-mc--cloudadoption.aem.page/
+> ```
+> Now compare `http://localhost:3000/` (original) and `http://localhost:3001/` (your theme) side by side.
 
-## Step 6: Make a Content Change (Prove Independence)
+### 7d: Push Your Changes
 
-Update your homepage to prove content independence:
-
-1. In DA.live, edit `index.html` in `cloudadoption/jsmith-mc`
-
-2. Change the heading and dates:
-
-```html
-<div>
-  <div>
-    <picture>
-      <source type="image/webp" srcset="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&fm=webp" media="(min-width: 600px)">
-      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800" alt="Your City Skyline">
-    </picture>
-  </div>
-  <div>
-    <h1>Austin Masterclass</h1>
-    <p>August 2026 • Austin, Texas</p>
-  </div>
-</div>
+```bash
+git add styles/styles.css
+git commit -m "feat: add personal theme for jsmith-mc"
+git push origin jsmith
 ```
 
-3. **Preview** and **Publish**
+Replace `jsmith` with your branch name.
 
-4. Verify:
-   - Your site shows Austin
-   - NYC site still shows NYC
-   - Both sites use same blocks, styles, scripts
+### 7e: Verify Your Theme
 
-**This proves**: Each site's content is completely independent while sharing all code.
+Open your site: `https://jsmith--jsmith-mc--cloudadoption.aem.page/`
+
+**You should see**:
+- Your custom heading ("Jsmith's Masterclass")
+- Your custom brand colors (cyan/blue instead of orange/purple)
+- Same blocks, same layout, same functionality — your content with your visual identity
+
+**Compare with NYC**: Open `https://main--nycmasterclass--cloudadoption.aem.page/` side by side. Same codebase, different content, different brand.
+
+If this was a real project, at this point, you'd raise a pull request to merge `jsmith` into `main` and once completed, you'd have a basic multi-brand setup powered by a singular codebase.
+
+### Why This Approach Works
+
+From the [multi-brand theming guide](https://main--helix-website--adobe.aem.page/drafts/ravuthu/multi-brand-eds-implementation-using-repoless#option-1-single-file-with-body-class-selectors):
+
+> The simplest approach is to define all brand variables in one file, scoped by body class.
+
+```
+styles/styles.css
+├── :root { ... }              ← Shared base variables
+├── body.masterclass { ... }   ← NYC Masterclass theme (orange/purple)
+├── body.jsmith { ... }        ← Your theme (cyan/blue)
+├── body.sjohnson { ... }      ← Another participant's theme
+└── ...                        ← Add more themes as needed
+```
+
+Each site's metadata controls which theme class is applied. **No code changes needed** to launch a new brand — just set the metadata and add a CSS rule.
 
 ---
 
-## Step 7: Explore Other Participants' Sites
+## Step 8: Explore Other Participants' Sites
 
-Ask other participants to share their site URLs. Compare:
-
-- Site 1: `https://main--jsmith-mc--cloudadoption.aem.page/`
-- Site 2: `https://main--agarcia-mc--cloudadoption.aem.page/`
-- Site 3: `https://main--kwang-mc--cloudadoption.aem.page/`
+Ask other participants to share their site URLs and compare.
 
 **What you'll notice**:
-- All sites have different content (cities, dates, schedules)
-- All sites have identical styling (hero, navigation, footer)
-- All sites use the same blocks (same functionality)
+- All sites have different content (names, headings)
+- All sites have different brand colors (if they completed the theming step)
+- All sites use the same blocks and functionality
 - All sites load code from `nycmasterclass` (check DevTools Network tab)
 
-**Result**: 20+ unique sites from one codebase!
-
----
-
-## Step 8: Explore Configuration Tools
-
-**Site Admin Tool**:
-
-Visit: `https://tools.aem.live/tools/site-admin/index.html`
-
-Search for `cloudadoption` and explore:
-- See all participants' sites
-- Notice they all use code from `nycmasterclass`
-- See different content sources for each
-
-**Other Configuration Tools**:
-
-Visit: `https://tools.aem.live`
-
-Explore additional tools:
-- **Admin Edit**: Modify site configuration (headers, metadata, redirects)
-- **Bulk Operations**: Manage multiple sites at once
-- **Permissions**: Control access per site
-
-**What's configurable without code changes**:
-- Content source (DA.live project)
-- Code source (GitHub repo)
-- Access permissions (who can edit)
-- Headers and redirects
-- Metadata defaults
-- CDN settings
-
-**What requires code changes**:
-- Themes (colors, fonts) - requires CSS changes
-- Block functionality - requires JS changes
-- New features - requires new blocks/scripts
-
----
-
-## Optional: Add Site-Specific Configuration
-
-For advanced participants, create site-specific config to customize behavior:
-
-1. In DA.live (`cloudadoption/jsmith-mc`), create `config.json` sheet:
-
-| key      | value  |
-|----------|--------|
-| site     | austin |
-| city     | Austin |
-| year     | 2026   |
-| location | Austin Convention Center |
-| primaryColor | #FF6B35 |
-
-2. Access config in blocks (example):
-
-```javascript
-// In any block
-const response = await fetch('/config.json');
-const configData = await response.json();
-const config = {};
-configData.data.forEach(row => {
-  config[row.key] = row.value;
-});
-
-// Use config
-console.log(config.city); // "Austin"
-```
-
-**Key insight**: Each site's `/config.json` comes from its own DA.live project, so same code reads different data.
+**Result**: Multiple unique branded sites from one codebase!
 
 ---
 
 ## Key Benefits of Repoless
 
 **For developers**:
-- Fix bug once -> all sites get fix instantly
-- Add feature once -> all sites get feature immediately
+- Fix bug once → all sites get fix instantly
+- Add feature once → all sites get feature immediately
 - One codebase to maintain (not 10 or 100)
 - Centralized testing and quality control
 - No code duplication or version drift
@@ -430,7 +408,7 @@ console.log(config.city); // "Austin"
 - Each site has own DA.live project (zero conflicts)
 - No code complexity (pure content authoring)
 - Full editorial control per site
-- Site-specific branding via config
+- Site-specific branding via metadata
 
 **For organizations**:
 - Launch new sites in minutes (not days or weeks)
@@ -445,28 +423,28 @@ console.log(config.city); // "Austin"
 **Use Case 1: Multi-Region Events (Like This Masterclass!)**
 - Code: Event site template (blocks, navigation, forms)
 - Sites: NYC, Boston, Austin, London, Tokyo, Dubai
-- Config: City, venue, dates, colors per site
+- Theme: City-specific colors and branding per site
 - Content: Local speakers, sessions, sponsors per site
 - Result: Launch 6 events in 6 cities in 1 hour
 
 **Use Case 2: Multi-Brand E-Commerce**
 - Code: E-commerce platform (product display, cart, checkout)
 - Sites: Brand A, Brand B, Brand C (3 fashion brands)
-- Config: Colors, logo, domain, currency per brand
+- Theme: Colors, logo, typography per brand via body class selectors
 - Content: Products, categories, campaigns per brand
 - Result: Consistent shopping experience, brand-specific identity
 
 **Use Case 3: Department Microsites**
 - Code: Company template (hero, cards, forms)
 - Sites: Marketing, Sales, Engineering, HR, Legal
-- Config: Navigation, colors, contact info per department
+- Theme: Department colors and style via metadata
 - Content: Department-specific pages, resources, team
 - Result: Cohesive company presence, departmental autonomy
 
 **Use Case 4: Franchise Network**
 - Code: Restaurant template (menu, locations, reservations)
 - Sites: 500+ franchise locations (each has own site)
-- Config: Address, hours, phone, menu prices per location
+- Theme: Regional variations (shared base, local overrides)
 - Content: Local photos, events, staff bios per location
 - Result: Consistent brand experience, local customization at scale
 
@@ -474,29 +452,30 @@ console.log(config.city); // "Austin"
 
 ## Key Takeaways
 
-- **Repoless** separates code from content and configuration
-- **One code repository** can serve unlimited sites
+- **Repoless** separates code from content — one codebase, many sites
+- **Site Admin** clones site configurations to launch new sites in minutes
+- **DA.live tools** (Traverse + Import) copy content between sites instantly
 - **Configuration Service** manages which code each site uses
-- **Sites created** via Site Admin tool in minutes
-- **Each site** has own content source in DA.live
+- **Multi-brand theming** uses body class selectors + CSS custom properties
+- **Theme metadata** controls which visual identity a site uses — no code changes needed
 - **Code updates** apply to all sites automatically
-- **Scale** from 1 site to 1000+ sites with same effort
-- **Launch** new sites without forking, duplicating, or managing separate repos
+- **Scale** from 1 site to 1000+ sites with the same codebase
 
 ---
 
 ## Verification Checklist
 
-- [ ] Created your own DA.live project (`cloudadoption/jsmith-mc`)
-- [ ] Created initial content (`index.html` with Hero block)
-- [ ] Configured code source in Site Admin tool (point to `nycmasterclass`)
+- [ ] Cloned `nycmasterclass` site config to create `jsmith-mc` (Site Admin)
+- [ ] Created content folder in DA.live (`cloudadoption/jsmith-mc`)
+- [ ] Copied content using Traverse and Import tools
+- [ ] Previewed your site and saw it working
 - [ ] Verified code loading from `nycmasterclass` (DevTools Network tab)
-- [ ] Created custom schedule page (different content, same styling)
-- [ ] Made content changes (updated city, dates)
+- [ ] Customized the homepage heading (content independence)
+- [ ] Created metadata sheet in DA.live to set theme site-wide
+- [ ] Added theme CSS in `styles/styles.css` with body class selector
+- [ ] Pushed changes and previewed your custom brand colors
 - [ ] Compared your site with other participants' sites
-- [ ] Understand how same code produces different sites
-- [ ] Explored Site Admin and configuration tools
-- [ ] Know what's configurable vs what requires code changes
+- [ ] Understand how one codebase serves many branded sites
 
 ---
 
@@ -504,8 +483,9 @@ console.log(config.city); // "Austin"
 
 - [Repoless Architecture](https://www.aem.live/docs/repoless)
 - [Configuration Service Setup](https://www.aem.live/docs/config-service-setup)
+- [Multi-Brand Theming (Option 1)](https://main--helix-website--adobe.aem.page/drafts/ravuthu/multi-brand-eds-implementation-using-repoless#option-1-single-file-with-body-class-selectors)
+- [Site Admin Tool](https://tools.aem.live/tools/site-admin/index.html)
 - [Admin API](https://www.aem.live/docs/admin.html)
-- [Tools Dashboard](https://tools.aem.live)
 
 ---
 
@@ -515,13 +495,14 @@ You've completed all 8 exercises of the NYC Masterclass 2026 lab.
 
 You now know how to:
 - Author content in DA.live
-- Build blocks with variations
+- Build blocks with enhancements and variations
 - Fetch data from external sources
 - Use query index with auto-blocking
 - Generate pages from JSON templates
 - Handle form submissions via Workers
 - Build DA.live plugins for content insertion
 - Architect multi-site solutions with shared code
+- Apply multi-brand theming from a single codebase
 
 **Next steps**:
 - Review your work
