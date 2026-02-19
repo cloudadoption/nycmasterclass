@@ -1,57 +1,61 @@
-# Exercise 0 — Demo Prompts
+# AI-Assisted Development — Prompts
 
 ---
 
-## Section 1 — Orient
+## Part 2 — Orient
 
 Three prompts. Goal: show what the agent knows and what it can do before
 you ask it to build anything.
 
 ---
 
-### O1 — What skills do you have?
+### 2.1 — What do you know about this project?
 
-> **What this demonstrates**: The agent surfaces its own capabilities from the
-> project config. Students see that skills are project-level tools, not global.
-
-```
-What skills do you have available to help with development on this project?
-```
-
----
-
-### O2 — How does an existing block work?
-
-> **What this demonstrates**: The agent as a pair programmer on an unfamiliar
-> codebase. It reads and explains code it didn't write. Highly relatable use case.
+> **What this demonstrates**: The agent shows genuine project awareness — tech
+> stack, file structure, conventions — and surfaces available skills. Students
+> see that the agent adapts to where it's working, not just generic AI output.
 
 ```
-Explain how the hero block works. What structure does an author create,
-and what does the JavaScript do to it?
+What do you know about this project and what tools do you have to help me
+work on it?
 ```
 
 ---
 
-### O3 — Research before you build
+### 2.2 — Research before you build
 
 > **What this demonstrates**: The agent using a research skill proactively.
 > Before writing anything, it checks whether reference implementations exist.
 > Shows that good agents don't start from scratch by default.
 
 ```
-Before we build anything, check the block collection for existing schedule
-or speakers block implementations we could use as a reference or starting point.
+I need to build a speakers block and a schedule block for this site.
+What's already out there that we can borrow or steal as a starting point?
 ```
 
 ---
 
-## Section 2 — Build
+### 2.3 — Code comprehension + documentation
+
+> **What this demonstrates**: The agent combining local code reading with
+> external documentation. It tours the project's blocks, then checks AEM docs
+> to identify gaps — pulling from multiple sources without being told which to use.
+
+```
+Give me a quick tour of the blocks in this project. Then check the AEM
+docs — what best practices should we be following that we're not? Link me
+to the relevant documentation.
+```
+
+---
+
+## Part 3 — Build
 
 Two blocks. Same CDD workflow. Different levels of control.
 
 ---
 
-### B1 — Speakers block (one-shot)
+### 3.1 — Speakers block (one-shot)
 
 > **What this demonstrates**: Full CDD workflow handed off completely.
 > No approval gate — the agent decides the content model, creates test content,
@@ -64,7 +68,7 @@ speakers — photo, name, title, and a short bio. Build it.
 
 ---
 
-### B2 — Schedule block (plan mode)
+### 3.2 — Schedule block (plan mode)
 
 > **What this demonstrates**: Same CDD workflow with a review gate.
 > The agent shows you the content model and approach before writing a single file.
@@ -100,13 +104,13 @@ Stop — I asked for a plan first. Show me the plan before writing any files.
 
 ---
 
-## Section 3 — Wrap-up
+## Part 4 — Wrap-up
 
 One prompt. The agent reviews both blocks it built against project conventions.
 
 ---
 
-### W1 — Code review
+### 4.1 — Code review
 
 > **What this demonstrates**: The agent as code reviewer. It looks at its own
 > output critically — catches things it missed, flags inconsistencies between

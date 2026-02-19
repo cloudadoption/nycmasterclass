@@ -1,371 +1,263 @@
-# Exercise 0: AI-Assisted Development
+# AI-Assisted Development
 
-**Format**: Instructor demo — students watch and follow along
 **Duration**: 65 minutes
-**Day**: Day 1 (standalone, before lab exercises)
-**Assumed AI experience**: None
+**Format**: Instructor demo — follow along with your own AI coding agent
 
 ---
 
-## Goal
-
-Show how AI agents accelerate real EDS development. Four sections: start with
-the Experience Modernization Agent as an accessible entry point, orient the
-agent in a CLI workflow, build two blocks with two different trust levels,
-then have the agent review its own work.
-
-Students leave with a mental model for how to use AI tools effectively —
-which primes them for Day 2 labs.
-
-**What we show**:
-- Experience Modernization Agent — hosted AI, quick demo
-- `speakers` block — one-shot (agent runs CDD end to end autonomously)
-- `schedule` block — plan mode (you review before anything is written)
-
-Blocks are demo only, not merged.
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+- **Demo**
+  - [Experience Modernization Agent](#part-1-experience-modernization-agent)
+  - [Orient the Agent](#step-1-explore-available-skills)
+  - [Build: Speakers (One-Shot)](#step-4-build-a-speakers-block-one-shot)
+  - [Build: Schedule (Plan Mode)](#step-5-build-a-schedule-block-plan-mode)
+  - [Code Review](#step-6-agent-code-review)
+- [Key Takeaways](#key-takeaways)
 
 ---
 
-## Setup (Before Session Starts)
+## Prerequisites
 
-- [ ] Claude Code open in the `nycmasterclass` project root
-- [ ] Dev server running: `aem up --html-folder drafts`
-- [ ] `localhost:3000` open in browser
-- [ ] `labs/ai-dev/Prompts.md` open in a second editor window for copy-paste
-- [ ] Experience Modernization Agent open in a browser tab
-- [ ] Slides loaded and ready
-- [ ] Terminal visible alongside editor (students should see commands run)
+**Complete [STUDENT_SETUP.md](STUDENT_SETUP.md) before starting this exercise.**
 
-> **Tip**: Do a full dry run on the demo machine before the session. Agent output
-> varies — know roughly what to expect so you can narrate without surprises.
+- AI coding agent installed and authenticated (Claude Code, Cursor, Codex CLI, or GitHub Copilot)
+- Dev server running: `aem up --html-folder drafts`
+- `localhost:3000` open in browser
+- Terminal visible alongside editor
+
+> **No agent set up?** You can follow along by watching the instructor's demo. The concepts and prompting patterns transfer to any AI coding tool.
 
 ---
 
-## Timing Overview
+## What You'll Learn
 
-```
-0:00–0:10   Slides          Foundational concepts (5 slides)
-0:10–0:17   Exp Mod Agent   Hosted AI demo
-0:17–0:27   Orient          O1: skills / O2: explain a block / O3: research
-0:27–0:55   Build           B1: speakers one-shot / B2: schedule plan mode
-0:55–1:02   Wrap-up         W1: agent reviews its own code + IBM slide
-1:02–1:05   Discussion      Key takeaways, preview Day 2
-```
+- How AI coding agents work with Edge Delivery Services
+- How to orient an agent in an unfamiliar codebase
+- Two approaches to building blocks: one-shot vs plan mode
+- How to use an agent for code review
+- How context (AGENTS.md, skills, prompts) shapes agent output
 
 ---
 
-## Part 1 — Slides (0:00–0:10)
+## Part 1: Experience Modernization Agent
 
-*10 minutes. Deck is instructor-created — see TODO.md for slide content and layout.*
+*Watch the instructor demo this section.*
 
-**Slide 1 — AI Agents and Edge Delivery**
-> "Most web stacks require the agent to understand your framework, your build
-> system, your abstractions. EDS doesn't have those layers. The code the agent
-> writes is the code that runs. And the same simplicity that makes it easy for
-> agents to build also makes it easy for AI search engines to consume."
+The [Experience Modernization Agent](https://aemcoder.adobe.io/) is Adobe's AI-powered console for modernizing web experiences with Edge Delivery Services. It migrates content and styles from existing sites, connects to your GitHub repo, and provides a built-in code editor with preview — all in the browser.
 
-**Slide 2 — How coding agents work**
-> "It's not magic. The model decides what to do, a tool does it, the result
-> comes back, and it decides again. That's the loop. Built-in tools cover the
-> basics — MCP lets you plug in anything else, like a browser or GitHub.
-> And critically — no memory. Every conversation starts empty. Which raises
-> the question..."
+This is the accessible entry point on the spectrum of AI tooling. The developer workflow we'll use next offers more control and flexibility, but the underlying concepts (context, skills, tools) are the same.
 
-**Slide 3 — Context is everything**
-> "No memory — so how do you make sure it knows what it needs to? You're
-> managing an attention budget. AGENTS.md is what the agent always knows.
-> Skills activate when relevant. Prompts are what you say right now. Get the
-> balance right and the output is good. Dump everything in and it drifts."
-
-**Slide 4 — The Edge Delivery Agent Starter Kit**
-> "You don't start from scratch. The boilerplate ships with AGENTS.md. Adobe
-> maintains a skills repo you install. There are MCP servers already built
-> for EDS. And if you want a fully hosted experience, there's the Experience
-> Modernization Agent — which is where we'll start the demo."
-
-**Slide 5 — What we'll build**
-> Walk through the demo agenda. Brief — they'll see it all live in a moment.
+> **Key idea**: There's a spectrum from hosted and guided to CLI and full control. Choose based on the task and your comfort level.
 
 ---
 
-## Part 2 — Experience Modernization Agent (0:10–0:17)
+## Part 2: Orient
 
-*Switch to the Experience Modernization Agent in the browser.*
+Before building anything, orient the agent in the project. These three steps show what the agent knows and what it can do — without asking it to write a single line of code.
 
-Quick show-and-tell of the hosted agent. This is the accessible entry point —
-no CLI, no local setup. Show site creation, migration, or block development
-(whichever is most impressive in the time available).
-
-> "This is the fully hosted option. Adobe built an agent that handles site
-> creation, migration, and block development in one environment. You don't
-> need a terminal. You don't need to configure anything."
-
-After a brief walkthrough (~5 min):
-> "That's the easy on-ramp. Now let's see the developer workflow — more
-> control, more flexibility, same underlying concepts."
-
-**Key teaching moment**: There's a spectrum of AI tooling — from hosted and
-guided to CLI and full control. The concepts (context, skills, tools) are the
-same across both.
-
----
-
-## Part 3 — Orient (0:17–0:27)
-
-*Switch to Claude Code. Keep Prompts.md visible.*
-
-The orient section has nothing to do with building yet. It's about showing the
-audience what the agent knows about this project and what it can do.
-Three prompts, each landing a different point.
-
----
-
-### O1 — What skills are available? (0:17–0:21)
-
-**Copy from Prompts.md — O1**
-
-While it runs (~1 min):
-> "I'm not asking it to do anything yet. I'm asking what it can do."
-
-After output:
-> Point out the skills list. Specifically call out:
-> - `content-driven-development` — "this is the workflow we'll use to build"
-> - `block-collection-and-party` — "we'll use this in a moment to research first"
-> - `docs-search` — "it can go read the AEM documentation"
+> **These prompts work across agents.** This project uses AGENTS.md and [Agent Skills](https://agentskills.io/) — an open standard supported by Claude Code, Cursor, Codex CLI, GitHub Copilot, and others. The same project instructions and skills are available regardless of which agent you use.
 >
-> "These aren't global tools. They live in this project. A different project
-> would have different skills. The agent adapts to where it's working."
-
-**Key teaching moment**: Skills are project-level context, not a fixed toolbox.
-
----
-
-### O2 — How does an existing block work? (0:21–0:24)
-
-**Copy from Prompts.md — O2**
-
-While it runs (~1 min):
-> "Now let's see if it can explain code it didn't write."
-
-After output:
-> Walk through the explanation briefly. Point out that it found the JS file,
-> read it, and described both the author-facing structure and the decoration logic.
->
-> "This is one of the most underrated uses of AI on a project. New developer,
-> unfamiliar codebase — instead of reading through files for 20 minutes,
-> you just ask."
-
-**Key teaching moment**: AI as a pair programmer for onboarding and code exploration.
+> Skills documentation per tool:
+> - [Claude Code](https://docs.anthropic.com/en/docs/claude-code/skills)
+> - [OpenAI Codex CLI](https://developers.openai.com/codex/skills/)
+> - [GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+> - [Cursor](https://cursor.com/docs/context/skills)
 
 ---
 
-### O3 — Research before you build (0:24–0:27)
+### Step 1: What Does the Agent Know?
 
-**Copy from Prompts.md — O3**
+Ask the agent what it knows about this project and what tools it has.
 
-While it runs (~2 min, uses the block-collection-and-party skill):
-> "Before we build anything, let's see if there's prior art. Good agents
-> don't start from scratch by default."
+**Prompt:** Use [**2.1** from Prompts.md](Prompts.md#21--what-do-you-know-about-this-project)
 
-After output:
-> Whatever it finds — reference implementations, patterns, nothing — the point
-> is that it looked. Discuss briefly what it surfaced and whether you'd use it.
->
-> "This is the research step most developers skip. The agent just did it in
-> two minutes."
+**What to look for:**
+- The agent describes the tech stack, project structure, and coding conventions — it read AGENTS.md
+- It surfaces available skills and explains when you'd use them
+- Key skills to note:
+  - `content-driven-development` — the workflow for building blocks
+  - `block-collection-and-party` — research tool for finding reference implementations
+  - `docs-search` — searches AEM documentation
 
-**Key teaching moment**: Research is part of the workflow, not a luxury.
-
----
-
-## Part 4 — Build (0:27–0:55)
-
-Two blocks. The CDD skill runs both times — the difference is how much control
-you keep.
+> **Key idea**: The agent adapts to where it's working. Skills, conventions, and project context are all project-level — a different project would produce a completely different response.
 
 ---
 
-### B1 — Speakers block, one-shot (0:27–0:39)
+### Step 2: Research Before You Build
 
-**Copy from Prompts.md — B1**
+Before building new blocks, check if reference implementations already exist.
 
-Before sending:
-> "First block. I'm going to give it the goal and step back. It will decide
-> the content model, create test content, write the JS and CSS, and validate —
-> without stopping to ask me."
+**Prompt:** Use [**2.2** from Prompts.md](Prompts.md#22--research-before-you-build)
 
-While it runs (~8–10 min):
-> "No approval gate. Watch what it decides on its own."
+**What to look for:**
+- The agent reaches for the block-collection-and-party skill on its own — you didn't tell it to
+- It searches for speakers and schedule references and reports what it finds
+- It maps existing blocks to your needs (e.g., "cards" as a starting point for speakers)
+- Even if there's no exact match, the agent researched before proposing to build from scratch
 
-Take light Q&A or let it run. Don't narrate every step — save the phase-by-phase
-commentary for the schedule block where students can see the plan first.
-
-After output — open `localhost:3000/drafts/speakers`:
-> "There it is. Full CDD workflow — I handed it off and it delivered.
-> My job now is to decide if this is right."
-
-Evaluate out loud. Point out one thing you like and one thing you'd question.
-Don't fix anything yet — save corrections for the review section.
+> **Key idea**: Research is part of the workflow, not a luxury. The agent just did it in two minutes — the step most developers skip.
 
 ---
 
-### B2 — Schedule block, plan mode (0:39–0:55)
+### Step 3: Code Comprehension + Documentation
 
-**Copy from Prompts.md — B2**
+Ask the agent to tour the project's blocks and check them against AEM best practices.
 
-Before sending:
-> "Same CDD workflow. Different approach. This time I want to see the plan
-> before anything gets written."
+**Prompt:** Use [**2.3** from Prompts.md](Prompts.md#23--code-comprehension--documentation)
 
-**Phase: plan output** (~3–5 min to produce)
+**What to look for:**
+- The agent reads local block files to explain what each one does
+- It fetches AEM documentation from aem.live to identify gaps and best practices
+- It links to relevant docs — students can follow the links later
+- The agent pulled from multiple sources (local code + external docs) without being told which tools to use
 
-> "It's planning, not coding. No files written yet."
-
-When the plan lands, read it with the room:
-> "Content model, test content, JS approach, CSS approach. This is the full
-> picture before a single file exists."
-
-Ask the audience:
-> "Does this content model make sense for how authors would work?
-> What would you change?"
-
-Make at least one decision out loud — push back on something or accept with a
-note. This is the most important moment in the demo. Students need to see you
-evaluating, not rubber-stamping.
-
-Then approve and let it proceed.
-
-**Key teaching moment**: Plan mode gives you a review gate before any code
-exists. Use it when the task is complex, unfamiliar, or when you want to steer
-before you're reacting to existing output.
-
-**Phase: test content** (agent creates `drafts/schedule.html`)
-
-> "Content before code. Same principle as B1 — the block decorates what's
-> already there. The difference is this time I knew what was coming."
-
-Open `localhost:3000/drafts/schedule`:
-> "Unstyled table. Correct. This is what tomorrow's Exercise 1 looks like before
-> your JavaScript touches it."
-
-**Phase: implementation** (~5–8 min — use for Q&A)
-
-Good questions to field:
-- *"When would you use plan mode vs one-shot in real work?"*
-  → Complex tasks, unfamiliar codebases, anything where the content model decision is non-obvious.
-- *"What if you don't like the plan?"*
-  → Tell it. It'll revise. That's the point of the gate.
-- *"Does this work in Cursor?"*
-  → Yes. Same AGENTS.md, same skills, same prompts.
-
-After implementation — refresh `localhost:3000/drafts/schedule`:
-> "Same outcome as the speakers block. Different experience getting here —
-> I knew the plan before the code existed."
-
-**Phase: validation and lint**
-
-The CDD skill includes self-review. Call it out when it happens:
-> "It's validating without being asked. That's the skill enforcing the
-> full workflow — including the parts people usually skip."
+> **Key idea**: The agent combines code comprehension with external knowledge. New developer, unfamiliar codebase — instead of reading files and docs separately, you get both in one response.
 
 ---
 
-## Part 5 — Wrap-up (0:55–1:02)
+## Part 3: Build
 
-### W1 — Agent reviews its own code
-
-**Copy from Prompts.md — W1**
-
-Before sending:
-> "Last prompt. We're going to ask it to look at both blocks together and
-> review its own work."
-
-While it runs (~2–3 min):
-> "This is the step that closes the loop. It built both blocks in different
-> sessions — now it's reviewing them as a pair."
-
-After output:
-> Whatever it flags — inconsistencies, convention issues, things it'd do
-> differently — highlight them.
->
-> "It found things. That's normal. The question is whether you asked it to look."
->
-> If it fixes something, refresh the browser.
->
-> "This is also how you use AI for code review on a team. You don't have to
-> ask it to review code you wrote yourself — you can ask it to review code
-> anyone wrote."
-
-### IBM Quote — Slide 6
-
-*Advance to the wrap-up slide (IBM quote).*
-
-> "A computer can never be held accountable, therefore a computer must never
-> make a management decision." — IBM, 1979
->
-> "Everything you watched — the agent orienting, building blocks, reviewing
-> its own code — it did all of that. But at every step, a human decided
-> whether to proceed. That's the model. That doesn't change."
+Two blocks, same Content Driven Development (CDD) workflow, different levels of control. The CDD skill orchestrates the full process: content model, test content, implementation, and validation.
 
 ---
 
-## Discussion (1:02–1:05)
+### Step 4: Build a Speakers Block (One-Shot)
 
-> "Four sections. Here's what each one showed:"
->
-> - **Experience Modernization Agent**: the accessible entry point. Hosted,
->   guided, no setup required.
->
-> - **Orient**: the agent knows your project, can explain existing code, and
->   can research before building. You didn't have to teach it any of that.
->
-> - **Build**: same CDD workflow both times. One-shot when you trust the
->   process and want speed. Plan mode when you want a review gate before
->   any code exists. Right choice depends on the task, not the tool.
->
-> - **Review**: the agent can evaluate its own output critically. Ask it to.
->
-> "Tomorrow you'll do this workflow manually — content model, test content,
-> JS, CSS, validate. That's intentional. You need to understand the steps
-> before you delegate them. Today was a preview of where it goes."
+Hand the agent the goal and let it run the entire workflow autonomously. No approval gates — it decides the content model, creates test content, writes JS and CSS, and validates.
+
+**Prompt:** Use [**3.1** from Prompts.md](Prompts.md#31--speakers-block-one-shot)
+
+**What happens:**
+1. The agent invokes the CDD skill
+2. It designs a content model (how authors will structure the block)
+3. It creates test content at `drafts/speakers.html`
+4. It implements `blocks/speakers/speakers.js` and `blocks/speakers/speakers.css`
+5. It validates — linting, self-review
+
+**When it finishes**, open `http://localhost:3000/drafts/speakers` to see the result.
+
+**What to evaluate:**
+- Does the content model make sense for authors?
+- Does the block render correctly?
+- What looks right? What would you question?
+
+> **Key idea**: One-shot works when you trust the workflow and want speed. You evaluate the output at the end rather than steering along the way.
 
 ---
 
-## If Things Go Wrong
+### Step 5: Build a Schedule Block (Plan Mode)
 
-**Plan mode skips the plan and starts coding**
-> Interrupt: "Stop — I asked for a plan first. Show me the plan before writing any files."
-> Good teaching moment: the prompt wording matters.
+Same CDD workflow, but this time you review the plan before any code is written. This is the approach for complex tasks or unfamiliar territory.
 
-**Agent produces broken or wrong output**
-> Don't fix it manually. Say: "This happens. Watch how I recover."
-> Use a follow-up from Prompts.md.
+**Prompt:** Use [**3.2** from Prompts.md](Prompts.md#32--schedule-block-plan-mode)
 
-**Dev server not serving draft files**
-> Verify `--html-folder drafts` flag. Restart: `aem up --html-folder drafts`
+**Phase 1 — Plan output:**
+The agent produces a plan covering content model, test content approach, and JS/CSS strategy. No files written yet.
 
-**Agent is slow or hanging**
-> Use Q&A time. After 3+ minutes with no output, cancel with Escape and retry
-> with a more specific prompt.
+Read the plan and consider:
+- Does the content model make sense for how authors would work?
+- Is the test content representative?
+- Would you change anything about the approach?
 
-**Block collection research returns nothing useful**
-> That's fine — say "no prior art, we build from scratch" and move on.
-> The point was that it looked.
+Approve the plan (or request changes) before the agent proceeds.
+
+**Phase 2 — Test content:**
+The agent creates `drafts/schedule.html`. Open `http://localhost:3000/drafts/schedule` — you should see an unstyled table. This is the authored content before JavaScript touches it.
+
+**Phase 3 — Implementation:**
+The agent writes `blocks/schedule/schedule.js` and `blocks/schedule/schedule.css`. Refresh the browser to see the styled block.
+
+**Phase 4 — Validation:**
+The CDD skill includes self-review and linting. The agent validates without being asked — the skill enforces the full workflow.
+
+> **Key idea**: Plan mode gives you a review gate before any code exists. Use it when the task is complex, unfamiliar, or when you want to steer before reacting to existing output.
+
+**Steering follow-ups** (use if needed): See [steering prompts in Prompts.md](Prompts.md#steering-follow-ups-use-if-needed)
+
+---
+
+## Part 4: Review
+
+### Step 6: Agent Code Review
+
+The agent built both blocks — now ask it to review its own work against project conventions.
+
+**Prompt:** Use [**4.1** from Prompts.md](Prompts.md#41--code-review)
+
+**What to look for:**
+- The agent reads both blocks and compares them
+- It flags inconsistencies (naming, structure, CSS patterns) between the two blocks
+- It checks against AGENTS.md conventions (CSS scoping, responsive design, accessibility)
+- It fixes what it finds — refresh the browser to see updates
+
+> **Key idea**: AI code review works on any code, not just code the agent wrote. You can use this on pull requests, teammate code, or unfamiliar codebases.
+
+---
+
+## Troubleshooting
+
+**Agent skips the plan and starts coding:**
+Interrupt and re-prompt: *"Stop — I asked for a plan first. Show me the plan before writing any files."* Prompt wording matters.
+
+**Agent produces broken output:**
+Don't fix it manually. Tell the agent what's wrong and let it recover. This is a normal part of the workflow.
+
+**Dev server not serving draft files:**
+Verify the `--html-folder drafts` flag. Restart: `aem up --html-folder drafts`
+
+**Agent is slow or unresponsive:**
+After 3+ minutes with no output, cancel (Escape in Claude Code) and retry with a more specific prompt.
 
 ---
 
 ## Key Takeaways
 
-| Theme | Line to use |
-|-------|-------------|
-| Stack | "The code the agent writes is the code that runs" |
-| Context | "You're managing an attention budget" |
-| No memory | "Every conversation starts from scratch" |
-| Starter kit | "You don't start from scratch — the tooling exists" |
-| Spectrum | "From hosted agent to full CLI control — same concepts" |
-| Research | "Good agents don't start from scratch by default" |
-| CDD | "Content model before code — always" |
-| Plan mode | "A review gate before any code exists" |
-| One-shot | "Hand it off when you trust the workflow and want speed" |
-| Review | "Ask it to evaluate its own output — it will" |
-| Accountability | "AI builds. You decide." |
+| Theme | Takeaway |
+|-------|----------|
+| Stack | The code the agent writes is the code that runs — no framework, no build step |
+| Context | You're managing an attention budget — AGENTS.md, skills, and prompts |
+| No memory | Every conversation starts from scratch |
+| Starter kit | You don't start from scratch — the EDS tooling exists |
+| Spectrum | From hosted agent to full CLI control — same concepts |
+| Research | Good agents don't start from scratch — they check for prior art |
+| CDD | Content model before code — always |
+| Plan mode | A review gate before any code exists |
+| One-shot | Hand it off when you trust the workflow and want speed |
+| Review | Ask the agent to evaluate its own output — it will |
+| Accountability | AI builds. You decide. |
+
+---
+
+## Verification Checklist
+
+**If you followed along with an agent:**
+- [ ] Agent listed available skills for this project
+- [ ] Agent explained the hero block's author structure and decoration logic
+- [ ] Agent researched block collection for prior art
+- [ ] Speakers block built and renders at `localhost:3000/drafts/speakers`
+- [ ] Schedule block planned, reviewed, and built at `localhost:3000/drafts/schedule`
+- [ ] Agent reviewed both blocks and fixed issues it found
+- [ ] Lint passes: `npm run lint`
+
+**If you watched the demo:**
+- [ ] Understand the agentic loop: prompt → inference → tool call → result
+- [ ] Understand why context management matters (AGENTS.md, skills, prompts)
+- [ ] Understand when to use one-shot vs plan mode
+- [ ] Understand how the CDD workflow structures block development
+
+---
+
+## References
+
+- [AEM Edge Delivery Documentation](https://www.aem.live/docs/)
+- [Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
+- [AI Coding Agents for EDS](https://www.aem.live/developer/ai-coding-agents)
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+
+---
+
+## What's Next
+
+In the exercises that follow, you'll do this workflow manually — content model, test content, JavaScript, CSS, validate. That's intentional. You need to understand the steps before you delegate them. This exercise was a preview of where it goes.

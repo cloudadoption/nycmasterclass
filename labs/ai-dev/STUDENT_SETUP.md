@@ -1,4 +1,4 @@
-# Exercise 0 — Student Setup
+# AI-Assisted Development — Student Setup
 
 Complete these steps before Day 1 if you want to follow along with the demo
 on your own machine. None of this is required — you can watch and learn without it.
