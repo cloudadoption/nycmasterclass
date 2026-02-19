@@ -166,6 +166,8 @@ blocks/
 
 **File**: `blocks/search/search.js`
 
+> **Tip**: The full implementation is also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search) if you prefer to copy from there.
+
 Copy this code:
 
 ```javascript
@@ -471,6 +473,8 @@ export default async function decorate(block) {
 ## Step 5: Implement Styles
 
 **File**: `blocks/search/search.css`
+
+> **Tip**: Also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search).
 
 Copy this code:
 
