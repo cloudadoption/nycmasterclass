@@ -4,6 +4,21 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How Query Index Works](#how-query-index-works)
+- **Hands-on Lab**
+  - [Verify Query Index](#step-1-verify-query-indexjson)
+  - [Block Collection Reference](#step-2-look-at-the-block-collection-reference)
+  - [Create Block Files](#step-3-create-block-files)
+  - [Implement JavaScript](#step-4-implement-javascript)
+  - [Test the Search Block](#step-7-test-the-search-block)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) if not already done.**

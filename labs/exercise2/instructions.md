@@ -4,6 +4,20 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How Block Decoration Works](#how-block-decoration-works)
+- **Hands-on Lab**
+  - [Eyebrow Enhancement](#step-3-implement-eyebrow-enhancement)
+  - [List Variation](#step-5-implement-list-variation)
+  - [View Switcher Variation](#step-7-implement-view-switcher-variation)
+  - [Commit Your Changes](#step-9-commit-your-changes)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 ✅ **Complete [SETUP.md](../SETUP.md) if not already done.**

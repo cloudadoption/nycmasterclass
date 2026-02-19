@@ -4,6 +4,20 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [Understanding Repoless](#understanding-repoless)
+- **Hands-on Lab**
+  - [Clone Site Configuration](#step-1-clone-the-site-configuration)
+  - [Create Content & Preview](#step-4-preview-your-site)
+  - [Multi-Brand Theming](#step-7-multi-brand-theming)
+  - [Explore Others' Sites](#step-8-explore-other-participants-sites)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) if not already done.**

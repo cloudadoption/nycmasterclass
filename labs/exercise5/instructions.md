@@ -4,6 +4,20 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [The Complete Data Flow](#the-complete-data-flow)
+- **Hands-on Lab**
+  - [Preview Generated Pages](#step-1-preview-the-generated-pages)
+  - [Test Templates in Simulator](#step-4-test-templates-in-simulator)
+  - [Add New Events](#step-5-add-new-events-to-the-data-sheet)
+  - [Commit Your Changes](#step-7-commit-your-changes)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) if not already done.**
