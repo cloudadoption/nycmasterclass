@@ -125,7 +125,7 @@ Two blocks, same Content Driven Development (CDD) workflow, different levels of 
 
 ### Step 4: Build a Speakers Block (One-Shot)
 
-Hand the agent the goal and let it run the entire workflow autonomously. No approval gates — it decides the content model, creates test content, writes JS and CSS, and validates.
+Hand the agent the goal and let it run the workflow. It decides the content model, creates test content, writes JS and CSS, and validates. The agent may pause to confirm decisions along the way — that's normal. Use your best judgement: approve and let it continue, or steer if something looks off.
 
 **Prompt:** Use [**3.1** from Prompts.md](Prompts.md#31--speakers-block-one-shot)
 
@@ -143,7 +143,7 @@ Hand the agent the goal and let it run the entire workflow autonomously. No appr
 - Does the block render correctly?
 - What looks right? What would you question?
 
-> **Key idea**: One-shot works when you trust the workflow and want speed. You evaluate the output at the end rather than steering along the way.
+> **Key idea**: One-shot works when you trust the workflow and want speed. You didn't ask for a plan — the agent decided when (and whether) to pause on its own.
 
 ---
 

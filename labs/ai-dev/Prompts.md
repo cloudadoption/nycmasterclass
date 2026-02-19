@@ -62,8 +62,8 @@ Two blocks. Same CDD workflow. Different levels of control.
 > builds the block, and validates. You evaluate the output at the end.
 
 ```
-Add a speakers block to this site. Authors will use it to showcase event
-speakers — photo, name, title, and a short bio. Build it.
+I need a speakers block for displaying conference speaker cards with a
+headshot, name, role, and bio.
 ```
 
 ---
@@ -75,11 +75,10 @@ speakers — photo, name, title, and a short bio. Build it.
 > You evaluate, steer if needed, then approve.
 
 ```
-I want to add a schedule block to this site. Authors should be able to display
-the day's agenda — time slots, session titles, speakers, and a track or room.
-
-Make a plan first. Show me the content model, the test content you'll create,
-and your approach to the JS and CSS. Wait for my approval before writing any code.
+Let's make a plan to build a schedule block for displaying a conference agenda
+with time slots, session titles, speakers, and a track or room. The content
+model here could get complex, so think it through carefully and let's review
+before writing any code.
 ```
 
 ---
