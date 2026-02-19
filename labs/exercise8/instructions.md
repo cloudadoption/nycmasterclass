@@ -549,3 +549,9 @@ You now know how to:
 - Share Lighthouse scores (target: 100)
 
 Thank you for participating in NYC Masterclass 2026!
+
+---
+
+## Solution
+
+The complete solution for this exercise is available on the `answers` branch.

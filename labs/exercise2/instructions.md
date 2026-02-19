@@ -648,6 +648,12 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 
 ---
 
+## Solution
+
+The complete solution for this exercise is available on the `answers` branch.
+
+---
+
 ## Next Exercise
 
 **Exercise 3**: Dynamic Cards - You'll build a block that fetches data from external sources (Sheets and Workers), learning how to integrate dynamic data into EDS blocks.
