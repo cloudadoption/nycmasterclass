@@ -274,13 +274,14 @@ button.secondary:hover {
   align-items: center;
   gap: 0.5em;
   transition: gap 0.2s ease;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  transform: none !important;
-  box-shadow: none !important;
+  /* Override button styles - specificity from selector wins over generic button rules */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  transform: none;
+  box-shadow: none;
 }
 
 .section.featured .cards-wrapper + .default-content-wrapper p a::after {
@@ -292,9 +293,9 @@ button.secondary:hover {
 .section.featured .cards-wrapper + .default-content-wrapper p a:hover {
   color: var(--brand-2);
   gap: 0.75em;
-  background: none !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: none;
+  transform: none;
+  box-shadow: none;
 }
 
 .section.featured .cards-wrapper + .default-content-wrapper p a:hover::after {
@@ -324,13 +325,13 @@ main img {
 .section.schedule .table a {
   color: var(--brand-1);
   text-decoration: none;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  transform: none;
+  box-shadow: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
@@ -338,9 +339,9 @@ main img {
 /* stylelint-disable-next-line no-descending-specificity */
 .section.schedule .table a:hover {
   color: var(--brand-2);
-  background: none !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: none;
+  transform: none;
+  box-shadow: none;
   text-decoration: underline;
 }
 
