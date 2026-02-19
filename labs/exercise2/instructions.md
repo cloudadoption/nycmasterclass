@@ -450,10 +450,16 @@ Add the toolbar styles at the end of the file:
 ```css
 /* View switcher toolbar */
 .cards.view-switcher .cards-toolbar {
-  display: flex;
+  display: none;
   justify-content: flex-end;
   gap: 8px;
   margin-bottom: 1rem;
+}
+
+@media (width >= 600px) {
+  .cards.view-switcher .cards-toolbar {
+    display: flex;
+  }
 }
 
 .cards.view-switcher .cards-toolbar-btn {
