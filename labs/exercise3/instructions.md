@@ -712,6 +712,12 @@ That's it. The index updates in the background — by the time you get to Ex4 te
 
 ---
 
+## Solution
+
+The complete solution for this exercise is available on the `answers` branch.
+
+---
+
 ## Next Exercise
 
 **Exercise 4**: Extend Search Block from Block Collection — You'll configure and test a Search block that fetches `query-index.json` and renders results using the Cards block. You'll learn how EDS indexes published content, how block composition works, and find your own `/labs/jsmith/` page via live search.
