@@ -253,13 +253,14 @@ button.secondary:hover {
   box-shadow: none;
 }
 
-/* Featured sections - reusable pattern for cards with centered buttons and arrow links */
-/* Add top margin to cards in featured sections */
 .section.featured .cards {
   margin-top: 2rem;
 }
 
-/* Center buttons in cards within featured sections */
+.section.featured .cards-wrapper + .default-content-wrapper p {
+  text-align: right;
+}
+
 .section.featured .cards .cards-card-body > p:has(a) {
   text-align: center;
 }
@@ -273,7 +274,6 @@ button.secondary:hover {
   align-items: center;
   gap: 0.5em;
   transition: gap 0.2s ease;
-  /* Override button styles */
   background: none !important;
   border: none !important;
   padding: 0 !important;
@@ -301,11 +301,6 @@ button.secondary:hover {
   transform: translateX(4px);
 }
 
-/* Right-align paragraph with link after cards wrapper in featured sections */
-.section.featured .cards-wrapper + .default-content-wrapper p {
-  text-align: right;
-}
-
 main img {
   max-width: 100%;
   width: auto;
@@ -323,7 +318,9 @@ main img {
   width: 100%;
 }
 
-/* schedule section - table links as text links, not buttons */
+/* Schedule section - table links as text links, not buttons */
+
+/* stylelint-disable-next-line no-descending-specificity */
 .section.schedule .table a {
   color: var(--brand-1);
   text-decoration: none;
@@ -338,6 +335,7 @@ main img {
   transition: color 0.2s ease;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .section.schedule .table a:hover {
   color: var(--brand-2);
   background: none !important;
