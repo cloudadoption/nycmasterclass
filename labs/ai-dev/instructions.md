@@ -1,7 +1,7 @@
 # Exercise 0: AI-Assisted Development
 
 **Format**: Instructor demo — students watch and follow along
-**Duration**: 60 minutes
+**Duration**: 65 minutes
 **Day**: Day 1 (standalone, before lab exercises)
 **Assumed AI experience**: None
 
@@ -9,18 +9,20 @@
 
 ## Goal
 
-Show how an AI coding agent accelerates real EDS development. Three sections:
-orient the agent, build two blocks with two different trust levels, then have
-the agent review its own work.
+Show how AI agents accelerate real EDS development. Four sections: start with
+the Experience Modernization Agent as an accessible entry point, orient the
+agent in a CLI workflow, build two blocks with two different trust levels,
+then have the agent review its own work.
 
 Students leave with a mental model for how to use AI tools effectively —
 which primes them for Day 2 labs.
 
-**What we build**:
+**What we show**:
+- Experience Modernization Agent — hosted AI, quick demo
 - `speakers` block — one-shot (agent runs CDD end to end autonomously)
 - `schedule` block — plan mode (you review before anything is written)
 
-Both are demo only, not merged.
+Blocks are demo only, not merged.
 
 ---
 
@@ -29,8 +31,8 @@ Both are demo only, not merged.
 - [ ] Claude Code open in the `nycmasterclass` project root
 - [ ] Dev server running: `aem up --html-folder drafts`
 - [ ] `localhost:3000` open in browser
-- [ ] `labs/exercise0/Prompts.md` open in a second editor window for copy-paste
-- [ ] Cursor open as a secondary tab (for the optional comparison moment)
+- [ ] `labs/ai-dev/Prompts.md` open in a second editor window for copy-paste
+- [ ] Experience Modernization Agent open in a browser tab
 - [ ] Slides loaded and ready
 - [ ] Terminal visible alongside editor (students should see commands run)
 
@@ -42,68 +44,73 @@ Both are demo only, not merged.
 ## Timing Overview
 
 ```
-0:00–0:10   Slides          Foundational concepts
-0:10–0:22   Orient          O1: skills / O2: explain a block / O3: research
-0:22–0:50   Build           B1: speakers one-shot / B2: schedule plan mode
-0:50–0:57   Wrap-up         W1: agent reviews its own code
-0:57–1:00   Discussion      Key takeaways, preview Day 2
+0:00–0:10   Slides          Foundational concepts (5 slides)
+0:10–0:17   Exp Mod Agent   Hosted AI demo
+0:17–0:27   Orient          O1: skills / O2: explain a block / O3: research
+0:27–0:55   Build           B1: speakers one-shot / B2: schedule plan mode
+0:55–1:02   Wrap-up         W1: agent reviews its own code + IBM slide
+1:02–1:05   Discussion      Key takeaways, preview Day 2
 ```
 
 ---
 
 ## Part 1 — Slides (0:00–0:10)
 
-*10 minutes. Deck is instructor-created — see TODO.md for slide content.*
+*10 minutes. Deck is instructor-created — see TODO.md for slide content and layout.*
 
-**Slide 1 — What changed**
-> "Autocomplete guesses the next line. An agent takes actions — it reads your files,
-> writes code, runs commands, searches the web. It doesn't suggest. It does."
->
-> Show the tool list visually. Let it sink in.
+**Slide 1 — AI Agents and Edge Delivery**
+> "Most web stacks require the agent to understand your framework, your build
+> system, your abstractions. EDS doesn't have those layers. The code the agent
+> writes is the code that runs. And the same simplicity that makes it easy for
+> agents to build also makes it easy for AI search engines to consume."
 
-**Slide 2 — Context window**
-> "The agent can only help with what it can see. If it doesn't know your project
-> conventions, it'll write perfectly valid code that violates them. This is why
-> AGENTS.md exists — it's not documentation for you, it's context for the agent."
->
-> "Garbage context in, garbage code out."
+**Slide 2 — How coding agents work**
+> "It's not magic. The model decides what to do, a tool does it, the result
+> comes back, and it decides again. That's the loop. Built-in tools cover the
+> basics — MCP lets you plug in anything else, like a browser or GitHub.
+> And critically — no memory. Every conversation starts empty. Which raises
+> the question..."
 
-**Slide 3 — Agent tools and skills**
-> "Claude Code ships with tools for reading files, writing files, running bash,
-> and searching the web. You can also give it custom skills — instructions it follows
-> for specific workflows. We have several in this project."
->
-> Don't go deep. One example is enough.
+**Slide 3 — Context is everything**
+> "No memory — so how do you make sure it knows what it needs to? You're
+> managing an attention budget. AGENTS.md is what the agent always knows.
+> Skills activate when relevant. Prompts are what you say right now. Get the
+> balance right and the output is good. Dump everything in and it drifts."
 
-**Slide 4 — MCP**
-> "Model Context Protocol is how you extend what the agent can connect to.
-> Think of it as a plugin system — databases, GitHub, Slack, your browser, whatever.
-> Cursor supports it, Claude Code supports it, most serious tools do now."
->
-> One sentence, move on.
+**Slide 4 — The Edge Delivery Agent Starter Kit**
+> "You don't start from scratch. The boilerplate ships with AGENTS.md. Adobe
+> maintains a skills repo you install. There are MCP servers already built
+> for EDS. And if you want a fully hosted experience, there's the Experience
+> Modernization Agent — which is where we'll start the demo."
 
-**Slide 5 — The mental model**
-> "You don't stop thinking. You think at a higher level. You're the architect —
-> you decide what to build and whether the output is correct. The agent figures out
-> the steps and does the work."
->
-> "The developers who get the most from this aren't the ones with the best prompts.
-> They're the ones who can evaluate output quickly."
-
-**Slide 6 — What we're about to do**
-> Three sections. Show them on screen:
->
-> ```
-> Orient  →  what does it know? what can it do?
-> Build   →  two blocks, two levels of control
-> Review  →  agent checks its own work
-> ```
->
-> "Same workflow both times in the build section. Different levels of trust."
+**Slide 5 — What we'll build**
+> Walk through the demo agenda. Brief — they'll see it all live in a moment.
 
 ---
 
-## Part 2 — Orient (0:10–0:22)
+## Part 2 — Experience Modernization Agent (0:10–0:17)
+
+*Switch to the Experience Modernization Agent in the browser.*
+
+Quick show-and-tell of the hosted agent. This is the accessible entry point —
+no CLI, no local setup. Show site creation, migration, or block development
+(whichever is most impressive in the time available).
+
+> "This is the fully hosted option. Adobe built an agent that handles site
+> creation, migration, and block development in one environment. You don't
+> need a terminal. You don't need to configure anything."
+
+After a brief walkthrough (~5 min):
+> "That's the easy on-ramp. Now let's see the developer workflow — more
+> control, more flexibility, same underlying concepts."
+
+**Key teaching moment**: There's a spectrum of AI tooling — from hosted and
+guided to CLI and full control. The concepts (context, skills, tools) are the
+same across both.
+
+---
+
+## Part 3 — Orient (0:17–0:27)
 
 *Switch to Claude Code. Keep Prompts.md visible.*
 
@@ -113,7 +120,7 @@ Three prompts, each landing a different point.
 
 ---
 
-### O1 — What skills are available? (0:10–0:14)
+### O1 — What skills are available? (0:17–0:21)
 
 **Copy from Prompts.md — O1**
 
@@ -133,7 +140,7 @@ After output:
 
 ---
 
-### O2 — How does an existing block work? (0:14–0:18)
+### O2 — How does an existing block work? (0:21–0:24)
 
 **Copy from Prompts.md — O2**
 
@@ -152,7 +159,7 @@ After output:
 
 ---
 
-### O3 — Research before you build (0:18–0:22)
+### O3 — Research before you build (0:24–0:27)
 
 **Copy from Prompts.md — O3**
 
@@ -171,14 +178,14 @@ After output:
 
 ---
 
-## Part 3 — Build (0:22–0:50)
+## Part 4 — Build (0:27–0:55)
 
 Two blocks. The CDD skill runs both times — the difference is how much control
 you keep.
 
 ---
 
-### B1 — Speakers block, one-shot (0:22–0:34)
+### B1 — Speakers block, one-shot (0:27–0:39)
 
 **Copy from Prompts.md — B1**
 
@@ -202,7 +209,7 @@ Don't fix anything yet — save corrections for the review section.
 
 ---
 
-### B2 — Schedule block, plan mode (0:34–0:50)
+### B2 — Schedule block, plan mode (0:39–0:55)
 
 **Copy from Prompts.md — B2**
 
@@ -263,7 +270,7 @@ The CDD skill includes self-review. Call it out when it happens:
 
 ---
 
-## Part 4 — Wrap-up (0:50–0:57)
+## Part 5 — Wrap-up (0:55–1:02)
 
 ### W1 — Agent reviews its own code
 
@@ -289,11 +296,25 @@ After output:
 > ask it to review code you wrote yourself — you can ask it to review code
 > anyone wrote."
 
+### IBM Quote — Slide 6
+
+*Advance to the wrap-up slide (IBM quote).*
+
+> "A computer can never be held accountable, therefore a computer must never
+> make a management decision." — IBM, 1979
+>
+> "Everything you watched — the agent orienting, building blocks, reviewing
+> its own code — it did all of that. But at every step, a human decided
+> whether to proceed. That's the model. That doesn't change."
+
 ---
 
-## Discussion (0:57–1:00)
+## Discussion (1:02–1:05)
 
-> "Three sections. Here's what each one showed:"
+> "Four sections. Here's what each one showed:"
+>
+> - **Experience Modernization Agent**: the accessible entry point. Hosted,
+>   guided, no setup required.
 >
 > - **Orient**: the agent knows your project, can explain existing code, and
 >   can research before building. You didn't have to teach it any of that.
@@ -307,10 +328,6 @@ After output:
 > "Tomorrow you'll do this workflow manually — content model, test content,
 > JS, CSS, validate. That's intentional. You need to understand the steps
 > before you delegate them. Today was a preview of where it goes."
-
-**Optional: 30-second Cursor moment**
-> Switch to Cursor, same project, agent mode.
-> "Same AGENTS.md. Same skills. Same prompts. The tool is interchangeable."
 
 ---
 
@@ -341,11 +358,14 @@ After output:
 
 | Theme | Line to use |
 |-------|-------------|
-| Context | "The agent can only help with what it can see" |
-| Skills | "Project-level tools — the agent adapts to where it's working" |
+| Stack | "The code the agent writes is the code that runs" |
+| Context | "You're managing an attention budget" |
+| No memory | "Every conversation starts from scratch" |
+| Starter kit | "You don't start from scratch — the tooling exists" |
+| Spectrum | "From hosted agent to full CLI control — same concepts" |
 | Research | "Good agents don't start from scratch by default" |
 | CDD | "Content model before code — always" |
 | Plan mode | "A review gate before any code exists" |
 | One-shot | "Hand it off when you trust the workflow and want speed" |
 | Review | "Ask it to evaluate its own output — it will" |
-| Portability | "The prompts work anywhere. The skill transfers" |
+| Accountability | "AI builds. You decide." |

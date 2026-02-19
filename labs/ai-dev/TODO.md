@@ -5,102 +5,139 @@
 ## Create Slide Deck
 
 6 slides. Keep each one sparse — one idea, few words, maybe one visual.
-These are backdrop slides, not reading material.
+These are backdrop slides, not reading material. Use Adobe template.
 
 ---
 
-### Slide 1 — What Changed
+### Slide 1 — Why This Stack Works with AI
 
-**Title**: From autocomplete to agent
+**Title**: AI Agents and Edge Delivery
+
+**Content** (two columns — AEM... / AI Agents...):
+- AEM delivers semantic HTML directly, all important content intact
+- AEM uses vanilla JS and framework-less CSS — no frameworks or build steps
+- AI agents can understand and surface it easily (GEO)
+- AI agents can read it, write it, and run it directly
+
+**Key takeaway** (bottom): Edge Delivery is optimized for AI agents, both in terms
+of development and content delivery
+
+**Layout**: Two-column (AEM / AI Agents) with paired rows. Key takeaway box at the
+bottom. Red boxes for the pairs, green box for the takeaway.
+
+**Talking point**: "Most web stacks require the agent to understand your framework,
+your build system, your abstractions. EDS doesn't have those layers. The code the
+agent writes is the code that runs. And the same simplicity that makes it easy for
+agents to build also makes it easy for AI search engines to consume."
+
+---
+
+### Slide 2 — How Coding Agents Work
+
+**Title**: How coding agents work
 
 **Content**:
-- Before: suggests the next line (Copilot v1, Tabnine)
-- After: takes actions
+- Loop diagram: LLM Inference → Tool Call → Result → back to LLM
+- Prompt enters the loop from outside
+- Tools box (right side):
+  - Built-in: Read, Write, Search, Bash
+  - Extended (MCP): Browser, GitHub, Slack, etc.
+- Memory callout (bottom, red box): "Agents have no memory. Every conversation
+  starts from scratch."
 
-**Visual idea**: Two-column comparison. Left: greyed-out autocomplete ghost text.
-Right: a list of tools — Read file, Write file, Run command, Search web, Browse.
+**Layout**: Loop diagram (left/center), tools box (right), memory callout
+(full-width bottom). Memory callout in red box for emphasis — it's the punchline
+that leads into slide 3.
 
-**Talking point** (in instructions.md): "It doesn't suggest. It does."
+**Talking point**: "It's not magic. The model decides what to do, a tool does it,
+the result comes back, and it decides again. That's the loop. Built-in tools cover
+the basics — MCP lets you plug in anything else. And critically — no memory.
+Every conversation starts empty. Which raises the question..."
 
 ---
 
-### Slide 2 — Context Window
+### Slide 3 — Context Is Everything
 
-**Title**: The agent can only help with what it can see
+**Title**: Context is everything
 
 **Content**:
-- Your codebase
-- Your conventions (AGENTS.md)
-- Your constraints
+- Horizontal spectrum bar across the top:
+  - Left segment (gray #8C8C8C): "Not enough context"
+  - Center segment (green #4A9E6B): "Right context, right time"
+  - Right segment (red #CC3333): "Too much context"
+- Descriptions under each zone:
+  - Left: "Generic output, misses conventions"
+  - Center: "Agent follows your conventions and delivers what you asked for"
+  - Right: "Agent forgets key instructions, contradicts itself"
+- Sweet spot marker (triangle, dark green #2D7A4A) on the center segment
+- Below: "Tools to hit the sweet spot:"
+  - AGENTS.md — project context, always loaded
+  - Skills — scoped instructions, loaded when needed
+  - Prompts — right context for the task
 
-**Visual idea**: A spotlight on a dark background. Only what's in the spotlight is visible.
-Or simply: a quote in large text — "Garbage context in, garbage code out."
+**Layout**: Spectrum bar top third, zone descriptions middle, three tool items
+in boxes at the bottom (ordered by persistence: always → when needed → right now).
 
-**Talking point**: AGENTS.md isn't just documentation. It's the agent's briefing.
-
----
-
-### Slide 3 — Agent Tools and Skills
-
-**Title**: What the agent can do
-
-**Content** (two columns):
-- Built-in: Read files / Write files / Run bash / Search web / Browse
-- Custom skills: project-specific workflows configured in settings
-
-**Visual idea**: Simple icon grid. No deep explanation needed.
-
-**Talking point**: Tools are how the agent acts. Skills are specialized instructions
-for specific workflows. This project has several — you'll see them used today.
+**Talking point**: "No memory — so how do you make sure it knows what it needs to?
+You're managing an attention budget. AGENTS.md is what the agent always knows.
+Skills activate when relevant. Prompts are what you say right now. Get the balance
+right and the output is good. Dump everything in and it drifts."
 
 ---
 
-### Slide 4 — MCP
+### Slide 4 — The Edge Delivery Agent Starter Kit
 
-**Title**: Extending the agent
+**Title**: The Edge Delivery Agent Starter Kit
+
+**Content** (simple list with short descriptions):
+- AGENTS.md — project context, ships with the boilerplate
+- Agent Skills — reusable workflows for EDS development
+- MCP Servers — Context7, Helix MCP, Playwright
+- Experience Modernization Agent — hosted AI for site creation and migration
+
+**Layout**: Simple list. Minimal.
+
+**Talking point**: "You don't start from scratch. The boilerplate ships with
+AGENTS.md. Adobe maintains a skills repo you install. There are MCP servers
+already built for EDS. And if you want a fully hosted experience, there's the
+Experience Modernization Agent — which is where we'll start the demo."
+
+---
+
+### Slide 5 — Demo Agenda
+
+**Title**: What we'll build
+
+**Content** (bullet list):
+- Experience Modernization Agent
+- Orient
+- Build
+- Review
+
+**Layout**: Simple bullet list. Placeholder — refine as demo script is finalized.
+
+**Talking point**: "We'll start with the hosted agent to see the accessible entry
+point, then switch to Claude Code for the full developer workflow."
+
+---
+
+### Slide 6 — Wrap-up (IBM Quote)
+
+**Title**: (none — let the quote stand alone)
 
 **Content**:
-- Model Context Protocol
-- Open standard for connecting agents to external services
-- Examples: databases, GitHub, Slack, browsers, design tools
+> "A computer can never be held accountable, therefore a computer must never
+> make a management decision."
+> — IBM, 1979
 
-**Visual idea**: Simple hub-and-spoke diagram. Agent in the center.
-Services on the outside: GitHub, Slack, Browser, DB, API.
+Below the quote: **AI builds. You decide.**
 
-**Talking point**: Think of it as a plugin system for AI agents.
-Claude Code supports it. Cursor supports it. Most serious tools do now.
+**Layout**: Large quote centered on the slide. Attribution below. One-liner at
+the bottom. Show this during the wrap-up after the agent reviews its own code.
 
----
-
-### Slide 5 — The Mental Model
-
-**Title**: You're the architect. AI is the crew.
-
-**Content**:
-- You: decide what to build, evaluate the output, course correct
-- AI: determine how, execute the steps
-
-**Visual idea**: Blueprint on one side (you), construction on the other (AI).
-Or just two large words: DECIDE / EXECUTE
-
-**Talking point**: "The developers who get the most from this aren't the ones with
-the best prompts. They're the ones who evaluate output quickly."
-
----
-
-### Slide 6 — What We're Building
-
-**Title**: Content Driven Development — live
-
-**Content** (simple flow):
-```
-Orient → Content model → Test content → Build → Validate → Ship
-```
-
-**Visual idea**: The six steps as a horizontal pipeline with arrows.
-Highlight that this is the same flow they'll use in every exercise tomorrow.
-
-**Talking point**: "We do this once, together, today. Tomorrow you do it yourselves."
+**Talking point**: "Everything you watched — the agent orienting, building blocks,
+reviewing its own code — it did all of that. But at every step, a human decided
+whether to proceed. That's the model. That doesn't change."
 
 ---
 
@@ -137,13 +174,13 @@ Do a full dry run on the demo machine before the session. Run both blocks end to
 - [ ] Node.js v18+ installed
 - [ ] AEM CLI installed globally (`npm install -g @adobe/aem-cli`)
 - [ ] Project cloned and `npm install` run
-- [ ] Cursor installed (for brief comparison moment — optional but planned)
+- [ ] Experience Modernization Agent accessible in browser
 
 ### On the day
 
 - [ ] Start dev server before the session: `aem up --html-folder drafts`
 - [ ] Open `localhost:3000` and verify it loads
-- [ ] Open `labs/exercise0/Prompts.md` in a second editor pane or window
+- [ ] Open `labs/ai-dev/Prompts.md` in a second editor pane or window
 - [ ] Set font size large enough to be readable on projector (editor + terminal)
 - [ ] Turn off notifications (Do Not Disturb)
 - [ ] Close Slack, email, anything that might pop up
