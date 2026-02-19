@@ -3,6 +3,19 @@
 **Duration**: 30 minutes
 
 ---
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How DA.live Plugins Work](#how-dalive-plugins-work)
+- **Hands-on Lab**
+  - [Create an EmbedWidget Plugin](#step-1-create-plugin-html)
+  - [Create a TradingView Block](#step-25-create-tradingview-block-decorator)
+  - [Test Plugin Locally First](#step-4-test-plugin-locally-first)
+  - [Create page, Use Plugin, Preview and Test](#step-6-preview-the-page-and-verify-widget-rendering)
+- [Key Takeaways](#key-takeaways)
+
+---
 
 ## Prerequisites
 
@@ -514,10 +527,8 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embed
 1. **Open DA.live**: Go to `https://da.live/edit#/cloudadoption/nycmasterclass/drafts/jsmith/` (use your name)
 2. **Open any existing page** (or create `/drafts/jsmith/plugin-test`)
 3. **Open library**: Click the library icon in the left sidebar (puzzle piece icon)
-4. **Load your plugin**: In a new browser tab, navigate to:
-   ```
-https://da.live/edit?ref=local#/cloudadoption/nycmasterclass/drafts/jsmith/plugin-test
-   ```
+4. **Load your plugin**: In a new browser tab, navigate to https://da.live/edit?ref=local#/cloudadoption/nycmasterclass/drafts/jsmith/plugin-test
+
 5. **Think like an author**: Open the TradingView Company Profile widget page:
    - `https://www.tradingview.com/widget-docs/widgets/symbol-details/company-profile/`
 6. **Copy the generated embed HTML** from TradingView
@@ -562,7 +573,7 @@ https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embed
 - [ ] Library palette closes after successful insertion
 - [ ] Inserted table includes `script`, `height`, and `config` rows
 
-## Step 5.5: Preview the Page and Verify Widget Rendering
+## Step 6: Preview the Page and Verify Widget Rendering
 
 After inserting the block in DA, validate that the `tradingview` block decorator renders the actual widget on the page.
 
@@ -576,7 +587,7 @@ After inserting the block in DA, validate that the `tradingview` block decorator
 
 ---
 
-## Step 6: Optional - Register Plugin in Library
+## Step 7: Optional - Register Plugin in Library
 
 
 For production use, plugins should be registered in the site configuration so authors can discover them automatically.

@@ -4,6 +4,19 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+- **Hands-on Lab**
+  - [Data Flow](#the-complete-data-flow)
+  - [Worker Endpoint](#worker-endpoint)
+  - [Create a Feedback Block](#step-1-create-a-feedback-block)
+  - [Create, Preview and Test](#step-3-create-test-page)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) if not already done.**
@@ -52,23 +65,7 @@ Forms are critical for user engagement: registrations, feedback, contact forms, 
 - Lead capture → CRM (HubSpot, Salesforce)
 
 ---
-**Worker Endpoint**:
-
-The instructor has already deployed a Cloudflare Worker that accepts form submissions and sends them to Slack.
-
-**Worker URL**: `https://masterclass-feedback.aem-poc-lab.workers.dev`
-
-**Verify worker is running**:
-
-Using the terminal, Run the following CURL command : 
-```bash
-curl -X POST https://masterclass-feedback.aem-poc-lab.workers.dev \
-  -H "Content-Type: application/json" \
-  -d '{"fullName":"Test User","email":"test@example.com","feedback":"Test message"}'
-```
-
-**Expected response**: `{"success": true, "message": "Feedback submitted successfully"}`
-
+**Lab Exercise**:
 
 ## The Complete Data Flow
 
@@ -125,6 +122,26 @@ Understanding the entire flow from user submission to Slack notification:
 ```
 
 **Key insight**: The browser never knows the Slack webhook URL. The worker acts as a secure proxy.
+
+---
+
+## Worker Endpoint
+
+The instructor has already deployed a Cloudflare Worker that accepts form submissions and sends them to Slack.
+
+**Worker URL**: `https://masterclass-feedback.aem-poc-lab.workers.dev`
+
+**Verify worker is running**:
+
+Using the terminal, Run the following CURL command : 
+```bash
+curl -X POST https://masterclass-feedback.aem-poc-lab.workers.dev \
+  -H "Content-Type: application/json" \
+  -d '{"fullName":"Test User","email":"test@example.com","feedback":"Test message"}'
+```
+
+**Expected response**: `{"success": true, "message": "Feedback submitted successfully"}`
+
 
 ---
 
