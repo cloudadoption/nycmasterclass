@@ -307,13 +307,6 @@ The JSON2HTML worker has been configured with two path rules. Here's the configu
 
 **Important**: `/events/list` must come **before** `/events/` in the array. The worker matches top-to-bottom, and `/events/` would match `/events/list` if it came first.
 
-**Key insight**: The worker is **branch-aware**. Your branch (`jsmith`) uses your config while main uses a different one. Zero conflicts!
-
-**How to view or update the config**: Use the [Admin Edit Tool](https://tools.aem.live/tools/admin-edit/) with a **GET** request to:
-```
-https://json2html.adobeaem.workers.dev/config/cloudadoption/nycmasterclass/jsmith
-```
-
 ---
 
 ## Step 4: Test Templates in Simulator
@@ -472,28 +465,32 @@ main .section.event-container:has(> .event-wrapper ~ .event-wrapper) { ... }
 
 ---
 
-## Step 7: Commit Your Changes
+## Step 7: Add the Event Block to Your Branch
 
-The `event` block is already committed to `main`. If you haven't merged it into your branch yet, do so now:
+The `event` block code exists in the `answers` branch. Copy it into your branch so EDS can load it.
 
 ```bash
-# Ensure your branch has the latest event block
-git pull origin main
+# From your branch, copy the event block files from answers
+git checkout answers -- blocks/event/event.js blocks/event/event.css
 
-# Verify block files exist
+# Verify the files are now in your working directory
 ls blocks/event/
 
-# Push to your branch
+# Stage, commit, and push
+git add blocks/event/event.js blocks/event/event.css
+git commit -m "feat: add event block for JSON2HTML list and detail pages"
 git push origin jsmith
 ```
 
 Replace `jsmith` with your branch name.
 
-**What's already committed** (in `main`):
+**What you just copied**:
 - `blocks/event/event.js` — Block decoration logic
 - `blocks/event/event.css` — Styles for list cards and detail views
-- `/labs/exercise5/events-template` — List page Mustache template
-- `/labs/exercise5/event-template` — Detail page Mustache template
+
+**What lives in the repo** (already available on your branch):
+- `labs/exercise5/events-template.html` — List page Mustache template
+- `labs/exercise5/event-template.html` — Detail page Mustache template
 
 **What lives in DA.live** (set up by instructor):
 - `/future-events` — Data sheet (JSON endpoint)
