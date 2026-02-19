@@ -89,26 +89,20 @@
 body {
   display: none;
   margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: 1.6;
-  background: radial-gradient(1200px 600px at 80% -10%, #ee5a24 0%, transparent 60%),
-    radial-gradient(900px 600px at 10% 10%, #6d28d9 0%, transparent 60%),
-    linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
-  background-attachment: fixed;
-  color: var(--ink);
 }
 
 body.appear {
   display: block;
 }
 
-body.ukhalid {
-  --brand-1: #06b6d4;
-  --brand-2: #2563eb;
-
-  background: radial-gradient(1200px 600px at 80% -10%, #06b6d4 0%, transparent 60%),
-              radial-gradient(900px 600px at 10% 10%, #2563eb 0%, transparent 60%),
+body.masterclass {
+  background: radial-gradient(1200px 600px at 80% -10%, #ee5a24 0%, transparent 60%),
+              radial-gradient(900px 600px at 10% 10%, #6d28d9 0%, transparent 60%),
               linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
   background-attachment: fixed;
   color: var(--ink);
@@ -150,12 +144,12 @@ h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
 
-body h1,
-body h2,
-body h3,
-body h4,
-body h5,
-body h6 {
+body.masterclass h1,
+body.masterclass h2,
+body.masterclass h3,
+body.masterclass h4,
+body.masterclass h5,
+body.masterclass h6 {
   font-family: var(--heading-font-family);
   font-weight: 700;
 }
@@ -222,7 +216,7 @@ button {
   line-height: 1.25;
   text-align: center;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+  background: linear-gradient(135deg, #f97316 0%, #c026d3 100%);
   color: white;
   cursor: pointer;
   overflow: hidden;
@@ -264,39 +258,15 @@ button.secondary:hover {
   box-shadow: none;
 }
 
-/* schedule section - table links as text links, not buttons */
-.section.schedule .table a {
-  color: var(--brand-1);
-  text-decoration: none;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  transform: none !important;
-  box-shadow: none !important;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.section.schedule .table a:hover {
-  color: var(--brand-2);
-  background: none !important;
-  transform: none !important;
-  box-shadow: none !important;
-  text-decoration: underline;
-}
-
 /* Featured sections - reusable pattern for cards with centered buttons and arrow links */
-
 /* Add top margin to cards in featured sections */
 .section.featured .cards {
   margin-top: 2rem;
 }
 
-/* Right-align paragraph with link after cards wrapper in featured sections */
-.section.featured .cards-wrapper + .default-content-wrapper p {
-  text-align: right;
+/* Center buttons in cards within featured sections */
+.section.featured .cards .cards-card-body > p:has(a) {
+  text-align: center;
 }
 
 /* Style links that come after cards wrapper in featured sections - make them arrow links */
@@ -308,7 +278,6 @@ button.secondary:hover {
   align-items: center;
   gap: 0.5em;
   transition: gap 0.2s ease;
-
   /* Override button styles */
   background: none !important;
   border: none !important;
@@ -337,9 +306,9 @@ button.secondary:hover {
   transform: translateX(4px);
 }
 
-/* Center buttons in cards within featured sections */
-.section.featured .cards .cards-card-body > p:has(a) {
-  text-align: center;
+/* Right-align paragraph with link after cards wrapper in featured sections */
+.section.featured .cards-wrapper + .default-content-wrapper p {
+  text-align: right;
 }
 
 main img {
@@ -357,6 +326,29 @@ main img {
 .icon img {
   height: 100%;
   width: 100%;
+}
+
+/* schedule section - table links as text links, not buttons */
+.section.schedule .table a {
+  color: var(--brand-1);
+  text-decoration: none;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.section.schedule .table a:hover {
+  color: var(--brand-2);
+  background: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  text-decoration: underline;
 }
 
 /* sections */
