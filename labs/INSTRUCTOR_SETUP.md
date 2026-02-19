@@ -31,7 +31,7 @@ Complete setup checklist for running the NYC Masterclass lab with 50 participant
 
 ### 2-3 Days Before Lab
 - [ ] Verify all content exists (sessions, labs, speakers, future-events)
-- [ ] Verify helix-query.yaml is committed
+- [ ] Verify index config is active in config storage (includes /sessions/**, /labs/**, excludes /drafts/**)
 - [ ] Publish all content to `.aem.live`
 - [ ] Verify query-index populates with custom metadata
 
@@ -52,22 +52,20 @@ Complete setup checklist for running the NYC Masterclass lab with 50 participant
 
 ## Phase 1: Verify Query Index Configuration
 
-### 1.1 Verify helix-query.yaml Exists
+### 1.1 Verify Index Configuration (Config Storage)
 
-File `helix-query.yaml` should exist at project root with:
+The index definition is stored in **EDS config storage** (not in the git repo — `helix-query.yaml` was intentionally removed from the repository). Verify the config is active via the Index Admin tool:
+
+```
+https://tools.aem.live/tools/index-admin
+```
+
+The config should have:
 - **Includes**: `/sessions/**` and `/labs/**`
 - **Excludes**: `/drafts/**`
 - **Custom properties**: speaker-name, instructor, category, tags, published-date, session-level, session-time, difficulty-level, duration
 
-### 1.2 Commit if Needed
-
-```bash
-git add helix-query.yaml
-git commit -m "feat: add query index configuration"
-git push origin main
-```
-
-### 1.3 TODO: Verify Query Index Working
+### 1.2 Verify Query Index Working
 
 After publishing all content, verify:
 
@@ -104,7 +102,7 @@ All in `/labs/` folder, published to `.aem.live`:
 - [ ] `/labs/authoring-first-page`
 - [ ] `/labs/block-development`
 - [ ] `/labs/dynamic-cards`
-- [ ] `/labs/page-list-block`
+- [ ] `/labs/search-block`
 - [ ] `/labs/json2html`
 - [ ] `/labs/form-submissions`
 - [ ] `/labs/da-plugin-development`
@@ -153,6 +151,12 @@ curl https://main--nycmasterclass--cloudadoption.aem.live/future-events.json | j
 ---
 
 ## Phase 3: Participant Branch Setup
+
+### 3.0 Preserve the `answers` Branch
+
+The `answers` branch contains complete solution code for all exercises (`blocks/search/`, `blocks/dynamic-cards/`, `blocks/feedback/`, `blocks/tradingview/`, `tools/plugins/embedwidget/`, etc.). Exercise instructions link directly to it so participants can copy block code.
+
+**Do not delete or force-push the `answers` branch.** It is a permanent reference, not a feature branch.
 
 ### 3.1 Create Participant List
 
@@ -404,8 +408,8 @@ gh pr merge {pr-number}
 - Create own repoless site (Exercise 8)
 
 **Exercise changes from original**:
-- Exercise 3: Personal workspace approach
-- Exercise 4: Manual configuration, no auto-blocking
+- Exercise 3: Dynamic Cards fetching from a personal `speakers.json` (personal workspace approach)
+- Exercise 4: Extend Search Block from Block Collection using `query-index.json` as data source
 - Exercise 5: JSON2HTML worker (not speaker profiles)
 - Exercise 7: Extended to 30 minutes
 - Exercise 8: Hands-on site creation (not pre-configured observation)

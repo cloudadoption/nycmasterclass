@@ -6,10 +6,17 @@ Complete these steps before starting Exercise 1.
 
 ## Prerequisites
 
+Before arriving at the lab, ensure the following are installed:
+
 - Git installed
 - Node.js v18 or higher
-- Code editor (VS Code recommended)
-- Web browser (Chrome/Edge recommended)
+- Code editor (Cursor / Claude Code / VS Code)
+- Web browser (Chrome or Edge — required for AEM Sidekick)
+- **AEM Sidekick browser extension** installed and pinned — [Install from Chrome Web Store](https://chromewebstore.google.com/detail/aem-sidekick/igkmdomcgoebiipaifhmpfjhbjccggml)
+
+![AEM Sidekick in the Chrome Web Store](images/sidekick-chrome-store.png)
+
+![Pin the Sidekick extension so it is visible in your toolbar](images/pin-sidekick-extension.png)
 
 ---
 
@@ -45,7 +52,7 @@ Verify:
 aem --version
 ```
 
-Expected output: Version number (e.g., `15.x.x`)
+Expected output: Version number (e.g., `16.x.x`)
 
 ---
 
@@ -87,51 +94,78 @@ The server starts at: http://localhost:3000
 
 **Keep this running** throughout the lab. Open a new terminal for Git commands.
 
-**Verify**: Open http://localhost:3000 - you should see the boilerplate homepage.
+**Verify**: Open http://localhost:3000 — you should see the NYC Masterclass homepage.
+
+![NYC Masterclass homepage at localhost:3000](images/nyc-masterclass-home.png)
 
 ---
 
-## Step 7: Verify Your Branch URLs
+## Step 7: Understand Your Branch URLs
 
-Your preview and live URLs use your branch name:
+EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
-**Pattern**:
-- Preview: `https://{branch}--{repo}--{owner}.aem.page/`
-- Live: `https://{branch}--{repo}--{owner}.aem.live/`
+- Preview: `https://{branch}--nycmasterclass--cloudadoption.aem.page/`
+- Live: `https://{branch}--nycmasterclass--cloudadoption.aem.live/`
 
-**Your URLs** (replace `jsmith` with your branch):
-- Preview: https://jsmith--nycmasterclass--cloudadoption.aem.page/
-- Live: https://jsmith--nycmasterclass--cloudadoption.aem.live/
-
-**Main branch** (reference only):
+**Main branch** (always available — use this as your reference throughout the lab):
 - Preview: https://main--nycmasterclass--cloudadoption.aem.page/
 - Live: https://main--nycmasterclass--cloudadoption.aem.live/
+
+> Your personal branch URLs (e.g. `jsmith--nycmasterclass--cloudadoption.aem.page`) become active after your first `git push` in Exercise 2.
 
 ---
 
 ## Step 8: Verify DA.live Access
 
 1. Go to https://da.live/#/cloudadoption/nycmasterclass
-2. You should see the project and folder structure
-3. Navigate to `/drafts/<your-name>/`
-4. You should be able to create/edit pages
+2. Complete the Sign In process using the Adobe ID provided to obtain access
+   > If your Adobe ID is tied to a Personal Account, choose that instead of Corporate Account
+3. You should see the project and folder structure
+
+   ![NYC Masterclass homepage at da.live](images/da-nyc-masterclass-home.png)
+
+4. Navigate into `/drafts`
+5. Create a folder: `/drafts/<yourname>` (e.g. `/drafts/jsmith`)
+
+   ![Create Folder in DA](images/da-create-folder.png)
+
+6. Confirm you can create and edit pages inside that folder
 
 **If you cannot access**:
 - Verify you're logged in with your Adobe IMS account
-- Check IMS group membership: `nycmasterclass2026`
 - Ask instructor to verify permissions
 
 ---
 
-## Step 9: Verify EDS Permissions
+## Step 9: Add This Project to Sidekick
+
+With your dev server running, add the NYC Masterclass project to your Sidekick extension so the toolbar appears on your pages.
+
+1. Open [main--nycmasterclass--cloudadoption.aem.page](https://main--nycmasterclass--cloudadoption.aem.page/) in Chrome or Edge
+2. Click the **AEM Sidekick** icon in your browser toolbar
+   > If this the first time that you are viewing sidekick extension , go through the overview
+3. Click **Add project** from sidekick extension
+
+![Sidekick "Add project" prompt](images/sidekick-add-project.png)
+
+4. Refresh the page — the Sidekick toolbar should appear at the top with **Preview** and **Publish** buttons
+
+
+**Verify**: Open [localhost:3000/sessions/architecture-deep-dive](http://localhost:3000/sessions/architecture-deep-dive) and confirm the Sidekick toolbar also appears there.
+
+> **If Sidekick is not installed**: See the prerequisite at the top of this document — [aem.live/docs/sidekick](https://www.aem.live/docs/sidekick)
+
+---
+
+## Step 10: Verify EDS Permissions
 
 You should have `publish` role which includes:
 - `preview:read`, `preview:write` (access to `.aem.page`)
 - `live:write` (publish to `.aem.live`)
 
-**Test**: Try publishing any page from DA.live. If successful, permissions are correct.
+**Test**: In DA.live, open an existing page (e.g., [sessions/architecture-deep-dive](https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive)) and click **Preview**. If it opens at `.aem.page`, permissions are correct.
 
-**If publish fails**: Ask instructor to verify EDS Admin API permissions.
+**If preview fails**: Ask instructor to verify EDS Admin API permissions.
 
 ---
 
@@ -151,11 +185,9 @@ git add blocks/block-name/
 # Commit with conventional commit message
 git commit -m "feat: add block-name block"
 
-# Push to your branch
-git push origin jsmith
+# Push to your branch (replace jsmith with your branch name)
+git push origin <your-branch>
 ```
-
-Replace `jsmith` with your branch name.
 
 ### Pull latest changes:
 
@@ -175,7 +207,9 @@ At the end of the lab, you'll create a PR to merge your work to main.
 
 1. **No linting errors**: Run `npm run lint` - must be clean
 2. **Test URLs**: Include before/after links showing your changes
-3. **Lighthouse scores**: 100 on both mobile and desktop
+   >before : points to main branch and all impacted pages
+   >after: point to feature branch and all impacted pages
+3. **Lighthouse scores**: 100 on both mobile and desktop on PR
 
 ### Steps to Create PR
 
@@ -192,14 +226,11 @@ Pick a page that demonstrates your work (e.g., `/drafts/<your-name>/sessions` fr
 
 **3. Run PageSpeed Insights**:
 
-Test both mobile and desktop:
 ```
-https://developers.google.com/speed/pagespeed/insights/?url=https://jsmith--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/sessions
+https://developers.google.com/speed/pagespeed/insights/?url=https://<your-branch>--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/sessions
 ```
 
-Replace `jsmith` and `<your-name>` with your values.
-
-**Target**: Green scores (ideally 100) for both mobile and desktop.
+**Target**: 100 on both mobile and desktop.
 
 **If scores are low**:
 - Optimize images
@@ -243,6 +274,8 @@ Screenshot: [attach screenshot of PSI results]
 
 Replace `jsmith` and URLs with your actual values.
 
+![Performance Check on PR](images/perfomance-check-pr.png)
+
 **5. Request Review**:
 
 Assign the instructor as a reviewer.
@@ -253,22 +286,15 @@ Assign the instructor as a reviewer.
 
 ---
 
-## URL Testing Guide
+## URL Reference
 
-**Local development** (code changes reflect immediately):
-```
-http://localhost:3000/your-page-path
-```
+| Environment | URL pattern | When it updates |
+|---|---|---|
+| Local | `http://localhost:3000/<path>` | Immediately on file save |
+| Preview | `https://{branch}--nycmasterclass--cloudadoption.aem.page/<path>` | After DA.live Preview or `git push` |
+| Live | `https://{branch}--nycmasterclass--cloudadoption.aem.live/<path>` | After DA.live Publish |
 
-**Preview** (after DA.live preview or git push):
-```
-https://jsmith--nycmasterclass--cloudadoption.aem.page/your-page-path
-```
-
-**Live** (after DA.live publish):
-```
-https://jsmith--nycmasterclass--cloudadoption.aem.live/your-page-path
-```
+Use `main` as the branch for the reference site. Use your branch name (e.g. `jsmith`) for your own work — available after your first `git push` in Exercise 2.
 
 ---
 
@@ -319,7 +345,9 @@ Before starting Exercise 1, verify:
 - [ ] Linting runs clean (`npm run lint` no errors)
 - [ ] Dev server running (`http://localhost:3000` loads)
 - [ ] DA.live access verified (can view project)
-- [ ] Branch URLs understood (preview vs live)
+- [ ] AEM Sidekick extension installed (Chrome/Edge)
+- [ ] Sidekick project added — toolbar visible on `localhost:3000`
+- [ ] Branch URL pattern understood — `main--` URLs verified as working
 - [ ] Git workflow clear (lint, add, commit, push)
 - [ ] PR process understood (test URLs, Lighthouse scores)
 

@@ -4,6 +4,20 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How It Works](#how-it-works)
+- **Hands-on Lab**
+  - [Copy Speakers Data](#step-1-copy-speakers-data-to-your-workspace)
+  - [Create Block Files](#step-3-create-block-files)
+  - [Implement JavaScript](#step-4-implement-javascript)
+  - [Test Locally](#step-8-test-locally)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Context: The Speakers Page
 
 If you've been exploring the site, you may have noticed the **Speakers** link in the navigation leads to a placeholder page at http://localhost:3000/speakers
@@ -709,6 +723,12 @@ Exercise 4 has you search for your own page. But the search index only includes 
 6. Open the page → **Preview** → **Publish**
 
 That's it. The index updates in the background — by the time you get to Ex4 testing, your page will be findable.
+
+---
+
+## Solution
+
+The complete solution for this exercise is available on the `answers` branch.
 
 ---
 

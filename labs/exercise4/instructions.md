@@ -4,6 +4,21 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How Query Index Works](#how-query-index-works)
+- **Hands-on Lab**
+  - [Verify Query Index](#step-1-verify-query-indexjson)
+  - [Block Collection Reference](#step-2-look-at-the-block-collection-reference)
+  - [Create Block Files](#step-3-create-block-files)
+  - [Implement JavaScript](#step-4-implement-javascript)
+  - [Test the Search Block](#step-7-test-the-search-block)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) if not already done.**
@@ -64,43 +79,48 @@ The index for this site is configured with the following `query.yaml`:
 
 ```yaml
 version: 1
-
 indices:
   default:
+    target: /query-index.json
     include:
       - /sessions/**
       - /labs/**
-    exclude:
-      - /drafts/**
-    target: /query-index.json
     properties:
       speaker-name:
+        value: attribute(el, "content")
         select: head > meta[name="speaker-name"]
-        value: attribute(el, "content")
       instructor:
+        value: attribute(el, "content")
         select: head > meta[name="instructor"]
-        value: attribute(el, "content")
       category:
+        value: attribute(el, "content")
         select: head > meta[name="category"]
-        value: attribute(el, "content")
       tags:
+        value: attribute(el, "content")
         select: head > meta[name="tags"]
-        value: attribute(el, "content")
       published-date:
-        select: head > meta[name="published-date"]
         value: parseTimestamp(attribute(el, "content"), "MM/DD/YYYY")
+        select: head > meta[name="published-date"]
       session-level:
+        value: attribute(el, "content")
         select: head > meta[name="session-level"]
-        value: attribute(el, "content")
       session-time:
+        value: attribute(el, "content")
         select: head > meta[name="session-time"]
-        value: attribute(el, "content")
       difficulty-level:
+        value: attribute(el, "content")
         select: head > meta[name="difficulty-level"]
-        value: attribute(el, "content")
       duration:
-        select: head > meta[name="duration"]
         value: attribute(el, "content")
+        select: head > meta[name="duration"]
+      title:
+        value: textContent(el)
+        select: head > title
+      description:
+        value: attribute(el, "content")
+        select: head > meta[name="description"]
+    exclude:
+      - /drafts/**
 ```
 
 **What this tells you**:
@@ -165,6 +185,8 @@ blocks/
 ## Step 4: Implement JavaScript
 
 **File**: `blocks/search/search.js`
+
+> **Tip**: The full implementation is also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search) if you prefer to copy from there.
 
 Copy this code:
 
@@ -471,6 +493,8 @@ export default async function decorate(block) {
 ## Step 5: Implement Styles
 
 **File**: `blocks/search/search.css`
+
+> **Tip**: Also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search).
 
 Copy this code:
 

@@ -4,529 +4,325 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [DA.live: The Authoring Tool](#dalive-the-authoring-tool)
+- **Hands-on Lab**
+  - [Create Your Page](#step-1-create-your-page)
+  - [Update Metadata](#step-4-update-metadata)
+  - [Save and Preview](#step-5-save-and-preview)
+  - [Publish](#step-7-publish)
+- [Verification Checklist](#verification-checklist)
+
+---
+
 ## Prerequisites
 
-✅ **Complete [SETUP.md](../SETUP.md) before starting this exercise.**
+**Complete [SETUP.md](../SETUP.md) before starting this exercise.**
 
-Required:
-- Repository cloned locally
-- Local dev server running at `http://localhost:3000`
-- DA.live access verified at https://da.live/#/cloudadoption/nycmasterclass
-- Personal folder created at `/drafts/jsmith/` (using your name)
+- Dev server running at `http://localhost:3000`
+- DA.live access verified: [da.live/#/cloudadoption/nycmasterclass](https://da.live/#/cloudadoption/nycmasterclass)
+- Personal folder exists at `/drafts/<your-name>/` (first initial + last name, all lowercase — e.g. John Smith → `jsmith`)
+- AEM Sidekick installed and this project added — toolbar is visible when you open `localhost:3000`
 
-**Your Personal Workspace**: Throughout this masterclass, you'll use a consistent naming format:
-- **Format**: First initial + full last name, all lowercase
-- **Examples**: John Smith → `jsmith`, Sarah Jones → `sjones`, Wei Chen → `wchen`
-- **Used for**: DA.live folders (`/drafts/jsmith/`), Git branch names (`jsmith`)
+> **Your personal `jsmith--nycmasterclass--cloudadoption.aem.page` URL does not exist yet.**
+> It becomes active only after your first `git push` in Exercise 2.
+> In this exercise, use `localhost:3000` and the `main--` URLs shown below.
 
 ---
 
 ## What You'll Learn
 
-- How document semantics work in EDS
-- How to author content in DA.live
-- How blocks are structured
-- The preview and publish workflow
-- The difference between DA.live and EDS permissions
+- How to author content in **DA.live** — the browser-based editor purpose-built for EDS
+- How a table in DA.live becomes a decorated block on the rendered page
+- How **Preview** and **Publish** update `.aem.page` and `.aem.live` respectively
+- How to inspect your content at each transformation stage: document source, `.plain.html`, `.md`
 
 ---
 
-## Why This Matters
+## DA.live: The Authoring Tool
 
-EDS uses a fundamentally different approach than traditional CMSs:
+This lab uses **DA.live** — a purpose-built, browser-based document editor for EDS. It is not Google Docs, Microsoft Word, or SharePoint. DA.live gives authors a familiar word-processor experience in the browser, but the underlying format is clean semantic HTML.
 
-**Authors work in familiar tools** (Word, Google Docs) rather than complex admin UIs.
+**The key pattern — tables become blocks:**
 
-**Content is semantic** - simple tables and headings map directly to HTML, making it fast and accessible.
-
-**Separation of concerns** - Authors focus on content structure, developers control presentation.
-
-This exercise shows you the author's perspective. In Exercise 2, you'll see the developer's side.
-
----
-
-## How It Works
+A table authored in DA.live:
 
 ```
-1. Author creates content in DA.live (tables, headings, text)
-2. DA.live converts to semantic HTML
-3. EDS serves the HTML on preview (.aem.page)
-4. Author publishes
-5. EDS serves the HTML on live (.aem.live)
+| Hero                   |
+|------------------------|
+| Welcome to Masterclass |
 ```
 
-**Key concept**: Content structure (tables) defines blocks. Developers write JavaScript/CSS to decorate those blocks.
-
----
-
-## Understanding Permissions
-
-**DA.live permissions** (content authoring):
-- `read` - View content and configs
-- `write` - Create, edit, delete content
-- Managed in DA.live config sheet
-
-**EDS permissions** (preview & publish):
-- `preview:read`, `preview:write` - Work with `.aem.page`
-- `live:write` - Publish to `.aem.live`
-- Managed via EDS Admin API
-
-You should have:
-- DA.live `write` permission on `/drafts/jsmith/` (replace `jsmith` with your first initial + last name, all lowercase)
-- EDS `publish` role (includes preview and live permissions)
-
-**Your name format**: First initial + full last name, all lowercase
-- John Smith → `jsmith`
-- Sarah Jones → `sjones`
-- Wei Chen → `wchen`
-
-**References**:
-- [DA.live Permissions](https://docs.da.live/administrators/guides/permissions)
-- [EDS Authentication](https://www.aem.live/docs/authentication-setup-authoring)
-
----
-
-## Document Semantics
-
-### Basic Elements
-
-```
-# Heading 1          →  <h1>Heading 1</h1>
-## Heading 2         →  <h2>Heading 2</h2>
-Paragraph text       →  <p>Paragraph text</p>
-![Image](url)        →  <img src="optimized.jpg" alt="Image">
-[Link](url)          →  <a href="url">Link</a>
-```
-
-### Blocks
-
-Tables with a name in the first cell become blocks:
-
-```
-| Hero                    |
-|-------------------------|
-| Welcome to Masterclass  |
-| Join us in NYC          |
-```
-
-Becomes:
+Becomes this HTML after EDS processes it:
 
 ```html
 <div class="hero">
   <div><div>Welcome to Masterclass</div></div>
-  <div><div>Join us in NYC</div></div>
 </div>
 ```
 
-**The contract**: Authors create the table structure, developers write `blocks/hero/hero.js` to decorate it.
+The table header (`Hero`) becomes the CSS class. Developers write `blocks/hero/hero.js` and `blocks/hero/hero.css` to decorate it. Authors never write CSS class names — the table structure *is* the contract between author and developer.
 
-**References**:
-- [Markup, Sections, Blocks](https://www.aem.live/developer/markup-sections-blocks)
-- [Document Semantics](https://www.aem.live/blog/content-document-semantics)
-
----
-
-## Before You Start: Review Existing Pages
-
-Before creating your page, look at the structure of existing content:
-
-**Session pages**: 
-- https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive
-- http://localhost:3000/sessions/architecture-deep-dive
-
-**Lab pages**:
-- https://da.live/edit#/cloudadoption/nycmasterclass/labs/authoring-first-page
-- http://localhost:3000/labs/authoring-first-page
-
-**What to notice**:
-- How Hero blocks are structured
-- The content sections (Overview, Learning Objectives, Key Topics)
-- Metadata fields used
-- Overall page structure
-
----
-
-## Step 1: Create a Session or Lab Page
-
-Choose to create either a **session page** or a **lab page** - your choice!
-
-1. Go to https://da.live/#/cloudadoption/nycmasterclass
-2. Navigate to `/drafts/<your-name>/`
-   - **Format**: First initial + full last name, all lowercase
-   - **Example**: John Smith → `jsmith`, Sarah Jones → `sjones`
-   - This is your personal workspace for the masterclass
-3. If your folder doesn't exist, create it: Click **New** → **Folder** → Name it with your format
-4. Inside your folder, click **New** → **Page**
-5. Name it: `my-session` or `my-lab`
-
-**Why this matters**: You're creating real content for the masterclass site, not throwaway practice content. You're learning by building something meaningful.
-
-**Note**: This same naming convention (`jsmith`) will be used for your GitHub branch name in Exercise 2.
-
----
-
-## Step 2: Add a Hero Block
-
-In the page editor, add this content:
+**The content pipeline:**
 
 ```
-| Hero |
-|------|
-| [Your Session/Lab Title] |
+DA.live editor
+     │
+     │  Save
+     ▼
+Preview (.aem.page) ── code from main GitHub branch
+     │                  content from DA.live
+     │  Publish
+     ▼
+Live (.aem.live) ──── same code, same content (promoted to production)
+```
+
+For a full overview of EDS authoring: [aem.live/docs/authoring](https://www.aem.live/docs/authoring)
+
+---
+
+## Before You Start
+
+Spend 2 minutes reviewing an existing page before creating your own. Open these side-by-side:
+
+- **In DA.live** (author's view): [sessions/architecture-deep-dive](https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive)
+- **Rendered** (visitor's view): [localhost:3000/sessions/architecture-deep-dive](http://localhost:3000/sessions/architecture-deep-dive)
+
+Notice how the tables you see in DA.live become the styled components on the rendered page. That transformation is what this exercise is about.
+
+---
+
+## Step 1: Create Your Page
+
+1. Go to [da.live/#/cloudadoption/nycmasterclass](https://da.live/#/cloudadoption/nycmasterclass)
+2. Navigate into `/drafts/<your-name>/`
+3. Click **New** → **Page**
+4. Name it `my-session` or `my-lab`
+
+![DA.live drafts folder showing personal workspace](images/browse-drafts-folder.png)
+
+---
+
+## Step 2: Start From a Template
+
+DA.live provides **session** and **lab** templates for this project. Using a template inserts all the required blocks and sections pre-populated with placeholder content — you fill in the details rather than building from scratch.
+
+In the page editor:
+
+1. Type `/` to open the slash command menu
+
+   ![Slash command menu in DA.live](images/slash-command-in-da.png)
+
+2. Select **Templates**
+3. Choose **Session** or **Lab** depending on what you are creating
+
+   ![Session and Lab template options](images/use-session-lab-template.png)
+
+The template inserts a Hero block, content sections, and a Metadata block — all with placeholder text.
+
+> **Didn't find a template?** You can also insert individual blocks via the **Blocks Library**:
+> Type `/` → select **Blocks** → browse and insert any block with placeholder content pre-filled.
+>
+> ![Block Library plugin in DA.live](images/block-library-plugin.png)
+>
+> Or insert a table manually with `/table` and type the block name in row 1.
+
+---
+
+## Step 3: Update Your Content
+
+With the template inserted, replace each placeholder with your own content.
+
+**Hero block** — update the title and keep the schedule link:
+
+```
+| Hero                                                                           |
+|--------------------------------------------------------------------------------|
+| [Your Session or Lab Title]                                                    |
 | [View Schedule](https://main--nycmasterclass--cloudadoption.aem.page/schedule) |
 ```
 
-**Example for a session**:
-```
-| Hero |
-|------|
-| Testing Strategies for EDS |
-| [View Schedule](https://main--nycmasterclass--cloudadoption.aem.page/schedule) |
-```
+![Hero block in DA.live editor](images/my-session-top.png)
 
-**Example for a lab**:
-```
-| Hero |
-|------|
-| Building a Search Block |
-| [View Lab Schedule](https://main--nycmasterclass--cloudadoption.aem.page/schedule) |
-```
-
-**What you're doing**: Creating a table that will become a `<div class="hero">` block with a title and link to schedule.
-
----
-
-## Step 3: Add Session/Lab Overview
-
-Below the Hero block, add:
+**Content sections** — fill in the overview and objectives below the Hero block:
 
 ```
 ## Session Overview
 
-[Describe what this session/lab is about - 2-3 sentences]
+[2–3 sentences describing this session or lab]
 
 ## What You'll Learn
 
 - [Learning objective 1]
 - [Learning objective 2]
 - [Learning objective 3]
-- [Learning objective 4]
-
-## Key Topics
-
-**[Topic 1 Name]**
-[1-2 sentences explaining this topic]
-
-**[Topic 2 Name]**
-[1-2 sentences explaining this topic]
-
-**[Topic 3 Name]**
-[1-2 sentences explaining this topic]
-
-## Who Should Attend
-
-[Describe the target audience - developers, architects, authors, etc.]
 ```
 
-**What you're doing**: Adding semantic HTML (headings, paragraphs, lists) that needs no decoration. Look at `/sessions/architecture-deep-dive` or `/labs/authoring-first-page` for real examples.
+> **Tip**: Type `/` anywhere in the document to explore other available insert options — headings, images, links, dividers, and more.
 
 ---
 
-## Step 4: Add Metadata
+## Step 4: Update Metadata
 
-At the very bottom of the page, add:
+The template includes a Metadata block at the bottom of the page. Fill in the placeholder values. **It must remain the last element on the page.**
 
-**For a session**:
+**For a session:**
+
 ```
-| Metadata       |                                           |
-|----------------|-------------------------------------------|
-| Title          | [Session Title] - NYC Masterclass         |
-| Description    | [Short description for SEO]               |
-| speaker-name   | [Speaker Name]                            |
-| category       | technical                                 |
-| tags           | [tag1, tag2, tag3]                        |
-| published-date | 02/01/2026                                |
-| session-level  | beginner / intermediate / advanced        |
-| session-time   | Day X - XX:XXa - XX:XXa                   |
+| Metadata      |                                    |
+|---------------|------------------------------------|
+| Title         | [Session Title] - NYC Masterclass  |
+| Description   | [Short description for SEO]        |
+| speaker-name  | [Speaker Name]                     |
+| category      | technical                          |
+| session-level | beginner / intermediate / advanced |
 ```
 
-**For a lab**:
+**For a lab:**
+
 ```
-| Metadata       |                                           |
-|----------------|-------------------------------------------|
-| Title          | Lab X: [Lab Title] - NYC Masterclass      |
-| Description    | [Short description for SEO]               |
-| instructor-name| [Instructor Name]                         |
-| category       | development / authoring / configuration   |
-| tags           | [tag1, tag2]                              |
-| published-date | 02/01/2026                                |
-| difficulty     | beginner / intermediate / advanced        |
-| lab-time       | Day X - XX:XXa - XX:XXa                   |
+| Metadata        |                                         |
+|-----------------|-----------------------------------------|
+| Title           | Lab: [Lab Title] - NYC Masterclass      |
+| Description     | [Short description for SEO]             |
+| instructor-name | [Instructor Name]                       |
+| category        | development / authoring / configuration |
+| difficulty      | beginner / intermediate / advanced      |
 ```
 
-**What you're doing**: Setting page metadata for SEO and classification. This data powers search, filtering, and organization.
-
-**Important**: Metadata block must be last on the page.
+![Metadata block at the bottom of the page in DA.live](images/my-session-bottom.png)
 
 ---
 
 ## Step 5: Save and Preview
 
-1. Click **Save** in DA.live
-2. Click **Preview**
-3. Your page opens at: `http://localhost:3000/drafts/jsmith/my-session` (replace `jsmith` with your name)
+1. Click **Preview** (in DA.live)
 
-**What you should see**:
-- Hero block at the top with your title
-- Session/lab overview and learning objectives
-- Key topics with headings
-- Everything styled by existing CSS in the repo
+Your page is now available at:
 
-**Compare with real pages**:
-- http://localhost:3000/sessions/architecture-deep-dive
-- http://localhost:3000/labs/authoring-first-page
+**Local** — uses your local code files + DA.live content:
+```
+http://localhost:3000/drafts/jsmith/my-session
+```
 
----
+**Main preview** — uses main branch code + DA.live content, accessible without a running dev server:
+```
+https://main--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session
+```
 
-## Step 6: Understanding Document Semantics
+> **Note**: There is no `jsmith--` preview URL yet. That becomes available after `git push origin jsmith` in Exercise 2. Until then, `localhost:3000` is your working environment.
 
-This is a critical step that reveals how EDS transforms simple content into performant web experiences. You'll inspect your page at three different stages of the transformation process.
-
-### 6.1: View Document Source (Author's View)
-
-1. With your page open at `http://localhost:3000/drafts/jsmith/my-session` (use your name)
-2. Right-click on the **AEM Sidekick** extension icon in your browser
-3. Select **View document source**
-
-**What you'll see**: The raw HTML as it exists in DA.live before any EDS processing. Notice:
-- Tables are still just tables
-- No `class="hero"` or block decorations yet
-- Simple, clean semantic HTML
-- This is exactly what the author creates
-
-**Key insight**: Authors work with pure semantic HTML. No CSS classes, no JavaScript complexity.
+Open your page on `localhost:3000`. Compare it against the reference live site:
+[main--nycmasterclass--cloudadoption.aem.live](https://main--nycmasterclass--cloudadoption.aem.live/)
 
 ---
 
-### 6.2: View Plain HTML (EDS Processing)
+## Step 6: Inspect the Content Transformation
 
-Open in a new tab (replace `jsmith` with your name):
+This is the core learning step. Your page exists in multiple representations simultaneously. Open each one and observe how the content changes form as it moves through the EDS pipeline.
+
+### Document Source — what the author wrote
+
+With your page open at `http://localhost:3000/drafts/jsmith/my-session`, click the **AEM Sidekick** icon in your toolbar and select **View document source**.
+
+![Sidekick "View document source" option](images/view-doc-source-sidekick.png)
+
+**What you see**: Raw HTML from DA.live — tables are still `<table>` elements, no `class="hero"`, no block structure. This is exactly what the author wrote.
+
+---
+
+### `.plain.html` — what EDS processes
+
+Open in a new tab. Available on both local and the main preview environment:
+
 ```
 http://localhost:3000/drafts/jsmith/my-session.plain.html
+https://main--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session.plain.html
 ```
 
-**What you'll see**: HTML after EDS processing but before JavaScript decoration. Notice:
-- Your Hero table is now `<div class="hero"><div><div>...</div></div></div>`
-- Content is wrapped in section divs (`<div>...</div>`)
-- Block structure is defined but not yet decorated
-- Metadata is processed but not visible in the page
+**What you see**: EDS has transformed your Hero table into block divs:
 
-**Key insight**: EDS transforms tables into semantic block structures. The table header becomes the block class name.
+```html
+<div class="hero">
+  <div><div>Your Session Title</div></div>
+  <div><div><a href="...">View Schedule</a></div></div>
+</div>
+```
 
-**Compare**: Open both document source and .plain.html side-by-side. See how:
-- `| Hero |` table → `<div class="hero">`
-- `| Metadata |` table → processed into `<head>` tags
-- Simple content stays simple (headings, paragraphs, lists)
+The Metadata table is gone — EDS has processed it into `<head>` tags. This `.plain.html` is what JavaScript receives when `decorate(block)` is called.
 
 ---
 
-### 6.3: View Markdown Source (Content Format)
+### `.md` — the content as Markdown
 
-Open in a new tab (replace `jsmith` with your name):
+Open in a new tab:
+
 ```
 http://localhost:3000/drafts/jsmith/my-session.md
+https://main--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session.md
 ```
 
-**What you'll see**: Markdown representation of your content. Notice:
-- Tables shown as markdown tables
-- Headings as `##` format
-- Lists with `-` or `*` bullets
-- This is how content could be edited in text editors
-
-**Key insight**: EDS stores content in a universal format that can be rendered as HTML, edited as markdown, or consumed as JSON.
+**What you see**: Your content as Markdown — tables, headings, and lists in plain text format. This is the storage format EDS uses internally.
 
 ---
 
-### 6.4: View JSON API (Structured Data)
+### The transformation at a glance
 
-Open in a new tab (replace `jsmith` with your name):
-```
-http://localhost:3000/drafts/jsmith/my-session.json
-```
-
-**What you'll see**: Structured data representation with metadata included. Notice:
-- Page content as JSON arrays
-- Metadata as separate object
-- Easy for programmatic access
-- Powers dynamic features like search, page lists
-
-**Key insight**: Every page is API-accessible. No separate API to build or maintain.
+| What you open | What it shows |
+|---|---|
+| `localhost:3000/…` | Fully rendered page — `.plain.html` decorated by JavaScript and CSS |
+| `…/my-session.plain.html` | EDS-processed HTML — tables become `<div class="blockname">`, Metadata → `<head>` |
+| Document Source (Sidekick) | Raw DA.live HTML — what the author wrote, unprocessed |
+| `…/my-session.md` | Markdown — the storage format |
 
 ---
 
-### Understanding the Flow
+## Step 7: Publish
+
+1. In DA.live, click **Publish** (or use the Sidekick toolbar on the page)
+2. Wait for the confirmation banner
+
+Your page is now on the **live** environment. Verify all three representations are accessible:
 
 ```
-Author creates content in DA.live
-        ↓
-    Simple HTML (tables, headings, text)
-        ↓ [View Document Source]
-        ↓
-EDS processes structure
-        ↓
-    Semantic blocks (.plain.html)
-        ↓ [View .plain.html]
-        ↓
-JavaScript decorates blocks
-        ↓
-    Styled, interactive page
-        ↓ [View in browser]
+https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session
+https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.plain.html
+https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.md
 ```
 
-**Key Principle**: Content flows from simple (author-friendly) to sophisticated (developer-controlled) without complexity for the author.
+**What happened**: The EDS Admin API promoted your content from `.aem.page` (preview) to `.aem.live` (production). The `.plain.html` and `.md` are identical across both environments — the only difference is *when* content appears: after Preview vs. after Publish.
 
-**Exercise**: Compare your page to an existing session:
-1. View document source for `/sessions/architecture-deep-dive`
-2. View .plain.html for the same page
-3. See how tables become blocks
-4. Notice how metadata is structured
-5. See the final rendered result
-
-This progression from authored content → semantic structure → decorated blocks is the core of how EDS maintains both authoring simplicity and developer flexibility.
-
-**References**:
-- [DA.live API](https://docs.da.live/developers/api)
-- [EDS Admin API](https://www.aem.live/docs/admin.html)
-
----
-
-## Step 7: Publish Your Page
-
-1. In DA.live, click **Publish** on your page
-2. Wait for confirmation
-
-**What happened**:
-- DA.live called EDS Admin API
-- Content copied from preview (`.aem.page`) to live (`.aem.live`)
-- CDN caches updated
-- Your session/lab is now publicly accessible!
-
-### View on Your Branch
-
-**Preview**:
-```
-https://jsmith--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session
-```
-
-**Live**:
-```
-https://jsmith--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session
-```
-
-Replace `jsmith` with your name (first initial + last name, all lowercase). Your GitHub branch name will use this same format.
-
-**Example URLs** (if your name is Sarah Jones):
-- Preview: `https://sjones--nycmasterclass--cloudadoption.aem.page/drafts/sjones/my-session`
-- Live: `https://sjones--nycmasterclass--cloudadoption.aem.live/drafts/sjones/my-session`
-
----
-
-## Understanding the Architecture
-
-```
-┌─────────────┐
-│  DA.live    │  Content authoring & management
-│ (Authoring) │  - Create/edit pages
-│             │  - Manage assets
-└──────┬──────┘  - API: list, create, update content
-       │
-       │ DA.live API
-       ↓
-┌──────────────┐
-│ EDS Preview  │  Preview environment
-│ (.aem.page)  │  - Test before publishing
-└──────┬───────┘  - Shows latest saved content
-       │
-       │ EDS Admin API (publish)
-       ↓
-┌──────────────┐
-│  EDS Live    │  Production environment
-│ (.aem.live)  │  - Public-facing site
-└──────────────┘  - Only published content
-```
-
-**Key principles**:
-- **Separation**: Authoring and delivery are separate services
-- **API-First**: All interactions via REST APIs
-- **Multi-Representation**: HTML, MD, JSON for every resource
-
----
-
-## Real-World Applications
-
-**Use Case 1: Marketing Campaign Pages**
-- Authors create landing pages in Word/Docs
-- No developer involvement for content changes
-- Fast iteration, publish in seconds
-
-**Use Case 2: Product Documentation**
-- Technical writers use familiar tools
-- Developers control layout via blocks
-- SEO metadata controlled by authors
-
-**Use Case 3: Multi-Language Sites**
-- Each language in separate folder
-- Shared blocks/code
-- Authors manage translations
-
----
-
-## Key Takeaways
-
-- **Authors work with simple semantics**: DA.live stores clean HTML without CSS classes or JavaScript complexity
-- **Tables become blocks**: A table with a header row (`| Hero |`) becomes a styled block (`<div class="hero">`)
-- **Three views reveal the transformation**:
-  - Document source = What authors create
-  - .plain.html = How EDS structures it
-  - Final page = How developers style it
-- **Every page is multi-format**: HTML, Markdown, and JSON representations enable different use cases
-- **Separate environments**: Preview (.aem.page) for testing, Live (.aem.live) for production
-- **Two permission systems**: DA.live (content authoring) and EDS Admin API (preview/publish)
-- **Metadata is powerful**: Drives SEO, search, classification, and dynamic features
-- **Patterns scale**: Session/lab structure is consistent, making it easy to create more pages
+> **When does your `jsmith--` live URL appear?**
+> `https://jsmith--nycmasterclass--cloudadoption.aem.live/...` becomes active after you push your feature branch in Exercise 2. Content on `.aem.live` is the same regardless of branch — only the *code* (blocks, scripts, styles) differs between `main--` and `jsmith--`.
 
 ---
 
 ## Verification Checklist
 
-- [ ] Created session or lab page in DA.live
-- [ ] Added Hero block with title and schedule link
-- [ ] Added session/lab overview and learning objectives
-- [ ] Added metadata block with appropriate fields
-- [ ] Previewed locally and saw styled content
-- [ ] **Viewed document source** (via AEM Sidekick right-click)
-- [ ] **Viewed .plain.html** and understood block structure transformation
-- [ ] **Viewed .md** representation
-- [ ] **Viewed .json** API format
-- [ ] **Compared** document source vs .plain.html vs final page
-- [ ] Published page
-- [ ] Viewed on branch preview and live URLs
-- [ ] Understand DA.live vs EDS permissions
-- [ ] Understand the content → structure → styled flow
+- [ ] Page created in DA.live under `/drafts/<your-name>/`
+- [ ] Hero block renders at the top with title and schedule link
+- [ ] Content (overview, objectives) appears below the Hero
+- [ ] Metadata is the last element on the page
+- [ ] Page visible at `http://localhost:3000/drafts/<your-name>/my-session`
+- [ ] **Document source** viewed via Sidekick — tables visible, no `class="hero"`
+- [ ] **`.plain.html`** opened on `localhost:3000` — Hero table is now `<div class="hero">`
+- [ ] **`.plain.html`** opened on `main--nycmasterclass--cloudadoption.aem.page` — matches local
+- [ ] **`.md`** opened and content confirmed
+- [ ] Page published via DA.live
+- [ ] All three representations accessible on `main--nycmasterclass--cloudadoption.aem.live`
 
 ---
 
 ## References
 
-- [Markup Reference](https://www.aem.live/developer/markup-sections-blocks)
-- [Document Semantics](https://www.aem.live/blog/content-document-semantics)
-- [DA.live Permissions](https://docs.da.live/administrators/guides/permissions)
-- [EDS Authentication](https://www.aem.live/docs/authentication-setup-authoring)
-- [DA.live API](https://docs.da.live/developers/api)
-- [EDS Admin API](https://www.aem.live/docs/admin.html)
+- [AEM Authoring](https://www.aem.live/docs/authoring)
+- [AEM Sidekick](https://www.aem.live/docs/sidekick)
+- [Markup, Sections, Blocks](https://www.aem.live/developer/markup-sections-blocks)
 
 ---
 
 ## Next Exercise
 
-**Exercise 2**: Block Development - You'll see the developer's side of the story. Learn how to build block variations (eyebrow, list) for the Cards block and write the JavaScript/CSS that transforms the tables you just created into styled, responsive components.
+**Exercise 2**: Block Development — You'll read the existing `blocks/cards/cards.js` to understand how EDS transforms the `.plain.html` you just inspected into styled, interactive components. Then you'll create test content in DA.live and push your first commit — which is also when your personal `jsmith--` preview URL comes to life.

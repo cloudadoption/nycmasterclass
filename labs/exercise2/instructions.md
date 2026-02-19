@@ -4,6 +4,20 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [Why This Matters](#why-this-matters)
+  - [How Block Decoration Works](#how-block-decoration-works)
+- **Hands-on Lab**
+  - [Eyebrow Enhancement](#step-3-implement-eyebrow-enhancement)
+  - [List Variation](#step-5-implement-list-variation)
+  - [View Switcher Variation](#step-7-implement-view-switcher-variation)
+  - [Commit Your Changes](#step-9-commit-your-changes)
+- [Key Takeaways](#key-takeaways)
+
+---
+
 ## Prerequisites
 
 ✅ **Complete [SETUP.md](../SETUP.md) if not already done.**
@@ -631,6 +645,12 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 - [Exploring Blocks](https://www.aem.live/docs/exploring-blocks)
 - [Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
 - [Component Model Definitions](https://www.aem.live/developer/component-model-definitions)
+
+---
+
+## Solution
+
+The complete solution for this exercise is available on the `answers` branch.
 
 ---
 
