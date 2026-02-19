@@ -64,43 +64,48 @@ The index for this site is configured with the following `query.yaml`:
 
 ```yaml
 version: 1
-
 indices:
   default:
+    target: /query-index.json
     include:
       - /sessions/**
       - /labs/**
-    exclude:
-      - /drafts/**
-    target: /query-index.json
     properties:
       speaker-name:
+        value: attribute(el, "content")
         select: head > meta[name="speaker-name"]
-        value: attribute(el, "content")
       instructor:
+        value: attribute(el, "content")
         select: head > meta[name="instructor"]
-        value: attribute(el, "content")
       category:
+        value: attribute(el, "content")
         select: head > meta[name="category"]
-        value: attribute(el, "content")
       tags:
+        value: attribute(el, "content")
         select: head > meta[name="tags"]
-        value: attribute(el, "content")
       published-date:
-        select: head > meta[name="published-date"]
         value: parseTimestamp(attribute(el, "content"), "MM/DD/YYYY")
+        select: head > meta[name="published-date"]
       session-level:
+        value: attribute(el, "content")
         select: head > meta[name="session-level"]
-        value: attribute(el, "content")
       session-time:
+        value: attribute(el, "content")
         select: head > meta[name="session-time"]
-        value: attribute(el, "content")
       difficulty-level:
+        value: attribute(el, "content")
         select: head > meta[name="difficulty-level"]
-        value: attribute(el, "content")
       duration:
-        select: head > meta[name="duration"]
         value: attribute(el, "content")
+        select: head > meta[name="duration"]
+      title:
+        value: textContent(el)
+        select: head > title
+      description:
+        value: attribute(el, "content")
+        select: head > meta[name="description"]
+    exclude:
+      - /drafts/**
 ```
 
 **What this tells you**:
