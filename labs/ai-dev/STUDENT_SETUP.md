@@ -20,15 +20,18 @@ You need at least one of these. If you already have one, skip this section.
 - Download: https://cursor.com
 - Enable Agent mode in settings
 
-**OpenAI Codex**
-- Requires ChatGPT Plus or API access
-- Available at https://chatgpt.com (use the coding agent mode)
-- The prompts in Prompts.md work here too
+**OpenAI Codex CLI**
+- Requires ChatGPT Plus, Pro, Business, Edu, or Enterprise subscription
+- Install: `npm install -g @openai/codex`
+- First run prompts you to sign in with your ChatGPT account or API key
+- macOS and Linux supported; Windows works under WSL
+- Docs: https://developers.openai.com/codex/cli
 
-**GitHub Copilot**
+**GitHub Copilot (VS Code Chat)**
 - Free tier available (limited monthly usage)
-- Install the VS Code extension
-- The prompts in Prompts.md work here too
+- Install the GitHub Copilot extension in VS Code
+- Open Chat view (⌃⌘I on Mac, Ctrl+Alt+I on Windows) and select **Agent** mode
+- Docs: https://code.visualstudio.com/docs/copilot/chat/copilot-chat
 
 > If you don't have access to any of these, you can still follow along with
 > the demo and use the prompts as reference material for later.
@@ -60,20 +63,16 @@ gh auth login
 Playwright MCP lets your coding agent control a browser — it can open `localhost:3000`,
 take screenshots, and verify that blocks render correctly without you switching windows.
 
-**Install the MCP server:**
+**Add to Claude Code:**
 ```bash
-npm install -g @playwright/mcp
-```
-
-**Add to Claude Code config** (`~/.claude/claude.json` or via `claude mcp add`):
-```bash
-claude mcp add playwright npx @playwright/mcp
+claude mcp add --transport stdio playwright -- npx @playwright/mcp@latest
 ```
 
 **Verify it's available:**
 Open Claude Code and ask: `What MCP servers do you have access to?`
 You should see `playwright` in the list.
 
-> With Playwright MCP configured, during the demo you can ask the agent to open
-> the browser and verify the block rendered correctly — it will do this automatically
-> as part of the CDD validation step.
+> With Playwright MCP configured, the agent can open the browser and verify blocks
+> render correctly as part of the CDD validation step.
+
+Docs: https://github.com/microsoft/playwright-mcp
