@@ -10,25 +10,32 @@
   - [Why This Matters](#why-this-matters)
   - [How Query Index Works](#how-query-index-works)
 - **Hands-on Lab**
-  - [Verify Query Index](#step-1-verify-query-indexjson)
-  - [Block Collection Reference](#step-2-look-at-the-block-collection-reference)
-  - [Create Block Files](#step-3-create-block-files)
-  - [Implement JavaScript](#step-4-implement-javascript)
-  - [Test the Search Block](#step-7-test-the-search-block)
+  - [Step 1: Verify query-index.json](#step-1-verify-query-indexjson)
+  - [Step 2: Look at the Block Collection Reference](#step-2-look-at-the-block-collection-reference)
+  - [Step 3: Create Block Files](#step-3-create-block-files)
+  - [Step 4: Implement JavaScript](#step-4-implement-javascript)
+  - [Step 5: Implement Styles](#step-5-implement-styles)
+  - [Step 6: Create Test Page in DA.live](#step-6-create-test-page-in-dalive)
+  - [Step 7: Test the Search Block](#step-7-test-the-search-block)
+  - [Step 8: Test Edge Cases](#step-8-test-edge-cases)
+  - [Step 9: Commit Your Changes](#step-9-commit-your-changes)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
-- Exercises 1–3 completed
-- Exercise 1 page published to `/labs/jsmith/` (done at end of Exercise 3)
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
+- Code editor open with the repository
+- Exercises 1–3 completed (if doing in sequence)
+- Exercise 1 page published to `/labs/jsmith/` (see end of Exercise 3)
 - DA.live access
+
+**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
 
 ---
 
@@ -142,6 +149,8 @@ http://localhost:3000/query-index.json
 ```
 
 Look for your `/labs/jsmith/my-session` path in the `data` array.
+
+**Validate index definition**: [Index Admin](https://tools.aem.live/tools/index-admin/index.html?org=cloudadoption&site=nycmasterclass) — use this tool to fetch and validate the index configuration (include/exclude paths, properties) for this org/site.
 
 > **Note**: Index updates can take a few minutes after publishing. If you don't see your page yet, continue — it will be there by the time you test.
 
@@ -605,13 +614,15 @@ Add this content:
 
 The URL row is optional — if omitted, the block defaults to `/query-index.json`. Authors can point the block at any JSON endpoint that returns `{ data: [...] }`.
 
-**Save** the page in DA.live.
+DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ---
 
 ## Step 7: Test the Search Block
 
 Open: `http://localhost:3000/drafts/jsmith/search-test`
+
+**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to switch to responsive mode, then resize the viewport or pick a device preset to verify layout at different widths. Use this for all test steps in this exercise.
 
 **You should see**:
 - A search icon + input field with placeholder "Search sessions and labs..."
@@ -694,6 +705,7 @@ Replace `jsmith` with your branch name.
 - [ ] "No results found" message shows for unmatched query
 - [ ] URL updates with `?q=` param as you type
 - [ ] Escape key clears the search
+- [ ] Tested in Chrome DevTools responsive view (desktop and mobile)
 - [ ] `npm run lint` passes
 
 ---
@@ -702,8 +714,14 @@ Replace `jsmith` with your branch name.
 
 - [AEM Block Collection — Search](https://github.com/adobe/aem-block-collection/tree/main/blocks/search)
 - [Indexing Reference](https://www.aem.live/docs/indexing-reference)
-- [Index Admin Tool](https://tools.aem.live/tools/index-admin)
+- [Index Admin Tool](https://tools.aem.live/tools/index-admin/index.html?org=cloudadoption&site=nycmasterclass) — fetch and validate the index definition for this site
 - [EDS Indexing Concepts](https://www.aem.live/developer/indexing)
+
+---
+
+## Solution
+
+The complete solution for this exercise (search block) is on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 

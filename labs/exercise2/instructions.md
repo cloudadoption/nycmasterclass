@@ -25,12 +25,13 @@
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
 - Code editor open with the repository
+- Exercise 1 completed (if doing in sequence)
 
 **Verify you're on your branch**:
 ```bash
@@ -618,7 +619,7 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 
 ## Solution
 
-The complete solution for this exercise is available on the `answers` branch.
+The complete solution for this exercise is available on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 

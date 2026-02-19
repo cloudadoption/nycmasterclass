@@ -387,3 +387,5 @@ Before starting Exercise 1, verify:
 ## Ready to Start
 
 Once all checklist items are complete, proceed to [Exercise 1](exercise1/instructions.md).
+
+**Solutions**: Complete solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise also links to this branch in its Solution section.

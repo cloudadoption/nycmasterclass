@@ -8,25 +8,31 @@
 - **Context**
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
-- **Hands-on Lab**
-  - [Data Flow](#the-complete-data-flow)
+  - [The Complete Data Flow](#the-complete-data-flow)
   - [Worker Endpoint](#worker-endpoint)
-  - [Create a Feedback Block](#step-1-create-a-feedback-block)
-  - [Create, Preview and Test](#step-3-create-test-page)
+  - [POST Request Structure](#understanding-the-post-request-structure)
+- **Hands-on Lab**
+  - [Step 1: Create a Feedback Block](#step-1-create-a-feedback-block)
+  - [Step 2: Configure the Block in Your Draft Page](#step-2-configure-the-block-in-your-draft-page)
+  - [Step 3: Create Test Page](#step-3-create-test-page)
+  - [Step 4: Understanding What the Worker Does](#step-4-understanding-what-the-worker-does)
+  - [Step 5: Commit Your Changes](#step-5-commit-your-changes)
 - [Key Takeaways](#key-takeaways)
 
 ---
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) if not already done.**
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
-Required:
-- On your feature branch (`jsmith` - your first initial + last name)
-- Local dev server running at `http://localhost:3000`
-- Exercises 1-5 completed
+**Required:**
+- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- Local dev server at `http://localhost:3000`
+- Code editor open with the repository
+- Exercises 1–5 completed (if doing in sequence)
+- **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
 
-**Your Personal Workspace**: All work in `/drafts/jsmith/` (use your name: first initial + last name, lowercase)
+**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
 
 ---
 
@@ -213,7 +219,7 @@ blocks/
     feedback.css
 ```
 
-**NOTE** : You can choose to copy the `feedback` block from  [answers](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/feedback) branch in github
+**NOTE**: You can copy the `feedback` block from the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/feedback) on GitHub.
 
 ---
 
@@ -245,7 +251,7 @@ See how this block looks like in DA edit mode
 
 ![Feedback Form | Block Structure](../images/da-feedback-form.png)
 
-What this blcok does:
+**What this block does**:
 - Renders a structured feedback form UI
 - Captures `fullName`, `email`, and `feedback`
 - POSTs JSON to the Worker endpoint from row 1
@@ -255,12 +261,13 @@ What this blcok does:
 
 ## Step 3: Create Test Page
 
-**In DA.live**, 
-1. create page: `/drafts/jsmith/feedback` (use your name)
-2. Use the DA BlockLibrary to add 'Feedback Form' block to your page
-3. You can preview the page using the 'Preview' the Feedback form
-4. **Preview** the page
-5. Test the Form Locally by opening  `http://localhost:3000/drafts/jsmith/feedback` (use your name)
+**In DA.live**:
+1. Create page: `/drafts/jsmith/feedback` (use your name)
+2. Use the Block Library to add the **Feedback Form** block to your page
+3. DA.live auto-saves. Click **Preview** to see the page on localhost
+4. Open `http://localhost:3000/drafts/jsmith/feedback` (use your name) to test the form locally
+
+**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to verify the form layout at different widths.
 
 **You should see**:
 - Form with three fields (name, email, feedback)
@@ -580,6 +587,7 @@ Form → Worker → [Validate + Transform] → [Service 1, Service 2, Service N]
   - Secure webhook URL storage
   - Error responses with appropriate status codes
 - [ ] **Understand complete flow**: Form → JavaScript → Worker → Slack → Response → UI update
+- [ ] **Tested in Chrome DevTools responsive view** (desktop and mobile)
 - [ ] **Committed and pushed** changes to feature branch
 
 ---
@@ -630,6 +638,12 @@ Form → Worker → [Validate + Transform] → [Service 1, Service 2, Service N]
 - [Slack Block Kit](https://api.slack.com/block-kit)
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
 - [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+
+---
+
+## Solution
+
+The complete solution for this exercise (feedback block) is on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
 
 ---
 

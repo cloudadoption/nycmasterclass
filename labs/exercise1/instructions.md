@@ -37,8 +37,9 @@
 
 ## Prerequisites
 
-**Complete [SETUP.md](../SETUP.md) before starting this exercise.**
+**Complete [SETUP.md](../SETUP.md) before starting this exercise.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
+**Required:**
 - Dev server running at `http://localhost:3000`
 - DA.live access verified: [da.live/#/cloudadoption/nycmasterclass](https://da.live/#/cloudadoption/nycmasterclass)
 - Personal folder exists at `/drafts/<your-name>/` (first initial + last name, all lowercase — e.g. John Smith → `jsmith`)
@@ -330,6 +331,12 @@ https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.md
 - [ ] **`.md`** opened and content confirmed
 - [ ] Page published via DA.live
 - [ ] All three representations accessible on `main--nycmasterclass--cloudadoption.aem.live`
+
+---
+
+## Solution
+
+Reference content and solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers).
 
 ---
 
