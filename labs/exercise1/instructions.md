@@ -3,6 +3,24 @@
 **Duration**: 20 minutes
 
 ---
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [DA.live: The Authoring Tool](#dalive-the-authoring-tool)
+  - [Before You Start](#before-you-start)
+- **Hands-on**
+  - [Step 1: Create Your Page](#step-1-create-your-page)
+  - [Step 2: Start From a Template](#step-2-start-from-a-template)
+  - [Step 3: Update Your Content](#step-3-update-your-content)
+  - [Step 4: Update Metadata](#step-4-update-metadata)
+  - [Step 5: Preview](#step-5-preview)
+  - [Step 6: Inspect the Content Transformation](#step-6-inspect-the-content-transformation)
+  - [Step 7: Publish](#step-7-publish)
+- [Verification Checklist](#verification-checklist)
+- [References](#references)
+- [Next Exercise](#next-exercise)
+
+---
 
 ## Prerequisites
 
@@ -183,7 +201,7 @@ The template includes a Metadata block at the bottom of the page. Fill in the pl
 
 ---
 
-## Step 5: Save and Preview
+## Step 5: Preview
 
 1. Click **Preview** (in DA.live)
 

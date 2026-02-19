@@ -3,6 +3,35 @@
 Complete these steps before starting Exercise 1.
 
 ---
+**Quick navigation**
+- [Lab Setup Instructions](#lab-setup-instructions)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Clone Repository](#step-1-clone-repository)
+  - [Step 2: Create Feature Branch](#step-2-create-feature-branch)
+  - [Step 3: Install AEM CLI](#step-3-install-aem-cli)
+  - [Step 4: Install Dependencies](#step-4-install-dependencies)
+  - [Step 5: Run Linting](#step-5-run-linting)
+  - [Step 6: Start Development Server](#step-6-start-development-server)
+  - [Step 7: Understand Your Branch URLs](#step-7-understand-your-branch-urls)
+  - [Step 8: Verify DA.live Access](#step-8-verify-dalive-access)
+  - [Step 9: Add This Project to Sidekick](#step-9-add-this-project-to-sidekick)
+  - [Step 10: Verify EDS , DA Permissions](#step-10-verify-eds--da-permissions)
+  - [Git Workflow](#git-workflow)
+    - [During exercises:](#during-exercises)
+    - [Pull latest changes:](#pull-latest-changes)
+  - [Creating a Pull Request](#creating-a-pull-request)
+    - [PR Requirements](#pr-requirements)
+    - [Steps to Create PR](#steps-to-create-pr)
+  - [URL Reference](#url-reference)
+  - [Troubleshooting](#troubleshooting)
+    - [Port 3000 in use](#port-3000-in-use)
+    - [Git push rejected](#git-push-rejected)
+    - [DA.live "Permission denied"](#dalive-permission-denied)
+    - [AEM CLI not found](#aem-cli-not-found)
+  - [Validation Checklist](#validation-checklist)
+  - [Ready to Start](#ready-to-start)
+
+---
 
 ## Prerequisites
 
@@ -157,11 +186,17 @@ With your dev server running, add the NYC Masterclass project to your Sidekick e
 
 ---
 
-## Step 10: Verify EDS Permissions
+## Step 10: Verify EDS , DA Permissions
 
 You should have `publish` role which includes:
 - `preview:read`, `preview:write` (access to `.aem.page`)
 - `live:write` (publish to `.aem.live`)
+
+**Check your role**: [User Admin](https://tools.aem.live/tools/user-admin/index.html?org=cloudadoption&site=nycmasterclass) — manage users and roles for this org/site.
+
+**DA.live permissions**: [Config](https://da.live/config#/cloudadoption/nycmasterclass/) — verify author access for this project.
+
+![DA.live config permissions](images/da-permissions-config.png)
 
 **Test**: In DA.live, open an existing page (e.g., [sessions/architecture-deep-dive](https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive)) and click **Preview**. If it opens at `.aem.page`, permissions are correct.
 
