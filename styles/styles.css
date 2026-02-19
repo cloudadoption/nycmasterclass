@@ -89,23 +89,18 @@
 body {
   display: none;
   margin: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: 1.6;
+  background: radial-gradient(1200px 600px at 80% -10%, #ee5a24 0%, transparent 60%),
+    radial-gradient(900px 600px at 10% 10%, #6d28d9 0%, transparent 60%),
+    linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
+  background-attachment: fixed;
+  color: var(--ink);
 }
 
 body.appear {
   display: block;
-}
-
-body.masterclass {
-  background: radial-gradient(1200px 600px at 80% -10%, #ee5a24 0%, transparent 60%),
-              radial-gradient(900px 600px at 10% 10%, #6d28d9 0%, transparent 60%),
-              linear-gradient(180deg, var(--masterclass-bg-2), var(--masterclass-bg-1) 55%);
-  background-attachment: fixed;
-  color: var(--ink);
 }
 
 header {
@@ -144,12 +139,12 @@ h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
 
-body.masterclass h1,
-body.masterclass h2,
-body.masterclass h3,
-body.masterclass h4,
-body.masterclass h5,
-body.masterclass h6 {
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
   font-family: var(--heading-font-family);
   font-weight: 700;
 }
