@@ -31,7 +31,7 @@ Complete setup checklist for running the NYC Masterclass lab with 50 participant
 
 ### 2-3 Days Before Lab
 - [ ] Verify all content exists (sessions, labs, speakers, future-events)
-- [ ] Verify helix-query.yaml is committed
+- [ ] Verify index config is active in config storage (includes /sessions/**, /labs/**, excludes /drafts/**)
 - [ ] Publish all content to `.aem.live`
 - [ ] Verify query-index populates with custom metadata
 
@@ -52,22 +52,20 @@ Complete setup checklist for running the NYC Masterclass lab with 50 participant
 
 ## Phase 1: Verify Query Index Configuration
 
-### 1.1 Verify helix-query.yaml Exists
+### 1.1 Verify Index Configuration (Config Storage)
 
-File `helix-query.yaml` should exist at project root with:
+The index definition is stored in **EDS config storage** (not in the git repo — `helix-query.yaml` was intentionally removed from the repository). Verify the config is active via the Index Admin tool:
+
+```
+https://tools.aem.live/tools/index-admin
+```
+
+The config should have:
 - **Includes**: `/sessions/**` and `/labs/**`
 - **Excludes**: `/drafts/**`
 - **Custom properties**: speaker-name, instructor, category, tags, published-date, session-level, session-time, difficulty-level, duration
 
-### 1.2 Commit if Needed
-
-```bash
-git add helix-query.yaml
-git commit -m "feat: add query index configuration"
-git push origin main
-```
-
-### 1.3 TODO: Verify Query Index Working
+### 1.2 Verify Query Index Working
 
 After publishing all content, verify:
 
