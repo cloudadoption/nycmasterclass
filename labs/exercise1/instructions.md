@@ -4,6 +4,19 @@
 
 ---
 
+**Quick navigation**
+- **Context**
+  - [What You'll Learn](#what-youll-learn)
+  - [DA.live: The Authoring Tool](#dalive-the-authoring-tool)
+- **Hands-on Lab**
+  - [Create Your Page](#step-1-create-your-page)
+  - [Update Metadata](#step-4-update-metadata)
+  - [Save and Preview](#step-5-save-and-preview)
+  - [Publish](#step-7-publish)
+- [Verification Checklist](#verification-checklist)
+
+---
+
 ## Prerequisites
 
 **Complete [SETUP.md](../SETUP.md) before starting this exercise.**
