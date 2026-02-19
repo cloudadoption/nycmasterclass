@@ -130,7 +130,7 @@ DA.live plugins are HTML + JavaScript applications hosted on your Edge Delivery 
 
 **URL Structure**:
 - **Your codebase**: `https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget/embedwidget.html`
-- **DA.live app URL**: `https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=jsmith`
+- **DA.live Plugin URL**: `https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=jsmith`
 - **Local development**: `https://da.live/app/cloudadoption/nycmasterclass/tools/plugins/embedwidget/embedwidget?ref=local`
 
 **Key concept**: DA.live loads your plugin HTML from your AEM site into an iframe, then uses PostMessage for secure cross-origin communication.
