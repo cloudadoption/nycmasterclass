@@ -194,10 +194,6 @@ You should have `publish` role which includes:
 
 **Check your role**: [User Admin](https://tools.aem.live/tools/user-admin/index.html?org=cloudadoption&site=nycmasterclass) — manage users and roles for this org/site.
 
-**DA.live permissions**: [Config](https://da.live/config#/cloudadoption/nycmasterclass/) — verify author access for this project.
-
-![DA.live config permissions](images/da-permissions-config.png)
-
 **Test**: In DA.live, open an existing page (e.g., [sessions/architecture-deep-dive](https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive)) and click **Preview**. If it opens at `.aem.page`, permissions are correct.
 
 **If preview fails**: Ask instructor to verify EDS Admin API permissions.
