@@ -529,4 +529,4 @@ Replace `jsmith` with your name (first initial + last name, all lowercase). Your
 
 ## Next Exercise
 
-**Exercise 2**: Block Development - You'll see the developer's side of the story. Learn how to build block variations (eyebrow, stacked) for the Cards block and write the JavaScript/CSS that transforms the tables you just created into styled, responsive components.
+**Exercise 2**: Block Development - You'll see the developer's side of the story. Learn how to build block variations (eyebrow, list) for the Cards block and write the JavaScript/CSS that transforms the tables you just created into styled, responsive components.

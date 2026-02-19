@@ -312,11 +312,12 @@ Create: `#nycmasterclass-registrations` for Exercise 6 form submissions
 - Check dynamic-cards block fetches from `/drafts/jsmith/speakers.json`
 - Monitor for fetch/CORS errors
 
-**Exercise 4** (20 mins): [Page List with Query Index](exercise4/instructions.md)
-- Verify query-index.json is accessible and populated
-- Confirm participants use manual block configuration (data-path, data-category, data-limit)
-- Check they read config from block content (table rows)
-- Monitor for metadata field display issues
+**Exercise 4** (25 mins): [Extend Search Block from Block Collection](exercise4/instructions.md)
+- Verify query-index.json is accessible and populated (15+ entries with custom metadata)
+- Confirm participants create `blocks/search/search.js` and `blocks/search/search.css`
+- Check that search results render as Cards block cards
+- Verify participants can find their own `/labs/jsmith/` page via search
+- Monitor for `cards.css` not loading (check browser console for import errors)
 
 **Exercise 5** (25 mins): [JSON2HTML - Dynamic Pages](exercise5/instructions.md)
 - Verify future-events.json is accessible
