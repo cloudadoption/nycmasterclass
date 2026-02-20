@@ -128,6 +128,17 @@ The server starts at: http://localhost:3000
 
 ![NYC Masterclass homepage at localhost:3000](images/nyc-masterclass-home.png)
 
+> **Note:**  
+> If you see a **403 error** when navigating to [http://localhost:3000](http://localhost:3000), check if a `.env` file exists in your project root.  
+> If not, create a `.env` file containing:
+>
+> ```
+> AEM_PAGES_URL = https://main--nycmasterclass--cloudadoption.aem.page
+> ```
+>
+> After saving this file, **restart your local development server** (`aem up`).
+
+
 ---
 
 ## Step 7: AI Coding Agent Setup

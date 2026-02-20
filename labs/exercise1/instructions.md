@@ -134,12 +134,21 @@ In the page editor:
 
    ![Slash command menu in DA.live](images/slash-command-in-da.png)
 
-2. Select **Templates**
-3. Choose **Session** or **Lab** depending on what you are creating
+2. Select **Library**
+
+  ![Select Library option from the menu in DA.live](images/slash-command-select-library.png)
+
+3. Select **Templates**
+
+  ![Select Templates option](images/select-template.png)
+
+4. Choose **Session** or **Lab** depending on what you are creating
 
    ![Session and Lab template options](images/use-session-lab-template.png)
 
 The template inserts a Hero block, content sections, and a Metadata block — all with placeholder text.
+
+  ![How to insert a template in DA](images/how-to-insert-a-template-da.gif)  
 
 > **Didn't find a template?** You can also insert individual blocks via the **Blocks Library**:
 > Type `/` → select **Blocks** → browse and insert any block with placeholder content pre-filled.
