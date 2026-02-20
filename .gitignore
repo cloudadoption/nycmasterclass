@@ -13,3 +13,6 @@ labs/ai-dev/TODO.md
 # Ensure these files are tracked
 !CLAUDE.md
 !AGENTS.md
+
+.playwright-mcp/
+drafts/tmp/*

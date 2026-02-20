@@ -78,7 +78,7 @@ headshot, name, role, and bio.
 Let's make a plan to build a schedule block for displaying a conference agenda
 with time slots, session titles, speakers, and a track or room. The content
 model here could get complex, so think it through carefully and let's review
-before writing any code.
+before we kick off the CDD process.
 ```
 
 ---
