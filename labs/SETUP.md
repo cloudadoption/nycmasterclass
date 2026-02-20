@@ -265,7 +265,7 @@ At the end of the lab, you'll create a PR to merge your work to main.
 2. **Test URLs**: Include before/after links showing your changes
    >before : points to main branch and all impacted pages
    >after: point to feature branch and all impacted pages
-3. **Lighthouse scores**: 100 on both mobile and desktop on PR
+3. **Lighthouse scores**: 100 on both mobile and desktop on PR(Highly Recommended)
 
 ### Steps to Create PR
 
@@ -288,11 +288,17 @@ https://developers.google.com/speed/pagespeed/insights/?url=https://<your-branch
 
 **Target**: 100 on both mobile and desktop.
 
-**If scores are low**:
-- Optimize images
-- Remove unused JavaScript
-- Check for render-blocking resources
-- Ask instructor for help
+**If scores are low** — troubleshoot in this order before asking for help:
+
+1. **Check what you added, not the boilerplate** — the starter project already scores 100. Low scores are almost always caused by code you introduced.
+2. **Images** — avoid committing large images to Git. Use DA.live to upload images (they get optimized automatically) or use external URLs. If you must commit an image, compress it first (< 100 KB).
+3. **JavaScript** — keep block JS minimal. Avoid importing large libraries. Use native browser APIs (fetch, DOM) instead of frameworks.
+4. **CSS** — put only above-the-fold styles in your block CSS. Avoid `@import` statements.
+5. **Render-blocking resources** — never add `<link>` or `<script>` tags to `head.html` unless absolutely necessary. Use `lazy-styles.css` or `delayed.js` for non-critical resources.
+6. **Run PSI again** — scores can vary ±5 points between runs due to network conditions. Run 2-3 times before worrying.
+7. **Reference**: [Keeping It 100 — EDS Performance Guide](https://www.aem.live/developer/keeping-it-100)
+
+> **Still stuck?** Raise your hand — the instructor will come to you. Please don't queue at the front; it helps everyone if we troubleshoot at your screen.
 
 **4. Create PR on GitHub**:
 
@@ -310,10 +316,10 @@ Added blocks from lab exercises: page-list, dynamic-cards, etc.
 ## Test URLs
 
 **Before** (main branch):
-https://main--nycmasterclass--cloudadoption.aem.page/
+https://main--nycmasterclass--cloudadoption.aem.live/
 
 **After** (my branch):
-https://jsmith--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/sessions
+https://jsmith--nycmasterclass--cloudadoption.aem.live/drafts/<your-name>/sessions
 
 ## Lighthouse Scores
 
