@@ -206,6 +206,8 @@ Add content to test the **existing** Cards block (default behavior). Use the **B
 2. Insert **default Cards** (add a heading like "Default Cards" if you like).
 3. Insert the **Cards block that includes the eyebrow** (italic label). Add a heading like **Cards with Eyebrow** above it — you'll use this when we add the eyebrow enhancement in Step 3.
 
+  ![Cards Block and Variants in DA.live](images/cards-block-1.gif)
+
 You'll add List and View Switcher content later when we implement those variations (Steps 5 and 7). DA.live auto-saves. Click **Preview** to see the page on localhost, then continue to Step 2.
 
 ---
@@ -219,6 +221,8 @@ You'll add List and View Switcher content later when we implement those variatio
 **You should see**:
 - Default Cards section showing cards in a grid
 - A second section with cards that have italic (eyebrow) text — still rendered as plain text for now
+
+  ![Cards Block and Variants in DA.live](images/cards-block-2.gif)
 
 **Why?** The eyebrow enhancement isn't implemented yet. We'll add it in the next step.
 
@@ -323,6 +327,7 @@ Add at the end of the file:
 - The italic text you authored is no longer displayed inline — it's been extracted into the eyebrow
 - Default Cards section is unaffected (no italic text = no eyebrow)
 
+  ![Cards Block and Variants in DA.live](images/cards-block-3.png)
 ---
 
 ## Step 5: Implement List Variation
@@ -330,6 +335,8 @@ Add at the end of the file:
 The list variation displays cards in a single column with centered text. Authors opt in by writing `Cards (List)` as the block name.
 
 **Add content to test it**: In DA.live, open your cards-test page. Type `/` → Library → Blocks → insert **Cards (List)** (add a heading like "List Variation" if you like). Preview so the page has a section to verify in Step 6.
+
+  ![Cards Block and Variants in DA.live](images/cards-block-4.png)
 
 ### Add List Styles
 
@@ -366,6 +373,7 @@ Add at the end of the file:
 - Cards are full width with full-width images
 - Text is centered
 
+![Cards Block and Variants in DA.live](images/cards-block-5.png)
 ---
 
 ## Step 7: Implement View Switcher Variation
@@ -373,6 +381,8 @@ Add at the end of the file:
 Now let's add a variation that combines **JavaScript and CSS**. The view switcher adds toggle buttons that let users switch between grid and list views on the fly.
 
 **Add content to test it**: In DA.live, open your cards-test page. Type `/` → Library → Blocks → insert **Cards (View Switcher)** (add a heading like "View Switcher" if you like). Preview so the page has a section to verify in Step 8.
+
+  ![Cards Block and Variants in DA.live](images/cards-block-6.png)
 
 **This is different from list**: List is a fixed layout chosen by the author. View switcher gives the **end user** control over the layout.
 
@@ -480,6 +490,8 @@ Add the toolbar styles at the end of the file:
 - Click **List** → cards switch to a single-column layout with centered text
 - Click **Grid** → cards switch back to the grid layout
 - The eyebrow enhancement still works (italic text → eyebrow label) in both views
+
+![Cards Block and Variants in DA.live](images/cards-block-7.png)
 
 ---
 
