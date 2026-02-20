@@ -83,41 +83,14 @@ before we kick off the CDD process.
 
 ---
 
-### Steering follow-ups (use if needed)
-
-**If something looks wrong:**
-```
-That's not quite right — [describe the issue]. Fix it.
-```
-
-**If you want to show course correction mid-plan:**
-```
-I want to change the content model — [describe the change]. Update your plan
-and show me the revised approach before proceeding.
-```
-
-**If the agent skips the plan gate:**
-```
-Stop — I asked for a plan first. Show me the plan before writing any files.
-```
-
----
-
-## Part 4 — Wrap-up
-
-One prompt. The agent reviews both blocks it built against project conventions.
-
----
-
 ### 4.1 — Code review
 
-> **What this demonstrates**: The agent as code reviewer. It looks at its own
-> output critically — catches things it missed, flags inconsistencies between
-> the two blocks, and checks against AGENTS.md conventions.
+> **What this demonstrates**: The agent as code reviewer, using the code-review
+> skill. It looks at its own output critically — catches things it missed,
+> flags inconsistencies between the two blocks, and checks against project
+> conventions.
 
 ```
-Review the code you wrote for both the speakers and schedule blocks.
-Check against the project conventions in AGENTS.md. Flag any issues,
-inconsistencies between the two blocks, or anything you'd do differently.
-Fix what you find.
+Before we open a PR, let's run a code review on both the speakers and
+schedule blocks.
 ```

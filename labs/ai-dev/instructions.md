@@ -190,7 +190,7 @@ The agent built both blocks — now ask it to review its own work against projec
 - It checks against AGENTS.md conventions (CSS scoping, responsive design, accessibility)
 - It fixes what it finds — refresh the browser to see updates
 
-> **Key idea**: AI code review works on any code, not just code the agent wrote. You can use this on pull requests, teammate code, or unfamiliar codebases.
+> **Key idea**: AI code review works on any code, not just code the agent wrote. You can also point the agent at a PR link (e.g., "review this PR: https://github.com/...") to review teammate code or unfamiliar codebases.
 
 ---
 
