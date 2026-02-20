@@ -293,10 +293,12 @@ https://developers.google.com/speed/pagespeed/insights/?url=https://<your-branch
 1. **Check what you added, not the boilerplate** — the starter project already scores 100. Low scores are almost always caused by code you introduced.
 2. **Images** — avoid committing large images to Git. Use DA.live to upload images (they get optimized automatically) or use external URLs. If you must commit an image, compress it first (< 100 KB).
 3. **JavaScript** — keep block JS minimal. Avoid importing large libraries. Use native browser APIs (fetch, DOM) instead of frameworks.
-4. **CSS** — put only above-the-fold styles in your block CSS. Avoid `@import` statements in your blocks that we used above-the-fold.
+4. **CSS** — put only above-the-fold styles in your block CSS. Avoid `@import` statements in your blocks that are used above-the-fold.
 5. **Render-blocking resources** — never add additional `<link>` or `<script>` tags to `head.html` unless absolutely necessary. Use `lazy-styles.css` or `delayed.js` for non-critical resources.
 6. **Run PSI again** — scores can vary ±5 points between runs due to network conditions. Run 2-3 times before worrying.
 7. **Reference**: [Keeping It 100 — EDS Performance Guide](https://www.aem.live/developer/keeping-it-100)
+
+> **Note on SEO scores**: Preview/development URLs (`.aem.page`) return `x-robots-tag: noindex, nofollow` headers, so PageSpeed Insights will flag SEO issues like "Page is blocked from indexing." **This is expected and not a problem.** These URLs are intentionally excluded from search engines. SEO scores will be full marks on production (`.aem.live`) URLs with proper domain mapping and real content.
 
 **4. Create PR on GitHub**:
 
