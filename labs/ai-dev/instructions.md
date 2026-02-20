@@ -10,7 +10,7 @@
   - [What You'll Learn](#what-youll-learn)
 - **Demo**
   - [Experience Modernization Agent](#part-1-experience-modernization-agent)
-  - [Orient the Agent](#step-1-explore-available-skills)
+  - [Orient the Agent](#part-2-orient)
   - [Build: Speakers (One-Shot)](#step-4-build-a-speakers-block-one-shot)
   - [Build: Schedule (Plan Mode)](#step-5-build-a-schedule-block-plan-mode)
   - [Code Review](#step-6-agent-code-review)
@@ -143,13 +143,13 @@ Hand the agent the goal and let it run the workflow. It decides the content mode
 - Does the block render correctly?
 - What looks right? What would you question?
 
-> **Key idea**: One-shot works when you trust the workflow and want speed. You didn't ask for a plan — the agent decided when (and whether) to pause on its own.
+> **Key idea**: One-shot works when you trust the agent and don't think it needs much oversight. You didn't ask for a plan — the agent decided when (and whether) to pause on its own.
 
 ---
 
 ### Step 5: Build a Schedule Block (Plan Mode)
 
-Same CDD workflow, but this time you review the plan before any code is written. This is the approach for complex tasks or unfamiliar territory.
+Same CDD workflow, but this time you review the plan before any code is written. This is a good approach for complex tasks or unfamiliar territory.
 
 **Prompt:** Use [**3.2** from Prompts.md](Prompts.md#32--schedule-block-plan-mode)
 
@@ -173,8 +173,6 @@ The agent writes `blocks/schedule/schedule.js` and `blocks/schedule/schedule.css
 The CDD skill includes self-review and linting. The agent validates without being asked — the skill enforces the full workflow.
 
 > **Key idea**: Plan mode gives you a review gate before any code exists. Use it when the task is complex, unfamiliar, or when you want to steer before reacting to existing output.
-
-**Steering follow-ups** (use if needed): See [steering prompts in Prompts.md](Prompts.md#steering-follow-ups-use-if-needed)
 
 ---
 
@@ -227,25 +225,6 @@ After 3+ minutes with no output, cancel (Escape in Claude Code) and retry with a
 | One-shot | Hand it off when you trust the workflow and want speed |
 | Review | Ask the agent to evaluate its own output — it will |
 | Accountability | AI builds. You decide. |
-
----
-
-## Verification Checklist
-
-**If you followed along with an agent:**
-- [ ] Agent listed available skills for this project
-- [ ] Agent explained the hero block's author structure and decoration logic
-- [ ] Agent researched block collection for prior art
-- [ ] Speakers block built and renders at `localhost:3000/drafts/speakers`
-- [ ] Schedule block planned, reviewed, and built at `localhost:3000/drafts/schedule`
-- [ ] Agent reviewed both blocks and fixed issues it found
-- [ ] Lint passes: `npm run lint`
-
-**If you watched the demo:**
-- [ ] Understand the agentic loop: prompt → inference → tool call → result
-- [ ] Understand why context management matters (AGENTS.md, skills, prompts)
-- [ ] Understand when to use one-shot vs plan mode
-- [ ] Understand how the CDD workflow structures block development
 
 ---
 
