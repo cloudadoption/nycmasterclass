@@ -36,6 +36,16 @@ You need at least one of these. If you already have one, skip this section.
 > If you don't have access to any of these, you can still follow along with
 > the demo and use the prompts as reference material for later.
 
+### How Agents Know About This Project
+
+This project uses AGENTS.md and [Agent Skills](https://agentskills.io/) — an open standard supported by Claude Code, Cursor, Codex CLI, GitHub Copilot, and others. The same project instructions and skills are available regardless of which agent you use.
+
+Skills documentation per tool:
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code/skills)
+- [OpenAI Codex CLI](https://developers.openai.com/codex/skills/)
+- [GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [Cursor](https://cursor.com/docs/context/skills)
+
 ---
 
 ## Recommended: GitHub CLI
