@@ -152,7 +152,10 @@ Look for your `/labs/jsmith/my-session` path in the `data` array.
 
 **Validate index definition**: [Index Admin](https://tools.aem.live/tools/index-admin/index.html?org=cloudadoption&site=nycmasterclass) — use this tool to fetch and validate the index configuration (include/exclude paths, properties) for this org/site.
 
+  ![Query Index Example](images/query-index.png)
+
 > **Note**: Index updates can take a few minutes after publishing. If you don't see your page yet, continue — it will be there by the time you test.
+
 
 ---
 
@@ -614,6 +617,8 @@ Add this content:
 
 The URL row is optional — if omitted, the block defaults to `/query-index.json`. Authors can point the block at any JSON endpoint that returns `{ data: [...] }`.
 
+  ![search Example](images/search-block.png)
+
 DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ---
@@ -645,6 +650,8 @@ Results render as Cards block cards — same dark cards with hover effect you sa
 **Check URL state**: Type a query and look at the browser URL bar — you should see `?q=yourquery`. Copy that URL, open a new tab, paste it — the search runs automatically on load.
 
 **Escape key**: Press Escape while the input is focused to clear the search and results.
+
+  ![Search demo](images/search_demo.gif)
 
 ---
 
