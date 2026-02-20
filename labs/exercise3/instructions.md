@@ -169,12 +169,14 @@ To avoid conflicts with 50 participants, you'll create your own personal speaker
 
 **In DA.live**:
 
-1. Navigate to https://da.live/#/cloudadoption/nycmasterclass/speakers
+1. Navigate to https://da.live/sheet#/cloudadoption/nycmasterclass/speakers
 2. This is the master speakers.json with 6 Adobe experts
-3. Click the **3-dot menu** → **Copy**
+3. Go back to the root folder and select the `speakers` file and click `copy`
 4. Navigate to `/drafts/jsmith/` (your folder)
 5. **Paste** the speakers file
 6. Rename it to `speakers` (keep it as a .json file)
+
+  ![Copy & Paste Speakers Sheet](images/exercise_3_1.gif)
 
 **Verify**: You should now have `/drafts/jsmith/speakers.json`
 
@@ -450,6 +452,7 @@ This page demonstrates fetching speaker data dynamically from JSON.
 |---------------|
 | /drafts/jsmith/speakers.json |
 ```
+  ![Dynamic Cards Example](images/exercise-3-2.png) 
 
 **Important**: Use YOUR actual path (replace `jsmith` with your first initial + last name).
 
@@ -474,6 +477,8 @@ DA.live auto-saves. Click **Preview** to see the page on localhost.
 - Find your speaker card in the grid
 - Verify your name, title, company, and bio display correctly
 - Check that your avatar image loads
+
+    ![Dynamic Cards Example](images/exercise-3-3.png) 
 
 **Test the data flow**:
 1. Keep the page open at `http://localhost:3000/drafts/jsmith/speakers-test`
@@ -501,6 +506,7 @@ Edit your `/drafts/jsmith/speakers-test` page in DA.live, change the URL to:
 
 Refresh localhost. You should see: "Error loading speakers: [error message]" with red background.
 
+![Dynamic Cards Error Handling Example](images/exercise-3-4.png)
 **Test 2 - No URL**:
 
 Remove the URL row entirely:
