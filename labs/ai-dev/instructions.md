@@ -1,6 +1,6 @@
 # AI-Assisted Development
 
-**Duration**: 65 minutes
+**Duration**: 60 minutes
 **Format**: Instructor demo — follow along with your own AI coding agent
 
 ---
@@ -43,13 +43,15 @@
 
 ## Part 1: Experience Modernization Agent
 
-*Demo Only*
+*10 minutes — Demo Only*
 
 The [Experience Modernization Agent](https://aemcoder.adobe.io/) is Adobe's AI-powered console for modernizing web experiences with Edge Delivery Services. It migrates content and styles from existing sites, connects to your GitHub repo, and provides a built-in code editor with preview — all in the browser.
 
 ---
 
 ## Part 2: Orient
+
+*10 minutes*
 
 Before building anything, it can be helpful to use the agent to orient yourself in the project. These three steps show examples of how to explore an unfamiliar codebase and research existing solutions.
 
@@ -102,6 +104,8 @@ Ask the agent to tour the project's blocks and check them against AEM best pract
 
 ## Part 3: Build
 
+*30 minutes (15 minutes per block)*
+
 Two blocks, same Content Driven Development (CDD) workflow, different levels of control. The CDD skill orchestrates the full process: content model, test content, implementation, and validation.
 
 ---
@@ -141,6 +145,8 @@ The agent will propose a content model and approach before writing any code. Rev
 ---
 
 ## Part 4: Review
+
+*10 minutes*
 
 ### Step 6: Agent Code Review
 
