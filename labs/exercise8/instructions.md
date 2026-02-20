@@ -523,7 +523,7 @@ Ask other participants to share their site URLs and compare.
 
 A working implementation of this exercise is available for the site `ukhalid-mc`.
 
-- Site: [https://main--ukhalid-mc--cloudadoption.aem.page/](https://main--ukhalid-mc--cloudadoption.aem.page/)
+- Site: [https://answers--ukhalid-mc--cloudadoption.aem.page/](https://answers--ukhalid-mc--cloudadoption.aem.page/)
 - Metadata sheet: [https://da.live/sheet#/cloudadoption/ukhalid-mc/metadata](https://da.live/sheet#/cloudadoption/ukhalid-mc/metadata)
 
 ---

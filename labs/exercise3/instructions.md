@@ -19,8 +19,7 @@
   - [Step 7: Create Test Page](#step-7-create-test-page)
   - [Step 8: Test Locally](#step-8-test-locally)
   - [Step 9: Test Error Handling](#step-9-test-error-handling)
-  - [Step 10: Optional - Understanding Worker Endpoints](#step-10-optional---understanding-worker-endpoints)
-  - [Step 11: Optional - Apply to Real Speakers Page](#step-11-optional---apply-to-real-speakers-page)
+  - [Step 10: Optional - Apply to Real Speakers Page](#step-10-optional---apply-to-real-speakers-page)
 - [Key Takeaways](#key-takeaways)
 
 ---
@@ -59,7 +58,6 @@ git branch
 
 - How to fetch data from external sources in blocks
 - How Sheets convert to JSON in DA.live
-- How to use Worker endpoints for data transformation
 - How to handle async operations and errors in blocks
 
 ---
@@ -74,7 +72,7 @@ In Exercise 2, you built blocks where authors manually create each card. But wha
 **Manual authoring doesn't scale**. Dynamic blocks solve this by fetching data from external sources.
 
 **The pattern**:
-- Content lives in structured data (Sheet, API, Worker)
+- Content lives in structured data (Sheet, API)
 - Block fetches and renders that data
 - Update the data once → all pages update automatically
 
@@ -96,29 +94,7 @@ In Exercise 2, you built blocks where authors manually create each card. But wha
 5. When sheet updates, all pages show new data
 ```
 
-**Alternative flow with Workers**:
-```
-1. Data in external system (database, API, query-index.json)
-2. Worker fetches and transforms data
-3. Worker returns JSON
-4. Block fetches from Worker endpoint
-5. Block renders cards
-```
-
-**Example - Featured content from query index**:
-```
-1. Worker fetches query-index.json
-2. Worker filters pages tagged "featured"
-3. Worker sorts by publishedDate (newest first)
-4. Worker limits to 3 results
-5. Dynamic Cards block renders featured articles
-```
-
-**Why use Workers?**
-- Keep API keys server-side (secure)
-- Transform/filter data before sending to client
-- Combine multiple data sources
-- Cache expensive operations
+In this exercise we'll use a Sheet-based `.json` endpoint that lives as content in DA — but the block itself doesn't care where the data comes from. Any endpoint that returns the same JSON shape will work, whether it's a Cloudflare Worker, a third-party API, or a custom backend. Swap the URL and everything else stays the same.
 
 **Reference**: [Integrations](https://www.aem.live/developer/integrations)
 
@@ -232,7 +208,7 @@ Copy this code:
  * Fetches speaker data and renders cards dynamically
  *
  * Author provides (in block):
- * - Row 1: Data source URL (sheet.json or worker endpoint)
+ * - Row 1: Data source URL (sheet.json endpoint)
  */
 export default async function decorate(block) {
   // Extract data source URL from block content
@@ -532,72 +508,7 @@ Refresh. Speaker cards should display again.
 
 ---
 
-## Step 10: Optional - Understanding Worker Endpoints
-
-Workers provide a powerful middleware layer between data sources and blocks.
-
-**Why use Workers?**
-- **Security**: Keep API keys server-side (never expose in client code)
-- **Transformation**: Filter, sort, aggregate, or enrich data server-side
-- **Combination**: Merge multiple data sources into one response
-- **Caching**: Cache expensive API calls at the edge
-- **Rate Limiting**: Protect external APIs from high traffic
-
-**Example Worker flow**:
-```
-1. Block fetches: https://worker.example.com/speakers
-2. Worker fetches speakers.json internally
-3. Worker adds computed fields (e.g., initials for avatars)
-4. Worker sorts alphabetically by name
-5. Worker filters by session category
-6. Worker returns transformed JSON
-7. Block renders without knowing about transformations
-```
-
-**Example Worker code** (Cloudflare Workers):
-```javascript
-export default {
-  async fetch(request) {
-    // Fetch the speakers sheet
-    const sheetUrl = 'https://main--nycmasterclass--cloudadoption.aem.page/speakers.json';
-    const response = await fetch(sheetUrl);
-    const data = await response.json();
-
-    // Transform: Add initials, sort alphabetically
-    data.data = data.data
-      .map(speaker => ({
-        ...speaker,
-        Initials: speaker.Name.split(' ').map(n => n[0]).join('')
-      }))
-      .sort((a, b) => a.Name.localeCompare(b.Name));
-
-    return new Response(JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=300' // Cache for 5 minutes
-      }
-    });
-  }
-}
-```
-
-**Key benefit**: To use a Worker instead of direct sheet access, authors just change the URL in the block:
-```
-| Dynamic Cards |
-|---------------|
-| https://worker.example.com/speakers |
-```
-
-No block code changes needed! The JSON structure stays the same.
-
-**When you'll use this**: Exercise 6 covers form submissions to Slack via Workers. You'll deploy a real Worker endpoint then.
-
-**Reference**: [Integrations - Edge Workers](https://www.aem.live/developer/integrations)
-
----
-
-## Step 11: Optional - Apply to Real Speakers Page
+## Step 10: Optional - Apply to Real Speakers Page
 
 Now that your dynamic-cards block is working, you can see how it would complete the real `/speakers` page.
 
@@ -681,14 +592,14 @@ try {
 Note: In Exercise 4, you'll learn how query-index.json works and build a dedicated block for it.
 
 **Use Case 2: E-commerce Product Catalog**
-- Product data in database
-- Worker fetches, filters by category, adds pricing
-- Block displays with live inventory status
+- Product data maintained in a Sheet
+- Block fetches and renders product cards with pricing
+- Update the sheet → all catalog pages update automatically
 
 **Use Case 3: News/Blog Feeds**
-- Articles in CMS
-- Worker aggregates from multiple sources
-- Block displays with filtering by topic
+- Articles indexed via query-index.json
+- Block fetches and displays recent articles
+- Filter by topic or tag using query parameters
 
 ---
 
@@ -696,7 +607,7 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 
 - Sheets automatically convert to JSON endpoints in DA.live
 - Dynamic blocks fetch data instead of decorating authored content
-- Workers provide secure middleware for data transformation
+- The same block works with any JSON endpoint
 - Always handle loading states and errors
 - Same JSON structure as Sheets - reusable patterns
 - Performance: consider placement (below fold preferred)
@@ -714,7 +625,7 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 - [ ] Tested editing sheet data - changes reflected on refresh
 - [ ] Tested error handling (invalid URL, no URL, restore)
 - [ ] Tested in Chrome DevTools responsive view (desktop and mobile)
-- [ ] Understand when to use Workers vs direct sheet fetch
+- [ ] Understand the sheet-to-JSON data flow
 - [ ] Committed and pushed block code changes
 
 ---
