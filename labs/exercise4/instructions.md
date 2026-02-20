@@ -632,13 +632,14 @@ Open: `http://localhost:3000/drafts/jsmith/search-test`
 
 | Query | Expected |
 |-------|----------|
-| `session` | Pages with "session" in title/description/tags |
-| `lab` | Pages with "lab" in title/description |
-| An instructor name | Pages where that instructor is listed |
-| A speaker name | Pages where that speaker is listed |
-| A category (e.g. `infrastructure`) | Pages tagged with that category |
-| Your session title (or part of it) | Your `/labs/jsmith/` page |
-| `xyz123` | No results message |
+| `technical` | All session pages that contain `technical` (matches `category` field) |
+| `lab` | All lab pages + your `/labs/jsmith/` page (matches title and path) |
+| `stefan` | 2 sessions by Stefan Seifert (matches `speaker-name` field) |
+| Your first name (e.g. `sagar`) | Your `/labs/jsmith/` page (matches `instructor` field — requires your page to be published) |
+| `development` | Lab pages in the development category |
+| Your session or lab title (or part of it) | Your `/labs/jsmith/` page |
+| `xyz123` | "No results found." message |
+| `edge` | All pages matching `edge` in title or description |
 
 Results render as Cards block cards — same dark cards with hover effect you saw in Exercise 2.
 
@@ -695,7 +696,7 @@ Replace `jsmith` with your branch name.
 
 ## Verification Checklist
 
-- [ ] `/labs/jsmith/my-session` visible in `query-index.json`
+- [ ] `/labs/jsmith/<your-page-name>` visible in `query-index.json`
 - [ ] `blocks/search/search.js` and `blocks/search/search.css` created
 - [ ] Search input renders on `http://localhost:3000/drafts/jsmith/search-test`
 - [ ] Typing at least 3 characters triggers a search
