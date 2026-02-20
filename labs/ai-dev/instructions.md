@@ -20,7 +20,7 @@
 
 ## Prerequisites
 
-**Complete [STUDENT_SETUP.md](STUDENT_SETUP.md) before starting this exercise.**
+**Complete [Lab Setup](../SETUP.md) through Step 7 before starting.**
 
 - AI coding agent installed and authenticated (Claude Code, Cursor, Codex CLI, or GitHub Copilot)
 - Dev server running: `aem up --html-folder drafts`

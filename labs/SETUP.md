@@ -1,6 +1,6 @@
 # Lab Setup Instructions
 
-Complete these steps before starting Exercise 1.
+Complete these steps in one go before **Day 1 (AI lab)** and **Day 2 (hands-on exercises)**. Steps 1–7 (including AI coding agent setup) are enough for the AI lab; Steps 8–11 add DA, Sidekick, and EDS for Day 2.
 
 ---
 **Quick navigation**
@@ -12,10 +12,11 @@ Complete these steps before starting Exercise 1.
   - [Step 4: Install Dependencies](#step-4-install-dependencies)
   - [Step 5: Run Linting](#step-5-run-linting)
   - [Step 6: Start Development Server](#step-6-start-development-server)
-  - [Step 7: Understand Your Branch URLs](#step-7-understand-your-branch-urls)
-  - [Step 8: Verify DA.live Access](#step-8-verify-dalive-access)
-  - [Step 9: Add This Project to Sidekick](#step-9-add-this-project-to-sidekick)
-  - [Step 10: Verify EDS , DA Permissions](#step-10-verify-eds--da-permissions)
+  - [Step 7: AI Coding Agent Setup](#step-7-ai-coding-agent-setup)
+  - [Step 8: Understand Your Branch URLs](#step-8-understand-your-branch-urls)
+  - [Step 9: Verify DA.live Access](#step-9-verify-dalive-access)
+  - [Step 10: Add This Project to Sidekick](#step-10-add-this-project-to-sidekick)
+  - [Step 11: Verify EDS, DA Permissions](#step-11-verify-eds-da-permissions)
   - [Git Workflow](#git-workflow)
     - [During exercises:](#during-exercises)
     - [Pull latest changes:](#pull-latest-changes)
@@ -41,6 +42,7 @@ Before arriving at the lab, ensure the following are installed:
 - Node.js v18 or higher
 - Code editor (Cursor / Claude Code / VS Code)
 - Web browser (Chrome or Edge — required for AEM Sidekick)
+- **GitHub CLI** — so your AI coding agent can manage branches and PRs. Install: `brew install gh` (macOS) or `winget install GitHub.cli` (Windows). Then run `gh auth login`.
 - **AEM Sidekick browser extension** installed and pinned — [Install from Chrome Web Store](https://chromewebstore.google.com/detail/aem-sidekick/igkmdomcgoebiipaifhmpfjhbjccggml)
 
 ![AEM Sidekick in the Chrome Web Store](images/sidekick-chrome-store.png)
@@ -115,21 +117,46 @@ Expected output: No errors (warnings are OK for boilerplate)
 
 ## Step 6: Start Development Server
 
-```bash
-aem up
-```
+- **For Day 2 exercises**: `aem up` — content comes from EDS/DA.
+- **For the AI lab (Day 1)**: `aem up --html-folder drafts` — serves local `drafts/` so the agent can create and view test pages (e.g. `drafts/tmp/speakers`, `drafts/tmp/schedule`).
 
 The server starts at: http://localhost:3000
 
 **Keep this running** throughout the lab. Open a new terminal for Git commands.
 
-**Verify**: Open http://localhost:3000 — you should see the NYC Masterclass homepage.
+**Verify**: Open http://localhost:3000 — you should see the NYC Masterclass homepage (or the drafts index if using `--html-folder drafts`).
 
 ![NYC Masterclass homepage at localhost:3000](images/nyc-masterclass-home.png)
 
 ---
 
-## Step 7: Understand Your Branch URLs
+## Step 7: AI Coding Agent Setup
+
+To get the most from the AI-assisted development lab, set up an AI coding agent and open this project in it. The repo already includes AGENTS.md and skills; your agent will use them automatically.
+
+**Required: AI coding agent** — at least one of:
+
+| Agent | Notes |
+|-------|--------|
+| **Claude Code** | `npm install -g @anthropic-ai/claude-code` — requires Claude Pro/Team |
+| **Cursor** | [cursor.com](https://cursor.com) — enable Agent mode |
+| **OpenAI Codex CLI** | `npm install -g @openai/codex` — requires ChatGPT Plus/Pro/Business |
+| **GitHub Copilot** | VS Code + Copilot extension — open Chat, use Agent mode |
+
+If you don't have one, you can still follow the demo by watching the instructor.
+
+If you installed GitHub CLI (Prerequisites), your agent can use it for branch management and PRs.
+
+**Optional: Playwright MCP** — lets the agent open localhost, take screenshots, and verify blocks. Example for Claude Code:
+```bash
+claude mcp add --transport stdio playwright -- npx @playwright/mcp@latest
+```
+
+For other tools, see [Playwright MCP](https://github.com/microsoft/playwright-mcp).
+
+---
+
+## Step 8: Understand Your Branch URLs
 
 EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
@@ -144,7 +171,7 @@ EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
 ---
 
-## Step 8: Verify DA.live Access
+## Step 9: Verify DA.live Access
 
 1. Go to https://da.live/#/cloudadoption/nycmasterclass
 2. Complete the Sign In process using the Adobe ID provided to obtain access
@@ -166,7 +193,7 @@ EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
 ---
 
-## Step 9: Add This Project to Sidekick
+## Step 10: Add This Project to Sidekick
 
 With your dev server running, add the NYC Masterclass project to your Sidekick extension so the toolbar appears on your pages.
 
@@ -182,11 +209,9 @@ With your dev server running, add the NYC Masterclass project to your Sidekick e
 
 **Verify**: Open [localhost:3000/sessions/architecture-deep-dive](http://localhost:3000/sessions/architecture-deep-dive) and confirm the Sidekick toolbar also appears there.
 
-> **If Sidekick is not installed**: See the prerequisite at the top of this document — [aem.live/docs/sidekick](https://www.aem.live/docs/sidekick)
-
 ---
 
-## Step 10: Verify EDS , DA Permissions
+## Step 11: Verify EDS, DA Permissions
 
 You should have `publish` role which includes:
 - `preview:read`, `preview:write` (access to `.aem.page`)
@@ -367,18 +392,23 @@ sudo npm install -g @adobe/aem-cli
 
 ## Validation Checklist
 
-Before starting Exercise 1, verify:
+**For AI lab (Day 1)** — before [AI-Assisted Development](ai-dev/instructions.md):
 
 - [ ] Repository cloned
 - [ ] Feature branch created (e.g., `jsmith`)
 - [ ] AEM CLI installed (`aem --version` works)
 - [ ] Dependencies installed (`npm install` completed)
 - [ ] Linting runs clean (`npm run lint` no errors)
-- [ ] Dev server running (`http://localhost:3000` loads)
-- [ ] DA.live access verified (can view project)
+- [ ] Dev server running with drafts: `aem up --html-folder drafts` — `http://localhost:3000` loads
+- [ ] AI coding agent set up (Cursor, Claude Code, Codex, or Copilot) and project opened in it
+
+**For Day 2 exercises** — add these before [Exercise 1](exercise1/instructions.md):
+
+- [ ] DA.live access verified (can view project, create folder in `/drafts/<yourname>`)
 - [ ] AEM Sidekick extension installed (Chrome/Edge)
 - [ ] Sidekick project added — toolbar visible on `localhost:3000`
 - [ ] Branch URL pattern understood — `main--` URLs verified as working
+- [ ] EDS/DA permissions verified (preview works from DA)
 - [ ] Git workflow clear (lint, add, commit, push)
 - [ ] PR process understood (test URLs, Lighthouse scores)
 
@@ -386,6 +416,7 @@ Before starting Exercise 1, verify:
 
 ## Ready to Start
 
-Once all checklist items are complete, proceed to [Exercise 1](exercise1/instructions.md).
+- **Day 1**: Once the AI lab checklist is complete, proceed to [AI-Assisted Development](ai-dev/instructions.md).
+- **Day 2**: Once the full checklist is complete, proceed to [Exercise 1](exercise1/instructions.md).
 
 **Solutions**: Complete solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise also links to this branch in its Solution section.
