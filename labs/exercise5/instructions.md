@@ -4,7 +4,9 @@
 
 ---
 
-**Quick navigation**
+<details>
+<summary><strong>Quick navigation</strong></summary>
+
 - **Context**
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
@@ -19,6 +21,8 @@
   - [Step 7: Add the Event Block to Your Branch](#step-7-add-the-event-block-to-your-branch)
 - [Key Takeaways](#key-takeaways)
 
+</details>
+
 ---
 
 ## Prerequisites
@@ -27,7 +31,7 @@
 
 **Required:**
 - On your feature branch (`jsmith` — first initial + last name, lowercase)
-- Local dev server at `http://localhost:3000`
+- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–4 completed (if doing in sequence)
 - **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)

@@ -4,7 +4,9 @@
 
 ---
 
-**Quick navigation**
+<details>
+<summary><strong>Quick navigation</strong></summary>
+
 - **Context**
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
@@ -21,6 +23,8 @@
   - [Step 9: Test Error Handling](#step-9-test-error-handling)
   - [Step 10: Optional - Apply to Real Speakers Page](#step-10-optional---apply-to-real-speakers-page)
 - [Key Takeaways](#key-takeaways)
+
+</details>
 
 ---
 
@@ -42,7 +46,7 @@ The speaker data already exists at `/speakers.json` with 6 Adobe experts. In thi
 
 **Required:**
 - On your feature branch (`jsmith` — first initial + last name, lowercase)
-- Local dev server at `http://localhost:3000`
+- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–2 completed (if doing in sequence)
 

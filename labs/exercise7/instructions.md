@@ -3,7 +3,10 @@
 **Duration**: 30 minutes
 
 ---
-**Quick navigation**
+
+<details>
+<summary><strong>Quick navigation</strong></summary>
+
 - **Context**
   - [What You'll Learn](#what-youll-learn)
   - [Why This Matters](#why-this-matters)
@@ -22,6 +25,8 @@
   - [Step 7: Optional - Register Plugin in Library](#step-7-optional---register-plugin-in-library)
 - [Key Takeaways](#key-takeaways)
 
+</details>
+
 ---
 
 ## Prerequisites
@@ -30,7 +35,7 @@
 
 **Required:**
 - On your feature branch (`jsmith` — first initial + last name, lowercase)
-- Local dev server at `http://localhost:3000`
+- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–6 completed (if doing in sequence)
 - DA.live access

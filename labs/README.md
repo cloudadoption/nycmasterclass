@@ -12,14 +12,12 @@
 
 **Complete setup**: [SETUP.md](SETUP.md) — Git, development environment, access verification.
 
-**Solutions**: Complete solutions for all exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise links to it in its Solution section.
+**Solutions**: Complete solutions for code-oriented exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Those exercises link to it from their **Solution** section; Exercise 1 is authoring-only in DA.live (no solution block there).
 
 **Your environment**:
 - Repository: https://github.com/cloudadoption/nycmasterclass
-- Branch: `jsmith` (your first initial + last name)
-- Local: http://localhost:3000
-- Preview: https://jsmith--nycmasterclass--cloudadoption.aem.page/
-- Live: https://jsmith--nycmasterclass--cloudadoption.aem.live/
+- Branch: `jsmith` (your first initial + last name). URLs for **your** code on Preview / Live look like `https://<branch>--nycmasterclass--cloudadoption.aem.page/` and `https://<branch>--nycmasterclass--cloudadoption.aem.live/` — they work only **after** that branch is pushed to GitHub ([SETUP Step 8](SETUP.md#step-8-understand-your-branch-urls), [Exercise 2](exercise2/instructions.md)). Until then, use `localhost:3000` and `main--` preview in the exercises.
+- Local: verify [http://localhost:3000](http://localhost:3000); if not, start with `aem up` from the repository root in a terminal ([SETUP Step 6](SETUP.md#step-6-start-development-server)).
 
 ---
 
@@ -152,7 +150,7 @@
 
 ## Resources
 
-**Solutions**: [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers) — complete solutions for all lab exercises.
+**Solutions**: [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers) — reference implementations for code-oriented exercises (Exercise 1 is DA.live authoring only).
 
 **Documentation**:
 - [AEM.live Docs](https://www.aem.live/)
