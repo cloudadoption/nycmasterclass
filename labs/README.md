@@ -2,6 +2,10 @@
 
 **Theme**: Build pages and features for a Masterclass event series that can scale to future meetup sites.
 
+**Sample content**: Sessions, speakers, agendas, and multi-city events used in these exercises are **fictitious**—they exist only to give you realistic pages and data to build against, not real public schedules or commitments.
+
+> **Tip:** On GitHub (and most Markdown viewers), links usually open in the **same tab**. **⌘-click** (Mac) or **Ctrl-click** (Windows/Linux) a link to open it in a **new tab** so you can keep this page open.
+
 ---
 
 ## Before You Begin

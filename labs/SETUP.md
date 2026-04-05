@@ -2,8 +2,13 @@
 
 Complete these steps in one go before **Day 1 (AI lab)** and **Day 2 (hands-on exercises)**. Steps 1–7 (including AI coding agent setup) are enough for the AI lab; Steps 8–11 add DA, Sidekick, and EDS for Day 2.
 
+> **Tip:** On GitHub (and most Markdown viewers), links usually open in the **same tab**. **⌘-click** (Mac) or **Ctrl-click** (Windows/Linux) a link to open it in a **new tab** so you can keep this page open.
+
 ---
-**Quick navigation**
+
+<details>
+<summary><strong>Quick navigation</strong></summary>
+
 - [Lab Setup Instructions](#lab-setup-instructions)
   - [Prerequisites](#prerequisites)
   - [Step 1: Clone Repository](#step-1-clone-repository)
@@ -17,6 +22,8 @@ Complete these steps in one go before **Day 1 (AI lab)** and **Day 2 (hands-on e
   - [Step 9: Verify DA.live Access](#step-9-verify-dalive-access)
   - [Step 10: Add This Project to Sidekick](#step-10-add-this-project-to-sidekick)
   - [Step 11: Verify EDS, DA Permissions](#step-11-verify-eds-da-permissions)
+  - [Ready to Start](#ready-to-start)
+  - [Validation Checklist](#validation-checklist)
   - [Git Workflow](#git-workflow)
     - [During exercises:](#during-exercises)
     - [Pull latest changes:](#pull-latest-changes)
@@ -29,14 +36,16 @@ Complete these steps in one go before **Day 1 (AI lab)** and **Day 2 (hands-on e
     - [Git push rejected](#git-push-rejected)
     - [DA.live "Permission denied"](#dalive-permission-denied)
     - [AEM CLI not found](#aem-cli-not-found)
-  - [Validation Checklist](#validation-checklist)
-  - [Ready to Start](#ready-to-start)
+
+</details>
 
 ---
 
 ## Prerequisites
 
 Before arriving at the lab, ensure the following are installed:
+
+- **[Lab access form](https://main--aem-rockstar-website--adobe.aem.live/en/masterclass/nyc-setup) (do this first)** — Submit your **Adobe ID email** and **GitHub username**. This provisions lab access (including DA.live). Allow time for processing **before** you verify DA in Step 9; if you skip this step, sign-in may work but the project or folders may be unavailable.
 
 - Git installed
 - Node.js v18 or higher
@@ -51,11 +60,52 @@ Before arriving at the lab, ensure the following are installed:
 
 ---
 
-## Step 1: Clone Repository
+### Homebrew (macOS)
+
+[Homebrew](https://brew.sh) is optional but convenient for **Node.js**, **GitHub CLI** (`gh`), and other command-line tools on Mac.
+
+1. **Check if it is already installed:**
+   ```bash
+   brew -v
+   ```
+   If you see a version number, skip to [Installing Node.js](#installing-nodejs).
+
+2. **Install Homebrew** (official one-liner from brew.sh):
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+   Follow the prompts. If macOS asks to install **Xcode Command Line Tools**, accept — Git and build tools often need them too.
+
+3. **Finish PATH setup (especially Apple Silicon):** When the script finishes, it prints **Next steps** — run those commands so `brew` is on your `PATH` (often adding `eval "$(/opt/homebrew/bin/brew shellenv)"` to `~/.zprofile`). **Open a new terminal window**, then verify:
+   ```bash
+   brew -v
+   ```
+
+On **Intel** Macs, Homebrew usually lives under `/usr/local`; the installer’s **Next steps** still apply if `brew` is not found.
+
+---
+
+### Installing Node.js
+
+You need **Node.js v18 or higher** before `npm install` and the AEM CLI steps.
+
+**macOS — with Homebrew:**
 
 ```bash
-git clone https://github.com/cloudadoption/nycmasterclass.git
-cd nycmasterclass
+brew install node
+node -v   # expect v18.x.x or newer
+```
+
+**Other options:** Download the **LTS** installer from [nodejs.org](https://nodejs.org/) (choose v18 or newer), or use another version manager your team prefers.
+
+---
+
+## Step 1: Clone Repository
+
+Clone the repo and **change into the project folder** (the next steps assume your terminal is inside `nycmasterclass`):
+
+```bash
+git clone https://github.com/cloudadoption/nycmasterclass.git && cd nycmasterclass
 ```
 
 ---
@@ -184,6 +234,8 @@ EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
 ## Step 9: Verify DA.live Access
 
+> **Prerequisite:** Complete the [Lab access form](https://main--aem-rockstar-website--adobe.aem.live/en/masterclass/nyc-setup) (see Prerequisites) and allow time for access to be granted before this step.
+
 1. Go to https://da.live/#/cloudadoption/nycmasterclass
 2. Complete the Sign In process using the Adobe ID provided to obtain access
    > If your Adobe ID is tied to a Personal Account, choose that instead of Corporate Account
@@ -196,11 +248,15 @@ EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
    ![Create Folder in DA](images/da-create-folder.png)
 
-6. Confirm you can create and edit pages inside that folder
+6. Inside that folder, create a new **Page** and name it something like `hello` (a simple “Hello” document to prove you can author).
+7. Add some text to the document — a short heading or paragraph is enough.
+8. **Preview** the page and confirm it opens in the browser at a `.aem.page` URL.
+9. **Publish** the page and confirm it is available on `.aem.live`.
 
 **If you cannot access**:
+- Confirm you submitted the [Lab access form](https://main--aem-rockstar-website--adobe.aem.live/en/masterclass/nyc-setup) with the **same** Adobe ID and GitHub username you are using for the lab
 - Verify you're logged in with your Adobe IMS account
-- Ask instructor to verify permissions
+- Ask your instructor to verify permissions — **@mention them in the lab Slack channel** so they can grant or fix access quickly
 
 ---
 
@@ -224,17 +280,52 @@ With your dev server running, add the NYC Masterclass project to your Sidekick e
 
 ## Step 11: Verify EDS, DA Permissions
 
-You should have `publish` role which includes:
+Your account should be granted a **`publish`-style** role (what the instructor configures), which typically includes:
 - `preview:read`, `preview:write` (access to `.aem.page`)
 - `live:write` (publish to `.aem.live`)
 
-**Check your role**: [User Admin](https://tools.aem.live/tools/user-admin/index.html?org=cloudadoption&site=nycmasterclass) — manage users and roles for this org/site.
-
 **Test**: In DA.live, open an existing page (e.g., [sessions/architecture-deep-dive](https://da.live/edit#/cloudadoption/nycmasterclass/sessions/architecture-deep-dive)) and click **Preview**. If it opens at `.aem.page`, permissions are correct.
 
-**If preview fails**: Ask instructor to verify EDS Admin API permissions.
+**If preview fails**: Ask your instructor to verify EDS Admin API permissions — **@mention them in the lab Slack channel** with what you tried (page path, Preview vs Publish, any error text).
 
 ---
+
+## Ready to Start
+
+- **Day 1**: Once the AI lab checklist is complete, proceed to [AI-Assisted Development](ai-dev/instructions.md).
+- **Day 2**: Once the full checklist is complete, proceed to [Exercise 1](exercise1/instructions.md).
+
+**Solutions**: Complete solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise also links to this branch in its Solution section.
+
+---
+
+## Validation Checklist
+
+**For AI lab (Day 1)** — before [AI-Assisted Development](ai-dev/instructions.md):
+
+- [ ] Repository cloned
+- [ ] Feature branch created (e.g., `jsmith`)
+- [ ] AEM CLI installed (`aem --version` works)
+- [ ] Dependencies installed (`npm install` completed)
+- [ ] Linting runs clean (`npm run lint` no errors)
+- [ ] Dev server running with drafts: `aem up --html-folder drafts` — `http://localhost:3000` loads
+- [ ] AI coding agent set up (Cursor, Claude Code, Codex, or Copilot) and project opened in it
+
+**For Day 2 exercises** — add these before [Exercise 1](exercise1/instructions.md):
+
+- [ ] [Lab access form](https://main--aem-rockstar-website--adobe.aem.live/en/masterclass/nyc-setup) submitted (Adobe ID + GitHub username); access processed before DA verification
+- [ ] DA.live access verified (project loads, `/drafts/<yourname>/` folder, `hello` page previewed and published)
+- [ ] AEM Sidekick extension installed (Chrome/Edge)
+- [ ] Sidekick project added — toolbar visible on `localhost:3000`
+- [ ] Branch URL pattern understood — `main--` URLs verified as working
+- [ ] EDS/DA permissions verified (preview works from DA)
+- [ ] Git workflow clear (lint, add, commit, push)
+- [ ] PR process understood (test URLs, Lighthouse scores)
+
+---
+
+<details>
+<summary><strong>Git Workflow</strong></summary>
 
 ## Git Workflow
 
@@ -264,7 +355,12 @@ git pull origin main
 
 Do this before starting new exercises if instructor made updates.
 
+</details>
+
 ---
+
+<details>
+<summary><strong>Creating a Pull Request</strong></summary>
 
 ## Creating a Pull Request
 
@@ -276,7 +372,7 @@ At the end of the lab, you'll create a PR to merge your work to main.
 2. **Test URLs**: Include before/after links showing your changes
    >before : points to main branch and all impacted pages
    >after: point to feature branch and all impacted pages
-3. **Lighthouse scores**: 100 on both mobile and desktop on PR(Highly Recommended)
+3. **Lighthouse scores**: 100 on both mobile and desktop on PR (highly recommended)
 
 ### Steps to Create PR
 
@@ -357,7 +453,12 @@ Assign the instructor as a reviewer.
 
 **Reference**: [Development & Collaboration Best Practices](https://www.aem.live/docs/dev-collab-and-good-practices)
 
+</details>
+
 ---
+
+<details>
+<summary><strong>URL Reference</strong></summary>
 
 ## URL Reference
 
@@ -369,7 +470,12 @@ Assign the instructor as a reviewer.
 
 Use `main` as the branch for the reference site. Use your branch name (e.g. `jsmith`) for your own work — available after your first `git push` in Exercise 2.
 
+</details>
+
 ---
+
+<details>
+<summary><strong>Troubleshooting</strong></summary>
 
 ## Troubleshooting
 
@@ -391,7 +497,7 @@ Should show `* jsmith` (your branch name).
 
 ### DA.live "Permission denied"
 
-Log out and log back in to refresh IMS tokens.
+Log out and log back in to refresh IMS tokens. If it still fails, **@mention your instructor in the lab Slack channel** so they can confirm your DA / EDS permissions.
 
 ### AEM CLI not found
 
@@ -405,35 +511,4 @@ On Mac/Linux, may need `sudo`:
 sudo npm install -g @adobe/aem-cli
 ```
 
----
-
-## Validation Checklist
-
-**For AI lab (Day 1)** — before [AI-Assisted Development](ai-dev/instructions.md):
-
-- [ ] Repository cloned
-- [ ] Feature branch created (e.g., `jsmith`)
-- [ ] AEM CLI installed (`aem --version` works)
-- [ ] Dependencies installed (`npm install` completed)
-- [ ] Linting runs clean (`npm run lint` no errors)
-- [ ] Dev server running with drafts: `aem up --html-folder drafts` — `http://localhost:3000` loads
-- [ ] AI coding agent set up (Cursor, Claude Code, Codex, or Copilot) and project opened in it
-
-**For Day 2 exercises** — add these before [Exercise 1](exercise1/instructions.md):
-
-- [ ] DA.live access verified (can view project, create folder in `/drafts/<yourname>`)
-- [ ] AEM Sidekick extension installed (Chrome/Edge)
-- [ ] Sidekick project added — toolbar visible on `localhost:3000`
-- [ ] Branch URL pattern understood — `main--` URLs verified as working
-- [ ] EDS/DA permissions verified (preview works from DA)
-- [ ] Git workflow clear (lint, add, commit, push)
-- [ ] PR process understood (test URLs, Lighthouse scores)
-
----
-
-## Ready to Start
-
-- **Day 1**: Once the AI lab checklist is complete, proceed to [AI-Assisted Development](ai-dev/instructions.md).
-- **Day 2**: Once the full checklist is complete, proceed to [Exercise 1](exercise1/instructions.md).
-
-**Solutions**: Complete solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Each exercise also links to this branch in its Solution section.
+</details>
