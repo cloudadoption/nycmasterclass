@@ -32,7 +32,7 @@
 - Local dev server at `http://localhost:3000`
 - Code editor open with the repository
 - Exercises 1–3 completed (if doing in sequence)
-- Exercise 1 page published to `/labs/jsmith/` (see end of Exercise 3)
+- Exercise 1 Session/Lab page published under `/labs/<your-name>/` to `.aem.live` (follow **Before You Move On** at the end of Exercise 3 — `/drafts/**` is not indexed)
 - DA.live access
 
 **Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
@@ -142,7 +142,7 @@ indices:
 
 ## Step 1: Verify query-index.json
 
-Verify your `/labs/jsmith/` page from the end of Exercise 3 appears in the index:
+Verify your `/labs/jsmith/` page (published in Exercise 3’s **Before You Move On** section) appears in the index:
 
 ```
 http://localhost:3000/query-index.json

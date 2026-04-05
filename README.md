@@ -8,7 +8,6 @@ Training materials and exercises for AEM Edge Delivery Services masterclass sess
 ## Labs & Exercises
 - [Labs Overview](labs/README.md) - Complete guide to all exercises
 - [Setup Instructions](labs/SETUP.md) - Get started with the labs
-- [Instructor Setup](labs/INSTRUCTOR_SETUP.md) - Setup guide for instructors
 
 ## Documentation
 
