@@ -3,12 +3,13 @@
 **Duration**: 20 minutes
 
 ---
-**Quick navigation**
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [DA.live: The Authoring Tool](#dalive-the-authoring-tool)
-  - [Before You Start](#before-you-start)
-- **Hands-on**
+
+<details>
+<summary><strong>Quick navigation</strong></summary>
+
+- [Prerequisites](#prerequisites)
+- **Background** (optional — expand the section below, or jump: [What you'll learn](#what-youll-learn) · [DA.live & tables → blocks](#dalive-the-authoring-tool) · [Before you start](#before-you-start))
+- **Exercise steps**
   - [Step 1: Create Your Page](#step-1-create-your-page)
   - [Step 2: Start From a Template](#step-2-start-from-a-template)
   - [Step 3: Update Your Content](#step-3-update-your-content)
@@ -20,18 +21,7 @@
 - [References](#references)
 - [Next Exercise](#next-exercise)
 
----
-
-**Quick navigation**
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [DA.live: The Authoring Tool](#dalive-the-authoring-tool)
-- **Hands-on Lab**
-  - [Create Your Page](#step-1-create-your-page)
-  - [Update Metadata](#step-4-update-metadata)
-  - [Save and Preview](#step-5-save-and-preview)
-  - [Publish](#step-7-publish)
-- [Verification Checklist](#verification-checklist)
+</details>
 
 ---
 
@@ -40,7 +30,7 @@
 **Complete [SETUP.md](../SETUP.md) before starting this exercise.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- Dev server running at `http://localhost:3000`
+- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - DA.live access verified: [da.live/#/cloudadoption/nycmasterclass](https://da.live/#/cloudadoption/nycmasterclass)
 - Personal folder exists at `/drafts/<your-name>/` (first initial + last name, all lowercase — e.g. John Smith → `jsmith`)
 - AEM Sidekick installed and this project added — toolbar is visible when you open `localhost:3000`
@@ -50,6 +40,9 @@
 > In this exercise, use `localhost:3000` and the `main--` URLs shown below.
 
 ---
+
+<details>
+<summary><strong>Background</strong> (optional — concepts & warm-up before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -110,6 +103,8 @@ Spend 2 minutes reviewing an existing page before creating your own. Open these 
 - **Rendered** (visitor's view): [localhost:3000/sessions/architecture-deep-dive](http://localhost:3000/sessions/architecture-deep-dive)
 
 Notice how the tables you see in DA.live become the styled components on the rendered page. That transformation is what this exercise is about.
+
+</details>
 
 ---
 
@@ -174,9 +169,9 @@ With the template inserted, replace each placeholder with your own content.
 
 ![Hero block in DA.live editor](images/my-session-top.png)
 
-**Content sections** — fill in the overview and objectives below the Hero block:
+**Content sections** — fill in the overview and objectives below the Hero block (in DA.live, use normal heading lines — the sample below is what you type in the document):
 
-```
+```text
 ## Session Overview
 
 [2–3 sentences describing this session or lab]
@@ -340,12 +335,6 @@ https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.md
 - [ ] **`.md`** opened and content confirmed
 - [ ] Page published via DA.live
 - [ ] All three representations accessible on `main--nycmasterclass--cloudadoption.aem.live`
-
----
-
-## Solution
-
-Reference content and solutions for all lab exercises are on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers).
 
 ---
 
