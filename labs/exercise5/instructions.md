@@ -332,7 +332,7 @@ The JSON2HTML worker has been configured with two path rules. Here's the configu
 
 Try the **JSON2HTML Simulator** to see exactly how templates are rendered.
 
-**Open**: [https://tools.aem.live/tools/json2html-simulator/](https://tools.aem.live/tools/json2html-simulator/)
+**Open**: [JSON2HTML Simulator](https://tools.aem.live/tools/json2html-simulator/index.html)
 
 ### Test the Detail Template:
 
@@ -641,8 +641,8 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 ## References
 
 - [JSON2HTML Documentation](https://www.aem.live/developer/json2html)
-- [JSON2HTML Simulator](https://tools.aem.live/tools/json2html-simulator/)
-- [Admin Edit Tool](https://tools.aem.live/tools/admin-edit/)
+- [JSON2HTML Simulator](https://tools.aem.live/tools/json2html-simulator/index.html)
+- [Admin Edit Tool](https://tools.aem.live/tools/admin-edit/index.html)
 - [Mustache Documentation](https://mustache.github.io/mustache.5.html)
 - [EDS Markup Reference](https://www.aem.live/developer/markup-sections-blocks)
 - [CSS :has() Selector](https://developer.mozilla.org/en-US/docs/Web/CSS/:has)
