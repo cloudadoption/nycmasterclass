@@ -1,0 +1,70 @@
+.speakers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (width >= 600px) {
+  .speakers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .speakers {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Each speaker card */
+.speakers > div {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color, #fff);
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Headshot */
+.speakers .speakers-image {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.speakers .speakers-image picture,
+.speakers .speakers-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Text content */
+.speakers .speakers-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.speakers .speakers-name {
+  font-size: var(--body-font-size-m, 1.2rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.speakers .speakers-title {
+  font-size: var(--body-font-size-xs, 0.875rem);
+  color: var(--dark-color, #505050);
+  margin: 0;
+  font-style: italic;
+}
+
+.speakers .speakers-bio {
+  font-size: var(--body-font-size-xs, 0.875rem);
+  line-height: 1.5;
+  margin: 0.5rem 0 0;
+  color: var(--text-color, #131313);
+}
