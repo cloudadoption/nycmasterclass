@@ -212,12 +212,14 @@ If you don't have one, you can still follow the demo by watching the instructor.
 
 If you installed GitHub CLI (Prerequisites), your agent can use it for branch management and PRs.
 
-**Optional: Playwright MCP** — lets the agent open localhost, take screenshots, and verify blocks. Example for Claude Code:
+**Optional: Playwright CLI** — lets the agent open localhost, take screenshots, and verify blocks. 
+
 ```bash
-claude mcp add --transport stdio playwright -- npx @playwright/mcp@latest
+npm install -g @playwright/cli@latest
+playwright-cli install --skills
 ```
 
-For other tools, see [Playwright MCP](https://github.com/microsoft/playwright-mcp).
+This installs `playwright-cli` and  adds the `playwright-cli` skill to your project's `.claude/skills/` directory so the agent can use it automatically.
 
 ---
 
