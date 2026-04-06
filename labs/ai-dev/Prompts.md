@@ -28,21 +28,21 @@ work on it?
 
 ---
 
-### 2.2 — Research before you build
-
-```
-I need to build a speakers block and a schedule block for this site.
-What's already out there that we can borrow or steal as a starting point?
-```
-
----
-
-### 2.3 — Code comprehension + documentation
+### 2.2 — Code comprehension + documentation
 
 ```
 Give me a quick tour of the blocks in this project. Then check the AEM
 docs — what best practices should we be following that we're not? Link me
 to the relevant documentation.
+```
+
+---
+
+### 2.3 — Research before you build
+
+```
+I need to build a speakers block and a schedule block for this site.
+What's already out there that we can borrow or steal as a starting point?
 ```
 
 ---

@@ -74,31 +74,31 @@ Ask the agent what it knows about this project and what tools it has.
 
 ---
 
-### Step 2: Research Before You Build
-
-Before building new blocks, check if reference implementations already exist.
-
-**Prompt:** Use [**2.2** from Prompts.md](Prompts.md#22--research-before-you-build)
-
-**What to look for:**
-- The agent reaches for the block-collection-and-party skill on its own — you didn't tell it to
-- It searches for speakers and schedule references and reports what it finds
-- It maps existing blocks to your needs (e.g., "cards" as a starting point for speakers)
-- Even if there's no exact match, the agent researched before proposing to build from scratch
-
----
-
-### Step 3: Code Comprehension + Documentation
+### Step 2: Code Comprehension + Documentation
 
 Ask the agent to tour the project's blocks and check them against AEM best practices.
 
-**Prompt:** Use [**2.3** from Prompts.md](Prompts.md#23--code-comprehension--documentation)
+**Prompt:** Use [**2.2** from Prompts.md](Prompts.md#22--code-comprehension--documentation)
 
 **What to look for:**
 - The agent reads local block files to explain what each one does
 - It fetches AEM documentation from aem.live to identify gaps and best practices
 - It links to relevant docs — students can follow the links later
 - The agent pulled from multiple sources (local code + external docs) without being told which tools to use
+
+---
+
+### Step 3: Research Before You Build
+
+Before building new blocks, check if reference implementations already exist.
+
+**Prompt:** Use [**2.3** from Prompts.md](Prompts.md#23--research-before-you-build)
+
+**What to look for:**
+- The agent reaches for the block-collection-and-party skill on its own — you didn't tell it to
+- It searches for speakers and schedule references and reports what it finds
+- It maps existing blocks to your needs (e.g., "cards" as a starting point for speakers)
+- Even if there's no exact match, the agent researched before proposing to build from scratch
 
 ---
 
