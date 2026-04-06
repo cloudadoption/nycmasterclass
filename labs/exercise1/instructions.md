@@ -49,7 +49,7 @@
 - How to author content in **DA.live** — the browser-based editor purpose-built for EDS
 - How a table in DA.live becomes a decorated block on the rendered page
 - How **Preview** and **Publish** update `.aem.page` and `.aem.live` respectively
-- How to inspect your content at each transformation stage: document source, `.plain.html`, `.md`
+- How to inspect your content at each transformation stage: document source, `.md`, `.plain.html`
 
 ---
 
@@ -133,6 +133,8 @@ In the page editor:
 
   ![Select Library option from the menu in DA.live](images/slash-command-select-library.png)
 
+> **If you do not see Templates or Blocks after you open Library**, your account may not have library access in DA.live yet. **@mention your instructor in the lab Slack channel** and include your **Adobe ID email** (the one you used on the [lab access form](https://main--aem-rockstar-website--adobe.aem.live/en/masterclass/nyc-setup)) so they can verify or fix permissions. Confirm you submitted that form with the **same** Adobe ID and GitHub username you use in the lab — see [SETUP.md — Step 9: Verify DA.live Access](../SETUP.md#step-9-verify-dalive-access).
+
 3. Select **Templates**
 
   ![Select Templates option](images/select-template.png)
@@ -156,32 +158,24 @@ The template inserts a Hero block, content sections, and a Metadata block — al
 
 ## Step 3: Update Your Content
 
-With the template inserted, replace each placeholder with your own content.
+With the template inserted, replace each placeholder **in DA.live** — edit the real blocks on the page. Do not try to paste Markdown tables or `##` lines from this page; use DA’s editor (headings, lists, links, and the table cells as they already appear).
 
-**Hero block** — update the title and keep the schedule link:
+**Hero block** (table at the top):
 
-```
-| Hero                                                                           |
-|--------------------------------------------------------------------------------|
-| [Your Session or Lab Title]                                                    |
-| [View Schedule](https://main--nycmasterclass--cloudadoption.aem.page/schedule) |
+1. Leave the block name row as **Hero** (same as the template).
+2. In the title row, replace the placeholder with your session or lab title (type normally in the cell).
+3. In the link row, keep a link whose **text** is **View Schedule**. Set the link URL to the schedule page (copy the line below and paste it into the link URL field if DA asks for the address):
+
+```text
+https://main--nycmasterclass--cloudadoption.aem.page/schedule
 ```
 
 ![Hero block in DA.live editor](images/my-session-top.png)
 
-**Content sections** — fill in the overview and objectives below the Hero block (in DA.live, use normal heading lines — the sample below is what you type in the document):
+**Content sections** (below the Hero — headings and bullets already come from the template):
 
-```text
-## Session Overview
-
-[2–3 sentences describing this session or lab]
-
-## What You'll Learn
-
-- [Learning objective 1]
-- [Learning objective 2]
-- [Learning objective 3]
-```
+1. Find the **Session Overview** heading. Under it, replace the placeholder with two or three sentences describing your session or lab.
+2. Find the **What You'll Learn** heading. Replace the three placeholder bullets with your own learning objectives (edit each list item in place).
 
 > **Tip**: Type `/` anywhere in the document to explore other available insert options — headings, images, links, dividers, and more.
 
@@ -189,31 +183,23 @@ With the template inserted, replace each placeholder with your own content.
 
 ## Step 4: Update Metadata
 
-The template includes a Metadata block at the bottom of the page. Fill in the placeholder values. **It must remain the last element on the page.**
+The template includes a Metadata block at the bottom of the page. Fill in the placeholder values **in the table cells in DA.live** (edit each cell like normal text). **It must remain the last element on the page.**
 
-**For a session:**
+**For a session**, update these rows (names are in the first column, your values in the second):
 
-```
-| Metadata      |                                    |
-|---------------|------------------------------------|
-| Title         | [Session Title] - NYC Masterclass  |
-| Description   | [Short description for SEO]        |
-| speaker-name  | [Speaker Name]                     |
-| category      | technical                          |
-| session-level | beginner / intermediate / advanced |
-```
+- **Title** — your session title, then ` - NYC Masterclass` (or follow the template wording).
+- **Description** — a short description for SEO.
+- **speaker-name** — speaker name.
+- **category** — e.g. `technical` (or another value your template suggests).
+- **session-level** — one of `beginner`, `intermediate`, or `advanced`.
 
-**For a lab:**
+**For a lab**, update these rows:
 
-```
-| Metadata        |                                         |
-|-----------------|-----------------------------------------|
-| Title           | Lab: [Lab Title] - NYC Masterclass      |
-| Description     | [Short description for SEO]             |
-| instructor-name | [Instructor Name]                       |
-| category        | development / authoring / configuration |
-| difficulty      | beginner / intermediate / advanced      |
-```
+- **Title** — `Lab: ` plus your lab title and ` - NYC Masterclass` (or follow the template).
+- **Description** — a short description for SEO.
+- **instructor-name** — instructor name.
+- **category** — e.g. `development`, `authoring`, or `configuration` as appropriate.
+- **difficulty** — one of `beginner`, `intermediate`, or `advanced`.
 
 ![Metadata block at the bottom of the page in DA.live](images/my-session-bottom.png)
 
@@ -244,21 +230,40 @@ Open your page on `localhost:3000`. Compare it against the reference live site:
 
 ## Step 6: Inspect the Content Transformation
 
-This is the core learning step. Your page exists in multiple representations simultaneously. Open each one and observe how the content changes form as it moves through the EDS pipeline.
+This is the core learning step. Your page exists in multiple representations simultaneously. Follow the order below: document source (author HTML), then **`.md`** (storage view), then **`.plain.html`** (EDS block HTML before browser decoration).
 
 ### Document Source — what the author wrote
 
-With your page open at `http://localhost:3000/drafts/jsmith/my-session`, click the **AEM Sidekick** icon in your toolbar and select **View document source**.
+With your page open at `http://localhost:3000/drafts/jsmith/my-session` (replace `jsmith` and the path with yours), use either path below to open **View document source**:
+
+**Option 1 — Sidekick on the page:** When the Sidekick toolbar is visible on the page, use it and choose **View document source**.
 
 ![Sidekick "View document source" option](images/view-doc-source-sidekick.png)
+
+**Option 2 — Extensions menu (Chrome / Edge):** If the on-page Sidekick toolbar is not showing, click the **Extensions** icon (puzzle piece) in the browser toolbar → in the list, find **AEM Sidekick** → click the **⋮** (More actions) next to it → **View document source**.
+
+![View document source from AEM Sidekick via the Extensions menu](images/view-doc-source-extensions-menu.png)
 
 **What you see**: Raw HTML from DA.live — tables are still `<table>` elements, no `class="hero"`, no block structure. This is exactly what the author wrote.
 
 ---
 
-### `.plain.html` — what EDS processes
+### `.md` — the content as Markdown
 
 Open in a new tab. Available on both local and the main preview environment:
+
+```
+http://localhost:3000/drafts/jsmith/my-session.md
+https://main--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session.md
+```
+
+**What you see**: Your content as Markdown — tables, headings, and lists in plain text format. This is the storage format EDS uses internally.
+
+---
+
+### `.plain.html` — what EDS processes
+
+Next, open **`.plain.html`** in a new tab (same environments as above):
 
 ```
 http://localhost:3000/drafts/jsmith/my-session.plain.html
@@ -278,41 +283,37 @@ The Metadata table is gone — EDS has processed it into `<head>` tags. This `.p
 
 ---
 
-### `.md` — the content as Markdown
-
-Open in a new tab:
-
-```
-http://localhost:3000/drafts/jsmith/my-session.md
-https://main--nycmasterclass--cloudadoption.aem.page/drafts/jsmith/my-session.md
-```
-
-**What you see**: Your content as Markdown — tables, headings, and lists in plain text format. This is the storage format EDS uses internally.
-
----
-
 ### The transformation at a glance
 
 | What you open | What it shows |
 |---|---|
-| `localhost:3000/…` | Fully rendered page — `.plain.html` decorated by JavaScript and CSS |
-| `…/my-session.plain.html` | EDS-processed HTML — tables become `<div class="blockname">`, Metadata → `<head>` |
 | Document Source (Sidekick) | Raw DA.live HTML — what the author wrote, unprocessed |
 | `…/my-session.md` | Markdown — the storage format |
+| `…/my-session.plain.html` | EDS-processed HTML — tables become `<div class="blockname">`, Metadata → `<head>` |
+| `localhost:3000/…` | Fully rendered page — `.plain.html` decorated by JavaScript and CSS |
 
 ---
 
 ## Step 7: Publish
 
-1. In DA.live, click **Publish** (or use the Sidekick toolbar on the page)
-2. Wait for the confirmation banner
+Your content moves from preview (`.aem.page`) to production (`.aem.live`). Use **either** path below.
+
+**Option 1 — From DA.live:** In the DA.live editor, click **Publish** and wait for the confirmation banner.
+
+**Option 2 — From AEM Sidekick while previewing on `.aem.page`:**
+
+1. Open your page in the browser so the URL is on **`.aem.page`** — for example:  
+   `https://main--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/my-session` (same pattern as in Step 5; replace `<your-name>`).
+2. With **AEM Sidekick** visible on that tab, use **Publish** and complete the flow.
+3. **Observe the URL:** after a successful publish, the address should switch from **`.aem.page`** to **`.aem.live`** for the same content path.
+4. **Observe Sidekick:** toolbar options and actions often **differ** between preview (`.aem.page`) and live (`.aem.live`) — note what changed after publish.
 
 Your page is now on the **live** environment. Verify all three representations are accessible:
 
 ```
 https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session
-https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.plain.html
 https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.md
+https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.plain.html
 ```
 
 **What happened**: The EDS Admin API promoted your content from `.aem.page` (preview) to `.aem.live` (production). The `.plain.html` and `.md` are identical across both environments — the only difference is *when* content appears: after Preview vs. after Publish.
@@ -330,9 +331,9 @@ https://main--nycmasterclass--cloudadoption.aem.live/drafts/jsmith/my-session.md
 - [ ] Metadata is the last element on the page
 - [ ] Page visible at `http://localhost:3000/drafts/<your-name>/my-session`
 - [ ] **Document source** viewed via Sidekick — tables visible, no `class="hero"`
+- [ ] **`.md`** opened on `localhost:3000` (and optionally on `main--`) — content confirmed
 - [ ] **`.plain.html`** opened on `localhost:3000` — Hero table is now `<div class="hero">`
 - [ ] **`.plain.html`** opened on `main--nycmasterclass--cloudadoption.aem.page` — matches local
-- [ ] **`.md`** opened and content confirmed
 - [ ] Page published via DA.live
 - [ ] All three representations accessible on `main--nycmasterclass--cloudadoption.aem.live`
 

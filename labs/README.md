@@ -28,7 +28,7 @@
 **What you'll learn**:
 - How to **manage content in DA.live** (authoring model, tables → blocks)
 - The **Preview** vs **Publish** workflow and what each environment represents
-- How to **read document transformations** across source, `.plain.html`, and `.md`
+- How to **read document transformations** across source, `.md`, and `.plain.html`
 
 **What you'll build**:
 - Your **personal workspace** under `/drafts/<your-name>/`
