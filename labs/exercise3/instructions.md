@@ -437,7 +437,7 @@ Replace `jsmith` with your branch name.
 
 1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
 2. Open your personal subfolder **`<your-name>`** (first initial + last name, lowercase).
-3. **New** → **Page**, name it **`speakers-test`**.
+3. **New** → **Document**, name it **`speakers-test`**.
 4. Add a **level-1 heading**: **Dynamic Speaker Directory**.
 5. Under it, add a short paragraph that explains the page loads speaker data from JSON (write it in your own words, or use something like: this page demonstrates fetching speaker data dynamically from JSON).
 6. Type `/` → **Library** (or **Blocks**) → find **Dynamic Cards** and insert it.
