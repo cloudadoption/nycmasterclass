@@ -7,11 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [How Query Index Works](#how-query-index-works)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [How Query Index works](#how-query-index-works))
+- **Exercise steps**
   - [Step 1: Verify query-index.json](#step-1-verify-query-indexjson)
   - [Step 2: Look at the Block Collection Reference](#step-2-look-at-the-block-collection-reference)
   - [Step 3: Create Block Files](#step-3-create-block-files)
@@ -21,7 +19,11 @@
   - [Step 7: Test the Search Block](#step-7-test-the-search-block)
   - [Step 8: Test Edge Cases](#step-8-test-edge-cases)
   - [Step 9: Commit Your Changes](#step-9-commit-your-changes)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
@@ -32,16 +34,21 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–3 completed (if doing in sequence)
-- Exercise 1 Session/Lab page published under `/labs/<your-name>/` to `.aem.live` (follow **Before You Move On** at the end of Exercise 3 — `/drafts/**` is not indexed)
+- **Indexed lab page** — Your Exercise 1 session/lab page must be **published** under `/labs/<your-name>/` on **`.aem.live`** so it appears in `query-index.json`. If you have not done this yet, complete [Exercise 3 — Step 11](../exercise3/instructions.md#step-11-before-you-move-on-for-exercise-4) (copy from `/drafts/<your-name>/`, publish). Pages under `/drafts/**` are **not** indexed.
 - DA.live access
 
-**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
-
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -142,17 +149,19 @@ indices:
 
 **Reference**: [Indexing Reference](https://www.aem.live/docs/indexing-reference)
 
+</details>
+
 ---
 
 ## Step 1: Verify query-index.json
 
-Verify your `/labs/jsmith/` page (published in Exercise 3’s **Before You Move On** section) appears in the index:
+Verify your **`/labs/<your-name>/`** page (published in [Exercise 3 — Step 11](../exercise3/instructions.md#step-11-before-you-move-on-for-exercise-4)) appears in the index:
 
 ```
 http://localhost:3000/query-index.json
 ```
 
-Look for your `/labs/jsmith/my-session` path in the `data` array.
+Look for your page path in the `data` array (e.g. `/labs/<your-name>/my-session` or whatever you named the copied Exercise 1 page).
 
 **Validate index definition**: [Index Admin](https://tools.aem.live/tools/index-admin/index.html?org=cloudadoption&site=nycmasterclass) — use this tool to fetch and validate the index configuration (include/exclude paths, properties) for this org/site.
 
@@ -165,13 +174,20 @@ Look for your `/labs/jsmith/my-session` path in the `data` array.
 
 ## Step 2: Look at the Block Collection Reference
 
-The search block we're extending lives at:
+The search block we’re extending lives in the **[AEM Block Collection](https://github.com/adobe/aem-block-collection)** repo. You won’t edit that repo in this lab — skim it on GitHub or clone it to a sibling folder and open it in your editor. **From that repository’s root**, the files are:
 
 ```
-https://github.com/adobe/aem-block-collection/tree/main/blocks/search
+blocks/
+  search/
+    search.js
+    search.css
 ```
 
-Open it and take a quick look. The Block Collection version has two variants:
+On GitHub: [tree/main/blocks/search](https://github.com/adobe/aem-block-collection/tree/main/blocks/search).
+
+**Step 3** has you create **`blocks/search/`** under **this** project (nycmasterclass) — same relative layout as upstream, but your own files to extend.
+
+Take a quick look at the upstream files. The Block Collection version has two variants:
 - **Default** — full search box with results rendered as cards
 - **Minimal** — search box only (results handled externally)
 
@@ -603,25 +619,16 @@ Copy this code:
 
 ## Step 6: Create Test Page in DA.live
 
-In [DA.live](https://da.live), create page: `/drafts/jsmith/search-test` (use your name)
+**In DA.live**, create a page at **`/drafts/<your-name>/search-test`** (same **`<your-name>`** folder as Exercises 1–3).
 
-Add this content:
+1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
+2. Open your personal subfolder **`<your-name>`** (first initial + last name, lowercase).
+3. **New** → **Page**, name it **`search-test`**.
+4. Add a **level-1 heading**: **Search**.
+5. Type `/` → **Library** (or **Blocks**) → insert **Search**.
+6. If the block has a row for the data source URL, set it to **`/query-index.json`**. If you leave that row empty or omit it, the block still defaults to **`/query-index.json`**. (You can point it at any JSON endpoint that returns `{ data: [...] }` if you experiment later.)
 
-```
-# Search
-
-| Search |
-|--------|
-| /query-index.json |
-```
-
-**What you're authoring**:
-- Block name: `Search`
-- Row 1: URL of the data source (`/query-index.json`)
-
-The URL row is optional — if omitted, the block defaults to `/query-index.json`. Authors can point the block at any JSON endpoint that returns `{ data: [...] }`.
-
-  ![search Example](images/search-block.png)
+![search Example](images/search-block.png)
 
 DA.live auto-saves. Click **Preview** to see the page on localhost.
 
@@ -629,7 +636,7 @@ DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ## Step 7: Test the Search Block
 
-Open: `http://localhost:3000/drafts/jsmith/search-test`
+Open: `http://localhost:3000/drafts/<your-name>/search-test`
 
 **Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to switch to responsive mode, then resize the viewport or pick a device preset to verify layout at different widths. Use this for all test steps in this exercise.
 
@@ -642,11 +649,11 @@ Open: `http://localhost:3000/drafts/jsmith/search-test`
 | Query | Expected |
 |-------|----------|
 | `technical` | All session pages that contain `technical` (matches `category` field) |
-| `lab` | All lab pages + your `/labs/jsmith/` page (matches title and path) |
+| `lab` | All lab pages + your `/labs/<your-name>/` page (matches title and path) |
 | `stefan` | 2 sessions by Stefan Seifert (matches `speaker-name` field) |
-| Your first name (e.g. `sagar`) | Your `/labs/jsmith/` page (matches `instructor` field — requires your page to be published) |
+| Your first name (e.g. `sagar`) | Your `/labs/<your-name>/` page (matches `instructor` field — requires your page to be published) |
 | `development` | Lab pages in the development category |
-| Your session or lab title (or part of it) | Your `/labs/jsmith/` page |
+| Your session or lab title (or part of it) | Your `/labs/<your-name>/` page |
 | `xyz123` | "No results found." message |
 | `edge` | All pages matching `edge` in title or description |
 
@@ -691,6 +698,9 @@ Replace `jsmith` with your branch name.
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — takeaways)</summary>
+
 ## Key Takeaways
 
 - **Block Collection** is a library of reference blocks — not boilerplate, but a starting point to extend
@@ -703,16 +713,18 @@ Replace `jsmith` with your branch name.
 - **URL state** (`?q=`) makes searches bookmarkable and shareable
 - **No `innerHTML` for user input** — `DocumentFragment` + `createElement` prevents XSS
 
+</details>
+
 ---
 
 ## Verification Checklist
 
-- [ ] `/labs/jsmith/<your-page-name>` visible in `query-index.json`
+- [ ] `/labs/<your-name>/<your-page-name>` visible in `query-index.json`
 - [ ] `blocks/search/search.js` and `blocks/search/search.css` created
-- [ ] Search input renders on `http://localhost:3000/drafts/jsmith/search-test`
+- [ ] Search input renders on `http://localhost:3000/drafts/<your-name>/search-test`
 - [ ] Typing at least 3 characters triggers a search
 - [ ] Results render as Cards block cards
-- [ ] Your own `/labs/jsmith/` page is findable by searching its title
+- [ ] Your own `/labs/<your-name>/` page is findable by searching its title
 - [ ] Matched terms are highlighted in brand color
 - [ ] "No results found" message shows for unmatched query
 - [ ] URL updates with `?q=` param as you type

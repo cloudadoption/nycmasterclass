@@ -7,19 +7,20 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [The Complete Data Flow](#the-complete-data-flow)
-  - [Worker Endpoint](#worker-endpoint)
-  - [POST Request Structure](#understanding-the-post-request-structure)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [The complete data flow](#the-complete-data-flow) · [Worker endpoint](#worker-endpoint) · [Understanding the POST request structure](#understanding-the-post-request-structure))
+- **Exercise steps**
   - [Step 1: Create a Feedback Block](#step-1-create-a-feedback-block)
   - [Step 2: Configure the Block in Your Draft Page](#step-2-configure-the-block-in-your-draft-page)
   - [Step 3: Create Test Page](#step-3-create-test-page)
   - [Step 4: Understanding What the Worker Does](#step-4-understanding-what-the-worker-does)
   - [Step 5: Commit Your Changes](#step-5-commit-your-changes)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [Troubleshooting Common Issues](#troubleshooting-common-issues)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
@@ -30,15 +31,20 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–5 completed (if doing in sequence)
 - **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
 
-**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
-
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -209,6 +215,8 @@ Content-Type: application/json
 2. Extract values and create JSON object
 3. `fetch()` POST request with JSON body
 4. Handle response (success or error)
+
+</details>
 
 ---
 
@@ -475,6 +483,9 @@ Replace `jsmith` with your branch name.
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — examples and takeaways)</summary>
+
 ## Real-World Applications
 
 **Use Case 1: Event Registration Form**
@@ -564,6 +575,8 @@ Form → Worker → [Validate + Transform] → [Service 1, Service 2, Service N]
 - Formatting (Block Kit, email templates)
 - Rate limiting (prevent spam)
 - Multi-destination (send to multiple services)
+
+</details>
 
 ---
 
