@@ -1,0 +1,100 @@
+.schedule {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Time slot row */
+.schedule .schedule-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.schedule .schedule-slot:first-child {
+  border-top: none;
+}
+
+/* Time label */
+.schedule .schedule-time {
+  font-size: var(--body-font-size-xs, 0.875rem);
+  font-weight: 600;
+  color: var(--brand-1, #f97316);
+  flex-shrink: 0;
+  padding-top: 0.2rem;
+}
+
+/* Session cards container */
+.schedule .schedule-sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+/* Individual session card */
+.schedule .schedule-session {
+  background: var(--card, #10121a);
+  border-left: 3px solid var(--brand-2, #c026d3);
+  border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem;
+}
+
+.schedule .schedule-session-break {
+  background: transparent;
+  border-left: 3px solid rgb(255 255 255 / 15%);
+  opacity: 0.7;
+}
+
+.schedule .schedule-title {
+  margin: 0;
+  font-size: var(--body-font-size-s, 1rem);
+  font-weight: 600;
+  color: var(--ink, #eef0f4);
+  line-height: 1.4;
+}
+
+.schedule .schedule-meta {
+  margin: 0.25rem 0 0;
+  font-size: var(--body-font-size-xs, 0.875rem);
+  color: var(--muted, #c5c8d2);
+}
+
+.schedule .schedule-meta a {
+  color: var(--muted, #c5c8d2);
+  text-decoration: none;
+}
+
+.schedule .schedule-meta a:hover {
+  color: var(--brand-1, #f97316);
+}
+
+.schedule .schedule-track {
+  font-style: italic;
+}
+
+/* Tablet: time label sits left of sessions */
+@media (width >= 600px) {
+  .schedule .schedule-slot {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .schedule .schedule-time {
+    min-width: 130px;
+  }
+}
+
+/* Desktop: parallel sessions sit side by side */
+@media (width >= 900px) {
+  .schedule .schedule-sessions {
+    flex-flow: row wrap;
+  }
+
+  .schedule .schedule-session {
+    flex: 1;
+    min-width: 200px;
+  }
+}
