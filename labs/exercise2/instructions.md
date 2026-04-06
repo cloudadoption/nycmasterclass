@@ -7,11 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [How Block Decoration Works](#how-block-decoration-works)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [How block decoration works](#how-block-decoration-works) · [Block anatomy](#block-anatomy) · [Current Cards block](#current-cards-block))
+- **Exercise steps**
   - [Step 1: Create Test Content](#step-1-create-test-content)
   - [Step 2: Test Default Cards](#step-2-test-default-cards)
   - [Step 3: Implement Eyebrow Enhancement](#step-3-implement-eyebrow-enhancement)
@@ -21,7 +19,11 @@
   - [Step 7: Implement View Switcher Variation](#step-7-implement-view-switcher-variation)
   - [Step 8: Test View Switcher Variation](#step-8-test-view-switcher-variation)
   - [Step 9: Commit Your Changes](#step-9-commit-your-changes)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — expand below, or jump: [CSS scoping](#understanding-css-scoping) · [Mobile-first CSS](#mobile-first-css) · [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
@@ -32,18 +34,19 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercise 1 completed (if doing in sequence)
 
-**Verify you're on your branch**:
-```bash
-git branch
-# Should show: * jsmith (your name)
-```
-
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -79,48 +82,52 @@ There are two ways to extend a block's capabilities:
 
 ## How Block Decoration Works
 
+Read this as a **conceptual pipeline** — build real tables and code in DA.live and your editor, not by pasting from this page.
+
+**1. Authoring in DA.live**  
+The author inserts a **Cards** block and fills it like a table: a header row names the block (**Cards**), then each content row is one card — typically an image in one area and body copy in another (e.g. italic label such as *Speaker*, then name and title). Exact layout comes from the block template in DA.live.
+
+**2. EDS output (HTML before your `decorate()` runs)**  
+EDS turns that into a root element (e.g. `div.cards`) with nested `div`s, `picture`, and paragraphs — including `<em>` where the author used italics. Below is **illustration-only** HTML so you can picture the shape of the DOM (do not paste into DA.live):
+
+```html
+<!-- Reference only — pipeline shape, not a copy target -->
+<div class="cards">
+  <div>
+    <div><picture><!-- image --></picture></div>
+    <div>
+      <p><em>Speaker</em></p>
+      <p>John Doe</p>
+      <p>Senior Developer</p>
+    </div>
+  </div>
+</div>
 ```
-1. Author creates table in DA.live
-   | Cards |                            |
-   |-------|----------------------------|
-   | [image] | *Speaker* (italic)       |
-   |         | John Doe                 |
-   |         | Senior Developer         |
 
-2. EDS converts to HTML (before decoration)
-   <div class="cards">
-     <div>
-       <div><picture>...</picture></div>
-       <div>
-         <p><em>Speaker</em></p>
-         <p>John Doe</p>
-         <p>Senior Developer</p>
-       </div>
-     </div>
-   </div>
+**3. Your `decorate(block)` function**  
+Your JavaScript receives that root node. For the Cards exercise you classify inner `div`s (image vs body), find `<em>` in the body when you add the eyebrow enhancement, extract it, and reshape nodes (for example wrapping rows in `ul` / `li`).
 
-3. Your decorate() function transforms it
-   - Classifies divs as image or body
-   - Detects <em> in body → extracts as eyebrow label
-   - Removes the <em> paragraph from body
-   - Prepends eyebrow div to card body
+**4. HTML after decoration**  
+After `decorate()` runs, the tree looks more like the final UI — e.g. list markup, eyebrow `div`, classified image/body wrappers. Again **reference only**:
 
-4. Final HTML (after decoration)
-   <div class="cards">
-     <ul>
-       <li>
-         <div class="cards-card-image"><picture>...</picture></div>
-         <div class="cards-card-body">
-           <div class="cards-card-eyebrow">Speaker</div>
-           <p>John Doe</p>
-           <p>Senior Developer</p>
-         </div>
-       </li>
-     </ul>
-   </div>
-
-5. CSS styles the decorated HTML
+```html
+<!-- Reference only — after decoration -->
+<div class="cards">
+  <ul>
+    <li>
+      <div class="cards-card-image"><picture><!-- image --></picture></div>
+      <div class="cards-card-body">
+        <div class="cards-card-eyebrow">Speaker</div>
+        <p>John Doe</p>
+        <p>Senior Developer</p>
+      </div>
+    </li>
+  </ul>
+</div>
 ```
+
+**5. CSS**  
+Project CSS targets classes on that decorated structure (scoped under `.cards`, etc.).
 
 **Reference**: [Exploring Blocks](https://www.aem.live/docs/exploring-blocks)
 
@@ -128,30 +135,13 @@ There are two ways to extend a block's capabilities:
 
 ## Block Anatomy
 
-Every block has:
+On disk, each block lives under **`blocks/<blockname>/`** with at least **`blockname.js`** (decoration logic) and **`blockname.css`** (styles). For Cards, that is **`blocks/cards/cards.js`** and **`blocks/cards/cards.css`**.
 
-```
-blocks/
-  cards/
-    cards.js      - Decoration logic (required)
-    cards.css     - Styles (required)
-```
+**Entrypoint**: The runtime calls the default export of each block’s `.js` file. That export must be a `decorate(block)` function — same pattern for every block. EDS passes the block’s root DOM element; your code transforms it.
 
-**Entrypoint**: The runtime calls the default export of each block's `.js` file. That export must be a `decorate(block)` function — same for every block. EDS passes the block's root DOM element; your code transforms it.
+**Naming convention**: Folder and file names must match the block name exactly.
 
-**Naming convention**: File names must match block name exactly.
-
-**Variation classes**: Authors add variations in parentheses:
-```
-| Cards (List) |
-```
-
-Becomes:
-```html
-<div class="cards list">
-```
-
-Your CSS/JS can then target `.cards.list` for variation-specific styling.
+**Variation classes**: In DA.live, authors add a variation by putting extra text in the table header after the block name in parentheses — for example the header reads **Cards (List)**. EDS adds both class names on the root element, so in the DOM you typically see **`class="cards list"`** (or equivalent) on the block wrapper. Your CSS/JS can target the combined selector **`.cards.list`** for variation-specific behavior.
 
 **Reference**: [Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
 
@@ -159,11 +149,12 @@ Your CSS/JS can then target `.cards.list` for variation-specific styling.
 
 ## Current Cards Block
 
-The repository already has a Cards block. Let's review it:
+The repository already has a Cards block. **Open `blocks/cards/cards.js` in your editor** and follow along there — the snippet below is **for reading only** (do not paste it into DA.live; it belongs in the repo file).
 
 **File**: `blocks/cards/cards.js`
 
 ```javascript
+// Reference only — canonical source is blocks/cards/cards.js in the repo
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 export default function decorate(block) {
@@ -198,17 +189,23 @@ export default function decorate(block) {
 
 **File**: `blocks/cards/cards.css` - Uses CSS Grid for responsive layout.
 
+</details>
+
 ---
 
 ## Step 1: Create Test Content
 
-**In DA.live**, create page: `/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+**In DA.live**, create a page at **`/drafts/<your-name>/cards-test`** (e.g. `/drafts/jsmith/cards-test` — first initial + last name, lowercase).
+
+1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
+2. In that view, go into your personal subfolder **`<your-name>`** (first initial + last name, lowercase). Create the folder here if it does not exist yet — same pattern as [Exercise 1](../exercise1/instructions.md).
+3. **New** → **Page**, name it **`cards-test`**.
 
 Add content to test the **existing** Cards block (default behavior). Use the **Block Library** so you get the correct block markup:
 
-1. Type `/` → **Library** (or **Blocks**) → find **Cards** and preview variations.
-2. Insert **default Cards** (add a heading like "Default Cards" if you like).
-3. Insert the **Cards block that includes the eyebrow** (italic label). Add a heading like **Cards with Eyebrow** above it — you'll use this when we add the eyebrow enhancement in Step 3.
+4. Type `/` → **Library** (or **Blocks**) → find **Cards** and preview variations.
+5. Insert **default Cards** (add a heading like "Default Cards" if you like).
+6. Insert the **Cards block that includes the eyebrow** (italic label). Add a heading like **Cards with Eyebrow** above it — you'll use this when we add the eyebrow enhancement in Step 3.
 
   ![Cards Block and Variants in DA.live](images/cards-block-1.gif)
 
@@ -246,11 +243,9 @@ The eyebrow adds a label above card content. Authors simply **italicize** the la
 
 **File**: `blocks/cards/cards.js`
 
-Replace the entire `decorate` function with:
+Leave the **`import`** line at the top of the file unchanged. Replace only the whole **`export default function decorate(block) { ... }`** (from `export default` through the closing `}` of that function) with:
 
 ```javascript
-import { createOptimizedPicture } from '../../scripts/aem.js';
-
 export default function decorate(block) {
   const ul = document.createElement('ul');
 
@@ -519,6 +514,9 @@ Replace `jsmith` with your branch name.
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — CSS patterns, examples, and takeaways)</summary>
+
 ## Understanding CSS Scoping
 
 **Critical rule**: All block styles must be scoped to the block.
@@ -608,6 +606,8 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 - Always scope CSS to the block (`.blockname .selector`)
 - Reuse CSS classes across variations — view-switcher toggles the same `list` class
 - Enhancements and variations can be combined — they're independent features
+
+</details>
 
 ---
 

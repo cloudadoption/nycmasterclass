@@ -7,11 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [The Complete Data Flow](#the-complete-data-flow)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [The complete data flow](#the-complete-data-flow) · [Understanding the data](#understanding-the-data))
+- **Exercise steps**
   - [Step 1: Preview the Generated Pages](#step-1-preview-the-generated-pages)
   - [Step 2: Understand the Templates](#step-2-understand-the-templates)
   - [Step 3: Understand the Worker Configuration](#step-3-understand-the-worker-configuration)
@@ -19,7 +17,12 @@
   - [Step 5: Add New Events to the Data Sheet](#step-5-add-new-events-to-the-data-sheet)
   - [Step 6: Understanding How the Event Block Works](#step-6-understanding-how-the-event-block-works)
   - [Step 7: Add the Event Block to Your Branch](#step-7-add-the-event-block-to-your-branch)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [Troubleshooting Common Issues](#troubleshooting-common-issues)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
@@ -30,11 +33,15 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–4 completed (if doing in sequence)
-- **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
+- **Personal workspace**: `/drafts/<your-name>/` (first initial + last name, lowercase — same pattern as earlier exercises)
 
 **What's already set up for you**:
 
@@ -62,6 +69,9 @@ The instructor has pre-configured the entire JSON2HTML pipeline so you can focus
 **Key concept**: Sheets in DA.live automatically become JSON endpoints. The Sheet at `/future-events` becomes available as `/future-events.json`.
 
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -188,6 +198,8 @@ The instructor has created a **Sheet in DA.live** at `/future-events` with upcom
 
 **Key concept**: The worker matches incoming requests (e.g., `/events/sydney`) to the correct record using the `URL` field, then renders it using your Mustache template.
 
+</details>
+
 ---
 
 ## Step 1: Preview the Generated Pages
@@ -196,9 +208,9 @@ Everything is pre-configured. The instructor has already generated the pages on 
 
 **Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to verify the grid at different widths (1/2/3 columns). Use this when checking list and detail pages in this exercise.
 
-**Open the list page** (replace `jsmith` with your branch name):
+**Open the list page** (replace `<your-name>` with your **Git feature branch** name from Prerequisites — usually the same as your `/drafts/<your-name>/` folder):
 ```
-https://jsmith--nycmasterclass--cloudadoption.aem.page/events/list
+https://<your-name>--nycmasterclass--cloudadoption.aem.page/events/list
 ```
 
 **You should see**:
@@ -211,7 +223,7 @@ https://jsmith--nycmasterclass--cloudadoption.aem.page/events/list
 
 **Open a detail page**:
 ```
-https://jsmith--nycmasterclass--cloudadoption.aem.page/events/sydney
+https://<your-name>--nycmasterclass--cloudadoption.aem.page/events/sydney
 ```
 
 **You should see**:
@@ -413,9 +425,9 @@ Add new rows to the sheet with new cities. For each row, fill in all columns to 
 
 The pages on edge are cached — they won't automatically reflect new data. You need to trigger the worker to regenerate them.
 
-1. **Open the list page** in your browser:
+1. **Open the list page** in your browser (same `<your-name>` host as Step 1):
    ```
-   https://jsmith--nycmasterclass--cloudadoption.aem.page/events/list
+   https://<your-name>--nycmasterclass--cloudadoption.aem.page/events/list
    ```
 
 2. **Open the AEM Sidekick** and click **"Update"** — this tells the JSON2HTML worker to regenerate the page with the latest data and store it on the edge.
@@ -424,7 +436,7 @@ The pages on edge are cached — they won't automatically reflect new data. You 
 
 4. **Generate a new detail page** — navigate to your new city's URL:
    ```
-   https://jsmith--nycmasterclass--cloudadoption.aem.page/events/newyork
+   https://<your-name>--nycmasterclass--cloudadoption.aem.page/events/newyork
    ```
 
 5. The page will initially show **404** (it's never been generated before). Click **"Update"** in the Sidekick to trigger the worker to generate it.
@@ -523,6 +535,9 @@ Replace `jsmith` with your branch name.
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — examples and takeaways)</summary>
+
 ## Real-World Applications
 
 **Use Case 1: Multi-City Event Series** (this exercise!)
@@ -568,6 +583,8 @@ JSON Data → Worker → [Match Path + Apply Template] → HTML → EDS Decorati
 - **Scale effortlessly** — 6 events or 600, same templates
 
 **The pattern**: Data in JSON → Sidekick "Update" → Worker generates HTML → Stored on edge → Served to all visitors
+
+</details>
 
 ---
 

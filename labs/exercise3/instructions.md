@@ -7,11 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [How It Works](#how-it-works)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [The Speakers Page](#the-speakers-page) · [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [How it works](#how-it-works) · [Understanding Sheets as JSON](#understanding-sheets-as-json))
+- **Exercise steps**
   - [Step 1: Copy Speakers Data](#step-1-copy-speakers-data-to-your-workspace)
   - [Step 2: Add Your Personal Data](#step-2-add-your-personal-data)
   - [Step 3: Create Block Files](#step-3-create-block-files)
@@ -22,11 +20,35 @@
   - [Step 8: Test Locally](#step-8-test-locally)
   - [Step 9: Test Error Handling](#step-9-test-error-handling)
   - [Step 10: Optional - Apply to Real Speakers Page](#step-10-optional---apply-to-real-speakers-page)
-- [Key Takeaways](#key-takeaways)
+  - [Step 11: Before You Move On (for Exercise 4)](#step-11-before-you-move-on-for-exercise-4)
+- **After the steps** (please read — expand below, or jump: [Performance considerations](#performance-considerations) · [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
 ---
+
+## Prerequisites
+
+**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
+
+**Required:**
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
+- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
+- Code editor open with the repository
+- Exercises 1–2 completed (if doing in sequence)
+
+---
+
+<details>
+<summary><strong>Background</strong> (please read — context and concepts before the hands-on steps)</summary>
 
 ## The Speakers Page
 
@@ -37,24 +59,6 @@ That page currently says "Coming Soon: Dynamic Speaker Profiles" and mentions th
 The speaker data already exists at `/speakers.json` with 6 Adobe experts. In this exercise, you'll build the dynamic-cards block that will eventually power that page.
 
 **You'll work in your own drafts folder** to avoid conflicts with other participants, but the block you build is production-ready and reusable.
-
----
-
-## Prerequisites
-
-**Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
-
-**Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
-- Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
-- Code editor open with the repository
-- Exercises 1–2 completed (if doing in sequence)
-
-**Verify you're on your branch**:
-```bash
-git branch
-# Should show: * jsmith (your name)
-```
 
 ---
 
@@ -141,24 +145,27 @@ https://main--nycmasterclass--cloudadoption.aem.page/path/to/sheet.json
 
 **Key insight**: Column names become JSON keys, rows become objects in `data` array.
 
+</details>
+
 ---
 
 ## Step 1: Copy Speakers Data to Your Workspace
 
-To avoid conflicts with 50 participants, you'll create your own personal speakers data.
+To avoid conflicts with other participants, you'll create your own personal speakers data.
 
 **In DA.live**:
 
 1. Navigate to https://da.live/sheet#/cloudadoption/nycmasterclass/speakers
 2. This is the master speakers.json with 6 Adobe experts
 3. Go back to the root folder and select the `speakers` file and click `copy`
-4. Navigate to `/drafts/jsmith/` (your folder)
-5. **Paste** the speakers file
-6. Rename it to `speakers` (keep it as a .json file)
+4. Open the project's **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
+5. In that view, go into your personal subfolder **`<your-name>`** (first initial + last name, lowercase). Create the folder here if it does not exist yet — same pattern as [Exercise 1](../exercise1/instructions.md).
+6. **Paste** the speakers file
+7. Rename it to `speakers` (keep it as a .json file)
 
   ![Copy & Paste Speakers Sheet](images/exercise_3_1.gif)
 
-**Verify**: You should now have `/drafts/jsmith/speakers.json`
+**Verify**: You should now have `/drafts/<your-name>/speakers.json` (replace `<your-name>` with your folder: first initial + last name, lowercase)
 
 ---
 
@@ -166,7 +173,7 @@ To avoid conflicts with 50 participants, you'll create your own personal speaker
 
 Make this exercise meaningful by adding yourself as a speaker!
 
-**In DA.live**, open `/drafts/jsmith/speakers` (the sheet you just copied)
+**In DA.live**, open `/drafts/<your-name>/speakers` (the sheet you just copied — same `<your-name>` folder as in Step 1)
 
 **Add a new row** with your information:
 - **Name**: Your full name (e.g., "John Smith")
@@ -179,12 +186,19 @@ Make this exercise meaningful by adding yourself as a speaker!
 
 **Optional**: Add another row for a teammate sitting near you.
 
-DA.live auto-saves. **Verify JSON endpoint** on localhost:
-```
-http://localhost:3000/drafts/jsmith/speakers.json
-```
+DA.live auto-saves. **Verify the sheet JSON** (same data, two ways to open it):
 
-You should see 7-8 speakers (6 Adobe + your entries) in JSON format.
+1. **Local dev (quick check)** — Open  
+   `http://localhost:3000/drafts/<your-name>/speakers.json`  
+   You should see JSON with a `data` array of 7–8 speakers (6 Adobe + your rows).
+
+2. **Preview URL (use in the Dynamic Cards block in Steps 7–9)** — The block’s data link must be a full **`.aem.page`** preview URL (not only a root-relative path like `/drafts/...`), so `fetch` hits the same sheet JSON the preview pipeline serves. For this lab, preview content is shared for everyone — use the **`main`** preview host:
+
+   `https://main--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/speakers.json`
+
+   Replace **`<your-name>`** with your drafts folder (first initial + last name, lowercase), matching Steps 1–2.
+
+   Paste that URL in the browser once: you should get the same JSON as localhost. The site’s master speakers sheet is the same host with a different path — [https://main--nycmasterclass--cloudadoption.aem.page/speakers.json](https://main--nycmasterclass--cloudadoption.aem.page/speakers.json). Yours is under **`/drafts/<your-name>/speakers.json`**.
 
 ---
 
@@ -419,22 +433,19 @@ Replace `jsmith` with your branch name.
 
 ## Step 7: Create Test Page
 
-**In DA.live**, create a new page: `/drafts/jsmith/speakers-test` (use your name)
+**In DA.live**, create a page at **`/drafts/<your-name>/speakers-test`** (same `<your-name>` folder as in Steps 1–2).
 
-Add this content:
+1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
+2. Open your personal subfolder **`<your-name>`** (first initial + last name, lowercase).
+3. **New** → **Page**, name it **`speakers-test`**.
+4. Add a **level-1 heading**: **Dynamic Speaker Directory**.
+5. Under it, add a short paragraph that explains the page loads speaker data from JSON (write it in your own words, or use something like: this page demonstrates fetching speaker data dynamically from JSON).
+6. Type `/` → **Library** (or **Blocks**) → find **Dynamic Cards** and insert it.
+7. In the block, set the **data source** to a **link** to the **full preview JSON URL** from Step 2: `https://main--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/speakers.json`. The block code reads the link’s `href`, so it must be a real hyperlink in DA, not plain text only.
 
-```
-# Dynamic Speaker Directory
+**Important**: Replace **`<your-name>`** with your drafts folder name (first initial + last name, lowercase), same as Step 2.
 
-This page demonstrates fetching speaker data dynamically from JSON.
-
-| Dynamic Cards |
-|---------------|
-| /drafts/jsmith/speakers.json |
-```
-  ![Dynamic Cards Example](images/exercise-3-2.png) 
-
-**Important**: Use YOUR actual path (replace `jsmith` with your first initial + last name).
+![Dynamic Cards Example](images/exercise-3-2.png)
 
 DA.live auto-saves. Click **Preview** to see the page on localhost.
 
@@ -442,7 +453,7 @@ DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ## Step 8: Test Locally
 
-**Open**: `http://localhost:3000/drafts/jsmith/speakers-test` (use your name)
+**Open**: `http://localhost:3000/drafts/<your-name>/speakers-test`
 
 **Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to switch to responsive mode, then resize the viewport or pick a device preset to verify layout at different widths. Use this for all test steps in this exercise.
 
@@ -461,8 +472,8 @@ DA.live auto-saves. Click **Preview** to see the page on localhost.
     ![Dynamic Cards Example](images/exercise-3-3.png) 
 
 **Test the data flow**:
-1. Keep the page open at `http://localhost:3000/drafts/jsmith/speakers-test`
-2. Go to DA.live and open `/drafts/jsmith/speakers`
+1. Keep the page open at `http://localhost:3000/drafts/<your-name>/speakers-test`
+2. Go to DA.live and open `/drafts/<your-name>/speakers`
 3. Edit YOUR speaker row - change your bio or title
 4. DA.live auto-saves. **Refresh** your local preview
 5. Your changes should appear immediately
@@ -473,73 +484,52 @@ DA.live auto-saves. Click **Preview** to see the page on localhost.
 
 ## Step 9: Test Error Handling
 
-Production blocks must handle failures gracefully. Let's test error scenarios.
+Quick checks on your **`/drafts/<your-name>/speakers-test`** page in DA.live — same **Dynamic Cards** block as Step 7; you’re only changing the data link (or removing it), then refreshing localhost.
 
-**Test 1 - Invalid URL**:
-
-Edit your `/drafts/jsmith/speakers-test` page in DA.live, change the URL to:
-```
-| Dynamic Cards |
-|---------------|
-| https://invalid-url.com/data.json |
-```
-
-Refresh localhost. You should see: "Error loading speakers: [error message]" with red background.
+1. **Bad URL** — Point the block’s JSON link at something that will fail (for example `https://invalid-url.com/data.json`). Save, refresh the local preview. You should see an **error** message (your block styles it, e.g. red background) instead of cards.
+2. **No URL** — Remove the data link row so the block has no source. Refresh. You should see **Error: No data source specified** (from your `decorate` logic).
+3. **Restore** — Set the link back to your working **full preview URL** from Step 2 (`https://main--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/speakers.json`). Refresh; speaker cards should return.
 
 ![Dynamic Cards Error Handling Example](images/exercise-3-4.png)
-**Test 2 - No URL**:
 
-Remove the URL row entirely:
-```
-| Dynamic Cards |
-|---------------|
-```
-
-Refresh localhost. You should see: "Error: No data source specified".
-
-**Test 3 - Restore Working State**:
-
-Change it back to your working speakers.json:
-```
-| Dynamic Cards |
-|---------------|
-| /drafts/jsmith/speakers.json |
-```
-
-Refresh. Speaker cards should display again.
-
-**Why test errors?** Network can fail, URLs can break, data can be malformed. Your block should always show helpful feedback to users.
+In production, fetches fail, URLs rot, and payloads break — the block should always give clear feedback instead of a blank screen.
 
 ---
 
 ## Step 10: Optional - Apply to Real Speakers Page
 
-Now that your dynamic-cards block is working, you can see how it would complete the real `/speakers` page.
+**Read-only mental model** — do **not** edit the shared `/speakers` page in this lab.
 
-**What you'd do** (don't actually do this - just understand the pattern):
+On a real site, after your block is tested and on `main`, you would open **`/speakers`** in DA.live, remove the placeholder body, insert the same **Dynamic Cards** block you used in Step 7, and set its data link to the **full preview URL** for the production sheet JSON — same host as Step 2, path **`/speakers.json`**, e.g. [https://main--nycmasterclass--cloudadoption.aem.page/speakers.json](https://main--nycmasterclass--cloudadoption.aem.page/speakers.json).
 
-1. **In DA.live**, open `/speakers` (the main speakers page with placeholder)
-2. Replace placeholder content with:
-```
-| Dynamic Cards |
-|---------------|
-| /speakers.json |
-```
-3. Preview to see the page
-4. The placeholder page becomes a dynamic speaker directory
+**Why skip it here**: With other participants, everyone would touch the same `/speakers` page at once (merge conflicts and confusion).
 
-**Why we don't do this now**: With 50 participants, we'd all be editing the same page simultaneously (conflicts!).
-
-**In real projects**: You'd update the production page once your block is tested and committed to main branch.
-
-**Key insight**: The same dynamic-cards block works for:
-- Your personal test page (`/drafts/jsmith/speakers-test`)
-- The real speakers page (`/speakers`)
-- Any other page that needs to display JSON data as cards
-
-This is the power of reusable blocks with dynamic data sources.
+**Same block, different URL**: Your test page points at your personal sheet:  
+`https://main--nycmasterclass--cloudadoption.aem.page/drafts/<your-name>/speakers.json`.  
+The public speakers page would point at the shared sheet:  
+`https://main--nycmasterclass--cloudadoption.aem.page/speakers.json`. Any page can reuse the block as long as the JSON shape matches what `decorate` expects.
 
 ---
+
+## Step 11: Before You Move On (for Exercise 4)
+
+**Do this now — it takes about 2 minutes and unlocks Exercise 4.**
+
+Exercise 4 has you search for your own page. The search index only includes `/sessions/**` and `/labs/**` — not `/drafts/**`. Your Exercise 1 page needs to live under **`/labs/<your-name>/`** before you start Ex4, or it will not appear in search. Use the same **`<your-name>`** folder as in Steps 1–2 (first initial + last name, lowercase).
+
+1. Go to [DA.live](https://da.live) and navigate to `/drafts/<your-name>/`
+2. Find your Exercise 1 page (e.g., `my-session` or `my-lab`)
+3. Click the **3-dot menu → Copy**
+4. Navigate to `/labs/` → **New → Folder** → name it **`<your-name>`** (same folder name as your drafts folder)
+5. Inside **`/labs/<your-name>/`**, paste the page
+6. Open the page → **Preview** → **Publish**
+
+The index updates in the background — by the time you reach Ex4, your page should be findable.
+
+---
+
+<details>
+<summary><strong>After the steps</strong> (please read — performance, examples, and takeaways)</summary>
 
 ## Performance Considerations
 
@@ -616,13 +606,15 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 - Same JSON structure as Sheets - reusable patterns
 - Performance: consider placement (below fold preferred)
 
+</details>
+
 ---
 
 ## Verification Checklist
 
 - [ ] Copied speakers.json to personal drafts folder
 - [ ] Added 1-2 personal speaker entries (yourself + teammate)
-- [ ] Verified JSON endpoint works on localhost
+- [ ] Verified sheet JSON on localhost and the `main--nycmasterclass--cloudadoption.aem.page` preview URL for your sheet (Step 2)
 - [ ] Created dynamic-cards block files (JS + CSS)
 - [ ] Created test page with dynamic-cards block
 - [ ] Block displays all speakers (Adobe experts + your entries)
@@ -631,6 +623,7 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 - [ ] Tested in Chrome DevTools responsive view (desktop and mobile)
 - [ ] Understand the sheet-to-JSON data flow
 - [ ] Committed and pushed block code changes
+- [ ] Completed Step 11 — published Exercise 1 page under `/labs/<your-name>/` for Ex4 search
 
 ---
 
@@ -642,25 +635,6 @@ Note: In Exercise 4, you'll learn how query-index.json works and build a dedicat
 
 ---
 
-## Before You Move On
-
-**Do this now — it takes 2 minutes and unlocks Exercise 4.**
-
-Exercise 4 has you search for your own page. But the search index only includes `/sessions/**` and `/labs/**` — not `/drafts/**`. Your Exercise 1 page needs to be published to `/labs/jsmith/` before you start Ex4, otherwise it won't appear in search results.
-
-### Steps
-
-1. Go to [DA.live](https://da.live) and navigate to `/drafts/jsmith/`
-2. Find your Exercise 1 page (e.g., `my-session` or `my-lab`)
-3. Click the **3-dot menu → Copy**
-4. Navigate to `/labs/` → **New → Folder** → name it `jsmith`
-5. Inside `/labs/jsmith/`, paste the page
-6. Open the page → **Preview** → **Publish**
-
-That's it. The index updates in the background — by the time you get to Ex4 testing, your page will be findable.
-
----
-
 ## Solution
 
 The complete solution for this exercise is available on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). The same branch contains solutions for all lab exercises.
@@ -669,4 +643,4 @@ The complete solution for this exercise is available on the [answers branch](htt
 
 ## Next Exercise
 
-**Exercise 4**: Extend Search Block from Block Collection — You'll configure and test a Search block that fetches `query-index.json` and renders results using the Cards block. You'll learn how EDS indexes published content, how block composition works, and find your own `/labs/jsmith/` page via live search.
+**Exercise 4**: Extend Search Block from Block Collection — You'll configure and test a Search block that fetches `query-index.json` and renders results using the Cards block. You'll learn how EDS indexes published content, how block composition works, and find your own **`/labs/<your-name>/`** page via live search.

@@ -7,12 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [Understanding Repoless](#understanding-repoless)
-  - [How It Works](#how-it-works)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [Understanding Repoless](#understanding-repoless) · [How it works](#how-it-works))
+- **Exercise steps**
   - [Step 1: Clone the Site Configuration](#step-1-clone-the-site-configuration)
   - [Step 2: Create Your Content Folder](#step-2-create-your-content-folder)
   - [Step 3: Copy Content from NYC Masterclass](#step-3-copy-content-from-nyc-masterclass)
@@ -21,7 +18,12 @@
   - [Step 6: Customize Your Content](#step-6-customize-your-content)
   - [Step 7: Multi-Brand Theming](#step-7-multi-brand-theming)
   - [Step 8: Explore Other Participants' Sites](#step-8-explore-other-participants-sites)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — [Key benefits of Repoless](#key-benefits-of-repoless) · [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [Reference Implementation](#reference-implementation)
+- [References](#references)
+- [Congratulations!](#congratulations)
+- [Solution](#solution)
 
 </details>
 
@@ -32,7 +34,11 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–7 completed (if doing in sequence)
@@ -40,9 +46,10 @@
 - AEM Sidekick logged in (for Site Admin tool auth)
 - **Personal workspace**: your own site `cloudadoption/jsmith-mc` (use your name, lowercase)
 
-**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
-
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -148,6 +155,8 @@ When someone visits `https://main--jsmith-mc--cloudadoption.aem.page/`:
 4. Combines them → your page with your content, shared functionality
 
 **Reference**: [Configuration Service Setup](https://www.aem.live/docs/config-service-setup)
+
+</details>
 
 ---
 
@@ -438,6 +447,9 @@ Ask other participants to share their site URLs and compare.
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — benefits, examples, and takeaways)</summary>
+
 ## Key Benefits of Repoless
 
 **For developers**:
@@ -503,6 +515,8 @@ Ask other participants to share their site URLs and compare.
 - **Theme metadata** controls which visual identity a site uses — no code changes needed
 - **Code updates** apply to all sites automatically
 - **Scale** from 1 site to 1000+ sites with the same codebase
+
+</details>
 
 ---
 

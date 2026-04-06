@@ -8,7 +8,7 @@
 <summary><strong>Quick navigation</strong></summary>
 
 - [Prerequisites](#prerequisites)
-- **Background** (optional — expand the section below, or jump: [What you'll learn](#what-youll-learn) · [DA.live & tables → blocks](#dalive-the-authoring-tool) · [Before you start](#before-you-start))
+- **Background** (please read — expand the section below, or jump: [What you'll learn](#what-youll-learn) · [DA.live & tables → blocks](#dalive-the-authoring-tool) · [Before you start](#before-you-start))
 - **Exercise steps**
   - [Step 1: Create Your Page](#step-1-create-your-page)
   - [Step 2: Start From a Template](#step-2-start-from-a-template)
@@ -42,7 +42,7 @@
 ---
 
 <details>
-<summary><strong>Background</strong> (optional — concepts & warm-up before the hands-on steps)</summary>
+<summary><strong>Background</strong> (please read — concepts & warm-up before the hands-on steps)</summary>
 
 ## What You'll Learn
 

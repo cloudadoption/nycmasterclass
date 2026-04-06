@@ -7,13 +7,9 @@
 <details>
 <summary><strong>Quick navigation</strong></summary>
 
-- **Context**
-  - [What You'll Learn](#what-youll-learn)
-  - [Why This Matters](#why-this-matters)
-  - [How DA.live Plugins Work](#how-dalive-plugins-work)
-  - [Understanding the DA App SDK](#understanding-the-da-app-sdk)
-  - [Plugin Architecture](#plugin-architecture)
-- **Hands-on Lab**
+- [Prerequisites](#prerequisites)
+- **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [Pattern showcase](#pattern-showcase-third-party-embed-conversion) · [How DA.live plugins work](#how-dalive-plugins-work) · [Understanding the DA App SDK](#understanding-the-da-app-sdk) · [Plugin architecture](#plugin-architecture))
+- **Exercise steps**
   - [Step 1: Create Plugin HTML](#step-1-create-plugin-html)
   - [Step 1.5: Create Plugin CSS](#step-15-create-plugin-css)
   - [Step 2: Create Plugin JavaScript](#step-2-create-plugin-javascript)
@@ -23,7 +19,12 @@
   - [Step 5: Access Plugin on Your Branch](#step-5-access-plugin-on-your-branch)
   - [Step 6: Preview the Page and Verify Widget Rendering](#step-6-preview-the-page-and-verify-widget-rendering)
   - [Step 7: Optional - Register Plugin in Library](#step-7-optional---register-plugin-in-library)
-- [Key Takeaways](#key-takeaways)
+- **After the steps** (please read — [Troubleshooting](#troubleshooting-common-issues) · [Real-world plugin examples](#real-world-plugin-examples) · [Key takeaways](#key-takeaways))
+- [Verification Checklist](#verification-checklist)
+- [Optional Enhancements](#optional-enhancements)
+- [References](#references)
+- [Solution](#solution)
+- [Next Exercise](#next-exercise)
 
 </details>
 
@@ -34,18 +35,23 @@
 **Complete [SETUP.md](../SETUP.md) if not already done.** Exercises can be done in sequence or independently; if independent, ensure SETUP is done and you have the items below.
 
 **Required:**
-- On your feature branch (`jsmith` — first initial + last name, lowercase)
+- **Feature branch** — From the repository root, run `git branch`. The line with `*` should be your personal branch: first initial + last name, all lowercase (e.g. `jsmith`). If you are on `main` or any other branch, create and switch to yours:
+  ```bash
+  git checkout -b jsmith
+  ```
+  Replace `jsmith` with your branch name. See [SETUP.md — Step 2: Create Feature Branch](../SETUP.md#step-2-create-feature-branch).
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–6 completed (if doing in sequence)
 - DA.live access
 - **Personal workspace**: `/drafts/jsmith/` (use your name, lowercase)
 
-**Verify you're on your branch**: `git branch` → should show `* jsmith` (your name).
-
 **Context:** You've been authoring in DA.live (Exercises 1–6); this exercise extends DA.live with custom plugins so authors can insert pre-formatted content from the library.
 
 ---
+
+<details>
+<summary><strong>Background</strong> (please read — concepts before the hands-on steps)</summary>
 
 ## What You'll Learn
 
@@ -264,6 +270,8 @@ This loads your HTML from:
 ```
 https://jsmith--nycmasterclass--cloudadoption.aem.page/tools/plugins/embedwidget/embedwidget.html
 ```
+
+</details>
 
 ---
 
@@ -624,6 +632,9 @@ For production use, plugins should be registered in the site configuration so au
 
 ---
 
+<details>
+<summary><strong>After the steps</strong> (please read — troubleshooting, examples, and takeaways)</summary>
+
 ## Troubleshooting Common Issues
 
 ### Plugin doesn't load (blank iframe)
@@ -820,6 +831,8 @@ buttons.forEach(btn => {
 - **Validation** - Enforce structure and rules
 
 **The pattern**: UI → Paste Embed → Parse + Validate → `actions.sendHTML()` → DA.live inserts → `actions.closeLibrary()`
+
+</details>
 
 ---
 
