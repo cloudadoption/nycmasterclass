@@ -112,7 +112,7 @@ Notice how the tables you see in DA.live become the styled components on the ren
 
 1. Go to [da.live/#/cloudadoption/nycmasterclass](https://da.live/#/cloudadoption/nycmasterclass)
 2. Navigate into `/drafts/<your-name>/`
-3. Click **New** → **Page**
+3. Click **New** → **Document**
 4. Name it `my-session` or `my-lab`
 
 ![DA.live drafts folder showing personal workspace](images/browse-drafts-folder.png)
