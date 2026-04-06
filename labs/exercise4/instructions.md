@@ -623,7 +623,7 @@ Copy this code:
 
 1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
 2. Open your personal subfolder **`<your-name>`** (first initial + last name, lowercase).
-3. **New** → **Page**, name it **`search-test`**.
+3. **New** → **Document**, name it **`search-test`**.
 4. Add a **level-1 heading**: **Search**.
 5. Type `/` → **Library** (or **Blocks**) → insert **Search**.
 6. If the block has a row for the data source URL, set it to **`/query-index.json`**. If you leave that row empty or omit it, the block still defaults to **`/query-index.json`**. (You can point it at any JSON endpoint that returns `{ data: [...] }` if you experiment later.)

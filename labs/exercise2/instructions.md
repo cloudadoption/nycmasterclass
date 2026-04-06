@@ -199,7 +199,7 @@ export default function decorate(block) {
 
 1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
 2. In that view, go into your personal subfolder **`<your-name>`** (first initial + last name, lowercase). Create the folder here if it does not exist yet — same pattern as [Exercise 1](../exercise1/instructions.md).
-3. **New** → **Page**, name it **`cards-test`**.
+3. **New** → **Document**, name it **`cards-test`**.
 
 Add content to test the **existing** Cards block (default behavior). Use the **Block Library** so you get the correct block markup:
 
