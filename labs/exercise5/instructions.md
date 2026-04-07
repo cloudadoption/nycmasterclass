@@ -371,7 +371,9 @@ Try the **JSON2HTML Simulator** to see exactly how templates are rendered.
 
 ### Test the List Template:
 
-1. **Simulator Options**: Set **pathKey** to empty, **testPath** to `/events/list`
+1. **JSON Data** (left panel - same as the previous step):
+   - Open `https://main--nycmasterclass--cloudadoption.aem.page/future-events.json` in browser
+   - Copy the entire JSON response and paste into the panel
 2. **Mustache Template**: Paste the **events-template** content
 3. **Click "Render"**
 
