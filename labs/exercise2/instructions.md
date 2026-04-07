@@ -10,8 +10,8 @@
 - [Prerequisites](#prerequisites)
 - **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [How block decoration works](#how-block-decoration-works) · [Block anatomy](#block-anatomy) · [Current Cards block](#current-cards-block))
 - **Exercise steps**
-  - [Step 1: Create Test Content](#step-1-create-test-content)
-  - [Step 2: Test Default Cards](#step-2-test-default-cards)
+  - [Step 1: Create a Test Page with Cards Blocks](#step-1-create-a-test-page-with-cards-blocks)
+  - [Step 2: Test the page (Cards w/Images + eyebrow sample)](#step-2-test-the-page-cards-w-images-eyebrow-sample)
   - [Step 3: Implement Eyebrow Enhancement](#step-3-implement-eyebrow-enhancement)
   - [Step 4: Test Eyebrow Enhancement](#step-4-test-eyebrow-enhancement)
   - [Step 5: Implement List Variation](#step-5-implement-list-variation)
@@ -135,11 +135,20 @@ Project CSS targets classes on that decorated structure (scoped under `.cards`, 
 
 ## Block Anatomy
 
-On disk, each block lives under **`blocks/<blockname>/`** with at least **`blockname.js`** (decoration logic) and **`blockname.css`** (styles). For Cards, that is **`blocks/cards/cards.js`** and **`blocks/cards/cards.css`**.
+Every block has **`blocks/<blockname>/<blockname>.js`** and **`blocks/<blockname>/<blockname>.css`** — same base name for both files. The **`.js`** file holds decoration logic (required); the **`.css`** file holds styles (required).
+
+For **Cards**, `<blockname>` is `cards`, so you have **`cards.js`** and **`cards.css`**:
+
+```
+blocks/
+  cards/
+    cards.js      - Decoration logic (required)
+    cards.css     - Styles (required)
+```
 
 **Entrypoint**: The runtime calls the default export of each block’s `.js` file. That export must be a `decorate(block)` function — same pattern for every block. EDS passes the block’s root DOM element; your code transforms it.
 
-**Naming convention**: Folder and file names must match the block name exactly.
+**Naming convention**: Folder and file names must match the block name exactly (e.g. `cards` → `cards/cards.js`).
 
 **Variation classes**: In DA.live, authors add a variation by putting extra text in the table header after the block name in parentheses — for example the header reads **Cards (List)**. EDS adds both class names on the root element, so in the DOM you typically see **`class="cards list"`** (or equivalent) on the block wrapper. Your CSS/JS can target the combined selector **`.cards.list`** for variation-specific behavior.
 
@@ -193,39 +202,47 @@ export default function decorate(block) {
 
 ---
 
-## Step 1: Create Test Content
+## Step 1: Create a Test Page with Cards Blocks
 
-**In DA.live**, create a page at **`/drafts/<your-name>/cards-test`** (e.g. `/drafts/jsmith/cards-test` — first initial + last name, lowercase).
+**In DA.live**, create a draft page at **`/drafts/<your-name>/cards-test`** (first initial + last name, lowercase — same folder pattern as [Exercise 1](../exercise1/instructions.md)).
 
 1. Open the project’s **drafts** folder: [da.live/#/cloudadoption/nycmasterclass/drafts](https://da.live/#/cloudadoption/nycmasterclass/drafts)
 2. In that view, go into your personal subfolder **`<your-name>`** (first initial + last name, lowercase). Create the folder here if it does not exist yet — same pattern as [Exercise 1](../exercise1/instructions.md).
 3. **New** → **Document**, name it **`cards-test`**.
 
-Add content to test the **existing** Cards block (default behavior). Use the **Block Library** so you get the correct block markup:
+**Follow this order on `cards-test`** (headings first, then blocks from the **Sidekick** library):
 
-4. Type `/` → **Library** (or **Blocks**) → find **Cards** and preview variations.
-5. Insert **default Cards** (add a heading like "Default Cards" if you like).
-6. Insert the **Cards block that includes the eyebrow** (italic label). Add a heading like **Cards with Eyebrow** above it — you'll use this when we add the eyebrow enhancement in Step 3.
+4. Add an **H1**: **Cards Test Page**.
+5. Add an **H2**: **Cards With Images**.
+6. Insert **Cards w/Images**: open the **DA Sidekick** → **Library** → **Blocks** → expand **Cards** → choose **Cards w/Images**. That inserts the cards table into the page.
+7. Add an **H2**: **Cards with Eyebrow**.
+8. Insert **Cards with Eyebrows**: open the **DA Sidekick** → **Library** → **Blocks** → expand **Cards** → choose **Cards with Eyebrows**. Place it under **Cards with Eyebrow**.
+9. In that eyebrow block, look at the **second column** of the sample cards: notice the italic phrases *performance* and *Authoring made easy as 1, 2, 3* (and similar). In Step 3, code will turn those into eyebrow labels instead of inline italics.
+
+**Preview vs refresh in this exercise**
+
+- **DA.live content** (headings, blocks, editing table cells): after each change, click **Preview** in the Sidekick and check `http://localhost:3000/drafts/<your-name>/cards-test`.
+- **`blocks/cards/` code** (`cards.js`, `cards.css`): save in your editor, then **refresh the browser** on that same URL so localhost loads the updated block files.
 
   ![Cards Block and Variants in DA.live](images/cards-block-1.gif)
 
-You'll add List and View Switcher content later when we implement those variations (Steps 5 and 7). DA.live auto-saves. Click **Preview** to see the page on localhost, then continue to Step 2.
+DA.live auto-saves. **Preview** now, then continue to Step 2.
 
 ---
 
-## Step 2: Test Default Cards
+## Step 2: Test the page (Cards w/Images + eyebrow sample)
 
-**Open**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+**Open** (or **Preview** from DA.live): `http://localhost:3000/drafts/<your-name>/cards-test`
 
 **Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to switch to responsive mode, then resize the viewport or pick a device preset to verify layout at different widths. Use this for all test steps in this exercise.
 
 **You should see**:
-- Default Cards section showing cards in a grid
-- A second section with cards that have italic (eyebrow) text — still rendered as plain text for now
+- A **Cards w/Images** block — cards in a responsive grid
+- Under **Cards with Eyebrow**: italic snippets such as *performance* and *Authoring made easy as 1, 2, 3* still showing **inline** in the card body (not as a separate eyebrow label yet)
 
   ![Cards Block and Variants in DA.live](images/cards-block-2.gif)
 
-**Why?** The eyebrow enhancement isn't implemented yet. We'll add it in the next step.
+**Why?** The eyebrow enhancement isn’t implemented yet. We’ll add it in the next step. After later **code** edits, **refresh** the browser to pick up `cards.js` / `cards.css`; after **DA.live** edits, use **Preview** again.
 
 ---
 
@@ -314,26 +331,29 @@ Add at the end of the file:
 - `.cards .cards-card-eyebrow` — scoped to the block, no variation class needed
 - All selectors start with `.cards` (proper scoping)
 
+**Save** `cards.js` and `cards.css`, then **refresh** the browser on your **`cards-test`** URL before Step 4.
+
 ---
 
 ## Step 4: Test Eyebrow Enhancement
 
-**Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+**Refresh** the browser on: `http://localhost:3000/drafts/<your-name>/cards-test` (code changed in Step 3).
 
 **You should see**:
-- The section with the eyebrow heading now shows "SPEAKER" (or your label) at the top of each card's body
-- Label is uppercase, smaller font, brand color
-- The italic text you authored is no longer displayed inline — it's been extracted into the eyebrow
-- Default Cards section is unaffected (no italic text = no eyebrow)
+- Under **Cards with Eyebrow**, each card shows an uppercase label (e.g. **PERFORMANCE**, **AUTHORING MADE EASY AS 1, 2, 3**, or similar) at the top of the body — styled smaller, brand color
+- The italic sample text is no longer inline — it’s been extracted into the eyebrow
+- The **Cards With Images** block is unchanged (no italic labels there = no eyebrow behavior)
 
   ![Cards Block and Variants in DA.live](images/cards-block-3.png)
 ---
 
 ## Step 5: Implement List Variation
 
-The list variation displays cards in a single column with centered text. Authors opt in by writing `Cards (List)` as the block name.
+The list variation displays cards in a single column with centered text. Authors opt in by writing **`Cards (List)`** in the block’s **table header row** (the first row of the block table).
 
-**Add content to test it**: In DA.live, open your cards-test page. Type `/` → Library → Blocks → insert **Cards (List)** (add a heading like "List Variation" if you like). Preview so the page has a section to verify in Step 6.
+**There is no separate “Cards (List)” snippet to insert from the library in this flow.** In DA.live, open **`cards-test`** and edit the **first** **Cards w/Images** block you added in Step 1: in the header row, change the block name so it includes the list variation — e.g. **`Cards (List)`** or, if the header still reflects the template name, add **`(List)`** in parentheses on that same heading row so EDS adds the `list` class (same pattern as `| Cards (List) |` in the source table).
+
+**Preview** after editing the header so localhost shows the new layout before Step 6.
 
   ![Cards Block and Variants in DA.live](images/cards-block-4.png)
 
@@ -361,16 +381,18 @@ Add at the end of the file:
 
 **No JavaScript needed** - this variation is CSS-only!
 
+**Save** `cards.css` and **refresh** the browser on **`cards-test`** so the list rules apply. (You already **Preview**’d after editing the block header in DA.live.)
+
 ---
 
 ## Step 6: Test List Variation
 
-**Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+**Refresh** the browser on: `http://localhost:3000/drafts/<your-name>/cards-test` (you added **list** CSS in Step 5).
 
 **You should see**:
-- List section displays as a single column
-- Cards are full width with full-width images
-- Text is centered
+- The **Cards With Images** section (now **`Cards (List)`**) in a **single column**
+- Cards full width with full-width images; body text **centered**
+- **Cards with Eyebrow** unchanged by this CSS (still uses grid unless you also add `(List)` there — don’t, for this step)
 
 ![Cards Block and Variants in DA.live](images/cards-block-5.png)
 ---
@@ -379,11 +401,11 @@ Add at the end of the file:
 
 Now let's add a variation that combines **JavaScript and CSS**. The view switcher adds toggle buttons that let users switch between grid and list views on the fly.
 
-**Add content to test it**: In DA.live, open your cards-test page. Type `/` → Library → Blocks → insert **Cards (View Switcher)** (add a heading like "View Switcher" if you like). Preview so the page has a section to verify in Step 8.
+**Add a new block (do not reuse the first Cards block)**: In DA.live, open **`cards-test`**. Add an **H2** (e.g. **View Switcher** or **Stacked cards**). **Sidekick** → **Library** → **Blocks** → **Cards** → insert **Stacked cards with view switcher** (name in the library may vary slightly). That adds a **new** Cards block on the page — **not** the **Cards w/Images** / **Cards (List)** block from Step 1 and **not** your **Cards with Eyebrow** block. The inserted table’s header row should look like **`Cards (List, View Switcher)`** (or equivalent), so the block already has both the **list** and **view-switcher** variation classes. **Preview** before Step 8.
 
   ![Cards Block and Variants in DA.live](images/cards-block-6.png)
 
-**This is different from list**: List is a fixed layout chosen by the author. View switcher gives the **end user** control over the layout.
+**This is different from Step 5 list-only**: Step 5 edits the **first** block to a fixed **Cards (List)** layout. Here, the **stacked / view-switcher** block lets the **end user** toggle grid vs list with buttons.
 
 ### Update JavaScript
 
@@ -475,20 +497,20 @@ Add the toolbar styles at the end of the file:
 
 **Key insight**: The view switcher toggles the `list` class — the same class used by `Cards (List)`. No duplicate layout CSS needed. When the user clicks "List", the `.cards.list` styles from Step 5 kick in automatically.
 
+**Save** `cards.js` and `cards.css`, then **refresh** the browser before Step 8.
+
 ---
 
 ## Step 8: Test View Switcher Variation
 
-**Refresh**: `http://localhost:3000/drafts/jsmith/cards-test` (replace `jsmith` with your name)
+**Refresh** the browser on: `http://localhost:3000/drafts/<your-name>/cards-test` (code changed in Step 7).
 
 **Note**: The Grid/List toolbar is hidden on narrow viewports and appears at 600px width and up. Use Chrome DevTools responsive view at ≥600px to see and use the buttons.
 
-**You should see**:
-- View Switcher section shows a toolbar with **Grid** and **List** buttons (top right) at desktop/tablet width
-- Grid button is active by default — cards display in a grid
-- Click **List** → cards switch to a single-column layout with centered text
-- Click **Grid** → cards switch back to the grid layout
-- The eyebrow enhancement still works (italic text → eyebrow label) in both views
+**You should see** (on the **Stacked cards with view switcher** / **`Cards (List, View Switcher)`** block):
+- A toolbar with **Grid** and **List** buttons (top right) at desktop/tablet width
+- **List** is the correct default highlight if the block was inserted with **`Cards (List, View Switcher)`** — try **Grid** to switch to the multi-column layout, then **List** again for single column + centered text
+- Toggling updates only **this** block; your **Cards w/Images** / **Cards (List)** and **Cards with Eyebrow** sections stay as you left them
 
 ![Cards Block and Variants in DA.live](images/cards-block-7.png)
 
@@ -613,10 +635,10 @@ grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
 
 ## Verification Checklist
 
-- [ ] Created test page with card examples (default, eyebrow, list, view-switcher)
+- [ ] Created **`cards-test`** with **Cards w/Images** → **Cards with Eyebrow**; **Cards (List)** on the **first** block only; **separate** **Stacked cards with view switcher** block (**`Cards (List, View Switcher)`**)
 - [ ] Implemented eyebrow enhancement (JavaScript + CSS) — works on any Cards block
 - [ ] Implemented list variation (CSS only) — requires `Cards (List)` class
-- [ ] Implemented view-switcher variation (JavaScript + CSS) — requires `Cards (View Switcher)` class
+- [ ] Implemented view-switcher variation (JavaScript + CSS) — works on the stacked block with **`view-switcher`** (and **`list`**) classes, e.g. **`Cards (List, View Switcher)`**
 - [ ] View-switcher toggles between grid and list views using the same `list` class
 - [ ] Tested in Chrome DevTools responsive view (desktop and mobile)
 - [ ] Understand the difference between enhancements and variations

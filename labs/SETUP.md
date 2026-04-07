@@ -254,7 +254,7 @@ EDS serves a separate preview and live URL per GitHub branch. The pattern is:
 
    ![Create Folder in DA](images/da-create-folder.png)
 
-6. Inside that folder, create a new **Page** and name it something like `hello` (a simple “Hello” document to prove you can author).
+6. Inside that folder, choose **New** → **Document** and name it something like `hello` (a simple “Hello” document to prove you can author).
 7. Add some text to the document — a short heading or paragraph is enough.
 8. **Preview** the page and confirm it opens in the browser at a `.aem.page` URL.
 9. **Publish** the page and confirm it is available on `.aem.live`.
