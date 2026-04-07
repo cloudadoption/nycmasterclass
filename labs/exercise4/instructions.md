@@ -174,7 +174,7 @@ Look for your page path in the `data` array (e.g. `/labs/<your-name>/my-session`
 
 ## Step 2: Look at the Block Collection Reference
 
-The search block we’re extending lives in the **[AEM Block Collection](https://github.com/adobe/aem-block-collection)** repo. You won’t edit that repo in this lab — skim it on GitHub or clone it to a sibling folder and open it in your editor. **From that repository’s root**, the files are:
+The search block we’re extending lives in the **[AEM Block Collection](https://github.com/adobe/aem-block-collection)** repo. You won’t edit that repo in this lab — skim it on GitHub or clone it to a sibling folder and open it in your editor. **From that repository’s root**, the files that we will focus on are for the search block:
 
 ```
 blocks/
@@ -185,7 +185,7 @@ blocks/
 
 On GitHub: [tree/main/blocks/search](https://github.com/adobe/aem-block-collection/tree/main/blocks/search).
 
-**Step 3** has you create **`blocks/search/`** under **this** project (nycmasterclass) — same relative layout as upstream, but your own files to extend.
+**In Step 3** , you will create `blocks/search/` under **this** project (nycmasterclass) — same relative layout as upstream, but your own files to extend.
 
 Take a quick look at the upstream files. The Block Collection version has two variants:
 - **Default** — full search box with results rendered as cards
@@ -220,7 +220,7 @@ blocks/
 
 > **Tip**: The full implementation is also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search) if you prefer to copy from there.
 
-Copy this code:
+Copy/Replace the contents of the file with this code:
 
 ```javascript
 import {
@@ -528,7 +528,7 @@ export default async function decorate(block) {
 
 > **Tip**: Also available on the [answers branch on GitHub](https://github.com/cloudadoption/nycmasterclass/tree/answers/blocks/search).
 
-Copy this code:
+Copy/Replace the contents of the file with this code:
 
 ```css
 /* Search block — extended from AEM Block Collection */
@@ -646,16 +646,18 @@ Open: `http://localhost:3000/drafts/<your-name>/search-test`
 
 **Run these searches**:
 
-| Query | Expected |
-|-------|----------|
-| `technical` | All session pages that contain `technical` (matches `category` field) |
-| `lab` | All lab pages + your `/labs/<your-name>/` page (matches title and path) |
-| `stefan` | 2 sessions by Stefan Seifert (matches `speaker-name` field) |
-| Your first name (e.g. `sagar`) | Your `/labs/<your-name>/` page (matches `instructor` field — requires your page to be published) |
-| `development` | Lab pages in the development category |
-| Your session or lab title (or part of it) | Your `/labs/<your-name>/` page |
-| `xyz123` | "No results found." message |
-| `edge` | All pages matching `edge` in title or description |
+
+| Query                                     | Expected                                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `technical`                               | All session pages that contain `technical` (matches `category` field)                            |
+| `lab`                                     | All lab pages + your `/labs/<your-name>/` page (matches title and path)                          |
+| `stefan`                                  | 2 sessions by Stefan Seifert (matches `speaker-name` field)                                      |
+| Your first name (e.g. `sagar`)            | Your `/labs/<your-name>/` page (matches `instructor` field — requires your page to be published) |
+| `development`                             | Lab pages in the development category                                                            |
+| Your session or lab title (or part of it) | Your `/labs/<your-name>/` page                                                                   |
+| `xyz123`                                  | "No results found." message                                                                      |
+| `edge`                                    | All pages matching `edge` in title or description                                                |
+
 
 Results render as Cards block cards — same dark cards with hover effect you saw in Exercise 2.
 
@@ -669,12 +671,14 @@ Results render as Cards block cards — same dark cards with hover effect you sa
 
 ## Step 8: Test Edge Cases
 
-| Scenario | Expected behavior |
-|----------|-------------------|
-| Query shorter than 3 chars | Results cleared, no fetch |
-| Query with no matches (`xyz123`) | "No results found." |
-| Escape key | Results cleared, URL param removed |
-| Page load with `?q=session` in URL | Search runs automatically |
+
+| Scenario                           | Expected behavior                  |
+| ---------------------------------- | ---------------------------------- |
+| Query shorter than 3 chars         | Results cleared, no fetch          |
+| Query with no matches (`xyz123`)   | "No results found."                |
+| Escape key                         | Results cleared, URL param removed |
+| Page load with `?q=session` in URL | Search runs automatically          |
+
 
 ---
 
