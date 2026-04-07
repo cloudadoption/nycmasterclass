@@ -15,8 +15,8 @@
   - [Step 3: Understand the Worker Configuration](#step-3-understand-the-worker-configuration)
   - [Step 4: Test Templates in Simulator](#step-4-test-templates-in-simulator)
   - [Step 5: Add New Events to the Data Sheet](#step-5-add-new-events-to-the-data-sheet)
-  - [Step 6: Understanding How the Event Block Works](#step-6-understanding-how-the-event-block-works)
-  - [Step 7: Add the Event Block to Your Branch](#step-7-add-the-event-block-to-your-branch)
+  - [Step 6: Add the Event Block to Your Branch](#step-6-add-the-event-block-to-your-branch)
+  - [Step 7: Understanding How the Event Block Works](#step-7-understanding-how-the-event-block-works)
 - **After the steps** (please read — [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
 - [Verification Checklist](#verification-checklist)
 - [Troubleshooting Common Issues](#troubleshooting-common-issues)
@@ -448,7 +448,42 @@ The pages on edge are cached — they won't automatically reflect new data. You 
 
 ---
 
-## Step 6: Understanding How the Event Block Works
+## Step 6: Add the Event Block to Your Branch
+
+The `event` block code exists on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Copy it into your branch so EDS can load it.
+
+```bash
+# From your branch, copy the event block files from answers
+git checkout answers -- blocks/event/event.js blocks/event/event.css
+
+# Verify the files are now in your working directory
+ls blocks/event/
+
+# Stage, commit, and push
+git add blocks/event/event.js blocks/event/event.css
+git commit -m "feat: add event block for JSON2HTML list and detail pages"
+git push origin jsmith
+```
+
+Replace `jsmith` with your branch name.
+
+**What you just copied**:
+- `blocks/event/event.js` — Block decoration logic
+- `blocks/event/event.css` — Styles for list cards and detail views
+
+**What lives in the repo** (already available on your branch):
+- `labs/exercise5/events-template.html` — List page Mustache template
+- `labs/exercise5/event-template.html` — Detail page Mustache template
+
+**What lives in DA.live** (set up by instructor):
+- `/future-events` — Data sheet (JSON endpoint)
+
+**What lives in the worker service** (configured by instructor):
+- JSON2HTML worker configuration (path patterns, endpoints, templates)
+
+---
+
+## Step 7: Understanding How the Event Block Works
 
 The `event` block (`blocks/event/event.js` and `event.css`) uses **smart CSS selectors** to detect whether it's rendering a list or a detail view.
 
@@ -498,41 +533,6 @@ main .section.event-container:has(> .event-wrapper ~ .event-wrapper) { ... }
 ```
 
 **Why this matters**: If you target `main .section > div:has(> .event-wrapper)` (with an extra `> div`), nothing will match because `.event-wrapper` elements are direct children of `.section`, not nested inside an intermediate `div`.
-
----
-
-## Step 7: Add the Event Block to Your Branch
-
-The `event` block code exists on the [answers branch](https://github.com/cloudadoption/nycmasterclass/tree/answers). Copy it into your branch so EDS can load it.
-
-```bash
-# From your branch, copy the event block files from answers
-git checkout answers -- blocks/event/event.js blocks/event/event.css
-
-# Verify the files are now in your working directory
-ls blocks/event/
-
-# Stage, commit, and push
-git add blocks/event/event.js blocks/event/event.css
-git commit -m "feat: add event block for JSON2HTML list and detail pages"
-git push origin jsmith
-```
-
-Replace `jsmith` with your branch name.
-
-**What you just copied**:
-- `blocks/event/event.js` — Block decoration logic
-- `blocks/event/event.css` — Styles for list cards and detail views
-
-**What lives in the repo** (already available on your branch):
-- `labs/exercise5/events-template.html` — List page Mustache template
-- `labs/exercise5/event-template.html` — Detail page Mustache template
-
-**What lives in DA.live** (set up by instructor):
-- `/future-events` — Data sheet (JSON endpoint)
-
-**What lives in the worker service** (configured by instructor):
-- JSON2HTML worker configuration (path patterns, endpoints, templates)
 
 ---
 
