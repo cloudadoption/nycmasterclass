@@ -389,7 +389,7 @@ Now prove the system is truly dynamic — add new events and watch the pages gen
 
 1. **In DA.live**, navigate to: `/future-events`
    ```
-   https://da.live/#/cloudadoption/nycmasterclass/future-events
+   https://da.live/sheet#/cloudadoption/nycmasterclass/future-events
    ```
 
 2. You should see a spreadsheet with the existing events (Sydney, London, Bangalore, Berlin, Singapore, Dubai).
