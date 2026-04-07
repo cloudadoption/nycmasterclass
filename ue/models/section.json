@@ -5,7 +5,7 @@
       "id": "section",
       "plugins": {
         "da": {
-          "unsafeHTML": " "
+          "unsafeHTML": "<div></div>"
         }
       },
       "filter": "section",

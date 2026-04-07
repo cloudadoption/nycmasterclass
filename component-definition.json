@@ -47,7 +47,7 @@
           "id": "section",
           "plugins": {
             "da": {
-              "unsafeHTML": " "
+              "unsafeHTML": "<div></div>"
             }
           },
           "filter": "section",
@@ -129,7 +129,7 @@
           "filter": "columns-cell",
           "plugins": {
             "da": {
-              "unsafeHTML": " ",
+              "unsafeHTML": "<div></div>",
               "behaviour": "columns-cell"
             }
           }
@@ -140,7 +140,7 @@
           "model": "hero",
           "plugins": {
             "da": {
-              "unsafeHTML": " ",
+              "unsafeHTML": "<div class=\"hero\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><source type=\"image/jpeg\" srcset=\"\"><img loading=\"lazy\"></picture><h1></h1></div></div></div>",
               "fields": [
                 {
                   "name": "image",
