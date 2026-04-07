@@ -42,7 +42,7 @@
 - Verify the local dev server is accessible at [http://localhost:3000](http://localhost:3000); if not, start it with `aem up` from the project root in a terminal ([SETUP Step 6](../SETUP.md#step-6-start-development-server)).
 - Code editor open with the repository
 - Exercises 1–3 completed (if doing in sequence)
-- **Indexed lab page** — Your Exercise 1 session/lab page must be **published** under `/labs/<your-name>/` on `**.aem.live**` so it appears in `query-index.json`. If you have not done this yet, complete [Exercise 3 — Step 11](../exercise3/instructions.md#step-11-before-you-move-on-for-exercise-4) (copy from `/drafts/<your-name>/`, publish). Pages under `/drafts/**` are **not** indexed.
+- **Indexed lab page** — Your Exercise 1 session/lab page must be **published** under `/labs/<your-name>/` on **`.aem.live`** so it appears in `query-index.json`. If you have not done this yet, complete [Exercise 3 — Step 11](../exercise3/instructions.md#step-11-before-you-move-on-for-exercise-4) (copy from `/drafts/<your-name>/`, publish). Pages under `/drafts/**` are **not** indexed.
 - DA.live access
 
 ---
