@@ -428,7 +428,7 @@ Copy this code:
 This block is **new** in your branch, so it is **not** in DA’s Block library until you register it later. **Test it first** by inserting a block table yourself:
 
 1. In the **DA Sidekick**, click **Block**. That inserts a table: first row header **Columns**, second row with **two** cells.
-2. Change the **first-row header** text from **Columns** to **`Dynamic Cards`** (must match the **`dynamic-cards`** folder name).
+2. Change the **first-row header** text from **`columns`** to **`dynamic-cards`**.
 3. Select the **second row**, **both** cells.
 4. The Sidekick label **Block** should change to **Edit Block**. Click **Edit Block**, then choose **Merge cells** (it is near the bottom of the menu — about the second option from the bottom). That merges the two cells into one.
 5. In the merged cell, type **`/drafts/<your-name>/speakers.json`** (replace **`<your-name>`** with your drafts folder). **Select that text** and use the **link** icon in the toolbar to turn it into a **real hyperlink** (the block code reads `block.querySelector('a')?.href`).
