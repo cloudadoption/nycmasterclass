@@ -99,37 +99,22 @@
 
 ---
 
-**Exercise 6**: [Form Submissions with Workers](exercise6/instructions.md)
+**Exercise 6**: [Third-Party Integrations with Edge Workers](exercise6/instructions.md)
 
 **What you'll learn**:
-- Why the **browser is the wrong place for secrets** and integrations
-- How a **worker** sits between the form and systems like Slack
+- Why the **browser is the wrong place for secrets** when calling external APIs
+- How an **Edge Worker** sits between your site and systems like Slack (or any HTTP API)
 - How to keep authors and visitors **informed** while async work runs
 
 **What you'll build**:
-- A **form block** on a draft page
-- An **end-to-end submission** you can trace from click to notification
+- A **feedback block** that collects input and POSTs to a worker
+- An **end-to-end path** you can trace from the page to a third-party system
 
-**Key takeaway**: Forms are a trust boundary—blocks collect; workers protect and connect.
-
----
-
-**Exercise 7**: [DA.live Plugin Development](exercise7/instructions.md)
-
-**What you'll learn**:
-- How **plugins extend authoring** without polluting documents with raw embeds
-- The split between **author experience** (paste, dialog) and **delivery** (clean block markup)
-- How **local vs branch** loading speeds up plugin development
-
-**What you'll build**:
-- A **plugin + block pair** that turns messy third-party snippets into structured content
-- A workflow authors could actually use week after week
-
-**Key takeaway**: Plugins are the guardrail that keeps “easy for authors” and “safe for the site” aligned.
+**Key takeaway**: Integrations are a trust boundary—blocks collect; workers protect credentials and connect to external systems.
 
 ---
 
-**Exercise 8**: [Repoless Multi-Site & Multi-Brand](exercise8/instructions.md)
+**Exercise 7**: [Repoless Multi-Site & Multi-Brand](exercise7/instructions.md)
 
 **What you'll learn**:
 - **Repoless** as “many sites, one codebase” via configuration—not copy-paste repos
@@ -141,6 +126,21 @@
 - **Evidence** (e.g. in DevTools) that shared scripts and styles really come from the shared repo
 
 **Key takeaway**: Scale out sites and brands by separating *where content lives* from *where code lives*.
+
+---
+
+**Exercise 8**: [DA.live Plugin Development](exercise8/instructions.md)
+
+**What you'll learn**:
+- How **plugins extend authoring** without polluting documents with raw embeds
+- The split between **author experience** (paste, dialog) and **delivery** (clean block markup)
+- How **local vs branch** loading speeds up plugin development
+
+**What you'll build**:
+- A **plugin + block pair** that turns messy third-party snippets into structured content
+- A workflow authors could actually use week after week
+
+**Key takeaway**: Plugins are the guardrail that keeps “easy for authors” and “safe for the site” aligned.
 
 ---
 

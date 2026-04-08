@@ -679,4 +679,4 @@ The complete solution for this exercise (event block, templates) is on the [answ
 
 ## Next Exercise
 
-**Exercise 6**: Form Submissions with Workers - You'll learn how to build forms that securely submit data through Cloudflare Workers to external services like Slack.
+**Exercise 6**: Third-Party Integrations with Edge Workers — Send data from the site to external systems (e.g. Slack) through a Cloudflare Worker so secrets stay off the client.
