@@ -1,4 +1,4 @@
-# Exercise 6: Form Submissions with Workers
+# Exercise 6: Third-Party Integrations with Edge Workers
 
 **Duration**: 20 minutes
 
@@ -11,8 +11,8 @@
 - **Background** (please read — expand below, or jump: [What you'll learn](#what-youll-learn) · [Why this matters](#why-this-matters) · [The complete data flow](#the-complete-data-flow) · [Worker endpoint](#worker-endpoint) · [Understanding the POST request structure](#understanding-the-post-request-structure))
 - **Exercise steps**
   - [Step 1: Create a Feedback Block](#step-1-create-a-feedback-block)
-  - [Step 2: Configure the Block in Your Draft Page](#step-2-configure-the-block-in-your-draft-page)
-  - [Step 3: Create Test Page](#step-3-create-test-page)
+  - [Step 2: Create Test Page](#step-2-create-test-page)
+  - [Step 3: Add and Configure the Feedback Block](#step-3-add-and-configure-the-feedback-block)
   - [Step 4: Understanding What the Worker Does](#step-4-understanding-what-the-worker-does)
   - [Step 5: Commit Your Changes](#step-5-commit-your-changes)
 - **After the steps** (please read — [Real-world applications](#real-world-applications) · [Key takeaways](#key-takeaways))
@@ -48,12 +48,11 @@
 
 ## What You'll Learn
 
-- How to build a sample feedback form in form of an Edge Delivery Services block
-- How to handle form submissions with JavaScript (prevent default, capture data)
-- **POST request structure** for worker endpoints
-- How Workers integrate with external services (Slack)
+- How **visitor input** on the page reaches **third-party systems** without exposing secrets in the browser
+- How to implement that path using a **feedback block** (structured inputs + `fetch` to a worker)
+- **POST request structure** for worker endpoints and how workers call external APIs (Slack in this lab)
 - How to provide user feedback during async operations (loading, success, error states)
-- The complete data flow: Form → Worker → Slack
+- The end-to-end flow: **page → Worker → third-party service** (Slack)
 
 ---
 
@@ -235,13 +234,28 @@ blocks/
 
 ---
 
-## Step 2: Configure the Block in Your Draft Page
+## Step 2: Create Test Page
 
-The block expects:
-- Row 1: Worker endpoint URL
-- Row 2: Rich content with location, address, title, and description
+**In DA.live**:
 
-Use this block structure in your page:
+1. Open your personal drafts folder **`/drafts/<your-name>/`** (first initial + last name, lowercase — same pattern as earlier exercises).
+2. **New** → **Document** and name it **`feedback`**. You should end up with **`/drafts/<your-name>/feedback`**.
+3. **Save**. Leave the body minimal for now — you’ll insert the Feedback block in Step 3.
+
+---
+
+## Step 3: Add and Configure the Feedback Block
+
+Still on **`/drafts/<your-name>/feedback`**:
+
+1. Use the **Block Library** to insert the **Feedback Form** block (or equivalent name shown in your library).
+
+**Authoring structure** — the block expects:
+
+- **Row 1**: Worker endpoint URL (as a link)
+- **Row 2**: Rich content with location, address, title, and description
+
+If you need to adjust cells after insert, match this shape:
 
 ```html
 <div class="feedback">
@@ -259,33 +273,29 @@ Use this block structure in your page:
 </div>
 ```
 
-See how this block looks like in DA edit mode
+See how this block looks in DA edit mode:
 
 ![Feedback Form | Block Structure](../images/da-feedback-form.png)
 
 **What this block does**:
-- Renders a structured feedback form UI
+
+- Renders a structured feedback UI
 - Captures `fullName`, `email`, and `feedback`
-- POSTs JSON to the Worker endpoint from row 1
+- POSTs JSON to the Worker URL from row 1
 - Handles loading, success, and error states
 
----
+2. **Save**, then click **Preview** to open the page on localhost.
+3. Open **`http://localhost:3000/drafts/<your-name>/feedback`** (dev server running) to exercise the block locally.
 
-## Step 3: Create Test Page
-
-**In DA.live**:
-1. Create page: `/drafts/jsmith/feedback` (use your name)
-2. Use the Block Library to add the **Feedback Form** block to your page
-3. DA.live auto-saves. Click **Preview** to see the page on localhost
-4. Open `http://localhost:3000/drafts/jsmith/feedback` (use your name) to test the form locally
-
-**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to verify the form layout at different widths.
+**Test on desktop and mobile**: Use Chrome DevTools responsive view — open DevTools (F12 or Cmd+Option+I), toggle the device toolbar (Cmd+Shift+M / Ctrl+Shift+M) to verify the layout at different widths.
 
 **You should see**:
-- Form with three fields (name, email, feedback)
+
+- Fields for name, email, and feedback
 - Submit button
 
 **Test submission**:
+
 1. Fill in all fields
 2. Click "Submit Feedback"
 3. Button should show "Sending..."
@@ -294,6 +304,7 @@ See how this block looks like in DA edit mode
 **Check Slack**: Instructor's Slack channel should receive your message!
 
 **Test validation**:
+
 - Submit with empty fields → error message
 - Submit with invalid email → error message
 - Fill all fields correctly → success
@@ -666,4 +677,4 @@ The complete solution for this exercise (feedback block) is on the [answers bran
 
 ## Next Exercise
 
-**Exercise 7**: Performance Optimization - You'll learn to analyze and optimize your Edge Delivery Services site for Core Web Vitals, aiming for perfect Lighthouse scores.
+**Exercise 7**: [Repoless Multi-Site & Multi-Brand](../exercise7/instructions.md) — Point a second DA site at this repo’s code and explore multi-brand theming.
