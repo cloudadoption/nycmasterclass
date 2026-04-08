@@ -171,12 +171,25 @@ Expected output: No errors (warnings are OK for boilerplate)
 
 ## Step 6: Start Development Server
 
-- **For Day 2 exercises**: `aem up` — content comes from EDS/DA.
-- **For the AI lab (Day 1)**: `aem up --html-folder drafts` — serves local `drafts/` so the agent can create and view test pages (e.g. `drafts/tmp/speakers`, `drafts/tmp/schedule`).
-
 The server starts at: http://localhost:3000
 
 **Keep this running** throughout the lab. Open a new terminal for Git commands.
+
+- **For Day 2 exercises**: From the **repository root**, run **`aem up`** — content comes from EDS/DA.
+
+- **For the AI lab (Day 1)** — before you run the command with `--html-folder drafts`:
+
+  1. At the **repository root** (same folder as `package.json`), create a **`drafts`** directory if it is not there yet. The clone may not include it; without it, `--html-folder drafts` has nothing to serve.
+     ```bash
+     mkdir -p drafts
+     ```
+  2. Then start the dev server:
+     ```bash
+     aem up --html-folder drafts
+     ```
+     That serves files under `drafts/` so the agent can add test pages (e.g. `drafts/tmp/speakers`, `drafts/tmp/schedule`).
+
+  The project **`.gitignore`** lists **`/drafts/`** so anything you or the agent puts there stays **local** and is not committed to GitHub.
 
 **Verify**: Open http://localhost:3000 — you should see the NYC Masterclass homepage (or the drafts index if using `--html-folder drafts`).
 
@@ -314,6 +327,7 @@ Your account should be granted a **`publish`-style** role (what the instructor c
 - [ ] AEM CLI installed (`aem --version` works)
 - [ ] Dependencies installed (`npm install` completed)
 - [ ] Linting runs clean (`npm run lint` no errors)
+- [ ] **`drafts`** folder exists at project root (`mkdir -p drafts` from repo root if needed)
 - [ ] Dev server running with drafts: `aem up --html-folder drafts` — `http://localhost:3000` loads
 - [ ] AI coding agent set up (Cursor, Claude Code, Codex, or Copilot) and project opened in it
 

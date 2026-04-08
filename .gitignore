@@ -15,4 +15,6 @@ helix-importer-ui
 !AGENTS.md
 
 .playwright-mcp/
-drafts/tmp/*
+
+# Local HTML / agent-generated pages (--html-folder drafts); do not commit
+/drafts/
