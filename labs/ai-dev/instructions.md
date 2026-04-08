@@ -20,10 +20,10 @@
 
 ## Prerequisites
 
-**Complete [Lab Setup](../SETUP.md) through Step 7 before starting.** Step 6 tells you to create a **`drafts`** folder at the project root, then run `aem up --html-folder drafts`.
+**Complete [Lab Setup](../SETUP.md) through Step 7 before starting.**
 
 - AI coding agent installed and authenticated (Claude Code, Cursor, Codex CLI, or GitHub Copilot)
-- Dev server running: `aem up --html-folder drafts` (after `mkdir -p drafts` at repo root — see [SETUP — Step 6](../SETUP.md#step-6-start-development-server))
+- Dev server running: `aem up --html-folder drafts`
 - `localhost:3000` open in browser
 - Terminal visible alongside editor
 
