@@ -481,10 +481,10 @@ try {
 npm run lint
 
 # Add changes
-git add blocks/feedback/ labs/exercise6/instructions.md
+git add blocks/feedback/
 
 # Commit
-git commit -m "docs: align exercise 6 with feedback block and worker url"
+git commit -m "feat: add feedback block"
 
 # Push
 git push origin jsmith
