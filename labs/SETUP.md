@@ -171,12 +171,13 @@ Expected output: No errors (warnings are OK for boilerplate)
 
 ## Step 6: Start Development Server
 
-- **For Day 2 exercises**: `aem up` — content comes from EDS/DA.
-- **For the AI lab (Day 1)**: `aem up --html-folder drafts` — serves local `drafts/` so the agent can create and view test pages (e.g. `drafts/tmp/speakers`, `drafts/tmp/schedule`).
-
 The server starts at: http://localhost:3000
 
 **Keep this running** throughout the lab. Open a new terminal for Git commands.
+
+- **For Day 2 exercises**: From the **repository root**, run **`aem up`** — content comes from EDS/DA.
+
+- **For the AI lab (Day 1)**: `aem up --html-folder drafts` — serves the `drafts/` folder so the agent can create and view test pages (e.g. `drafts/tmp/speakers`, `drafts/tmp/schedule`). The `drafts/` folder is included in the repo; its `.gitignore` keeps any content you or the agent adds there **local** and out of commits.
 
 **Verify**: Open http://localhost:3000 — you should see the NYC Masterclass homepage (or the drafts index if using `--html-folder drafts`).
 
