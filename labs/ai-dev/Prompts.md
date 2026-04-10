@@ -13,6 +13,8 @@ Let's migrate https://summit.adobe.com/na/ to /drafts/mdeluna/summit.
 Match the original design as close as possible, but with our color scheme.
 ```
 
+Let's migrate https://www.fidelity.com/learning-center/personal-finance/retirement/inflation-and-volatility to /drafts/mdeluna/fidelity/learning-center/inflation-and-volatility. Match the original design as close as possible.
+
 ---
 
 ## Part 2 — Orient
