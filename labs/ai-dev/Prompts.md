@@ -9,7 +9,7 @@
 ### 1.1 — Migrate a page
 
 ```
-Let's migrate https://summit.adobe.com/na/ to /drafts/shsteimer/summit.
+Let's migrate https://summit.adobe.com/na/ to /drafts/mdeluna/summit.
 Match the original design as close as possible, but with our color scheme.
 ```
 

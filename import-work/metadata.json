@@ -1,0 +1,38 @@
+{
+  "url": "https://summit.adobe.com/na/",
+  "timestamp": "2026-04-09T14:54:00.000Z",
+  "paths": {
+    "documentPath": "/drafts/mdeluna/summit",
+    "htmlFilePath": "drafts/mdeluna/summit.plain.html",
+    "mdFilePath": "drafts/mdeluna/summit.md",
+    "dirPath": "drafts/mdeluna",
+    "filename": "summit"
+  },
+  "screenshot": "./import-work/screenshot.png",
+  "html": {
+    "filePath": "./import-work/cleaned.html",
+    "size": 12000
+  },
+  "metadata": {
+    "title": "Adobe Summit 2026: Discover what's next in marketing, creativity, and AI",
+    "description": "Unlock the power of Adobe's AI-native platform to create content at scale, orchestrate personalized experiences, and accelerate business growth.",
+    "og:image": "https://summit.adobe.com/na/images/hero-image.jpg",
+    "canonical": "https://summit.adobe.com/na/"
+  },
+  "images": {
+    "count": 5,
+    "mapping": {
+      "https://summit.adobe.com/na/images/hero-image.jpg": "./images/hero-image.jpg",
+      "https://summit.adobe.com/na/images/speakers.jpg": "./images/speakers.jpg",
+      "https://summit.adobe.com/na/images/sessions.jpg": "./images/sessions.jpg",
+      "https://summit.adobe.com/na/images/certifications.jpg": "./images/certifications.jpg",
+      "https://summit.adobe.com/na/images/sponsors.jpg": "./images/sponsors.jpg"
+    },
+    "stats": {
+      "total": 5,
+      "converted": 0,
+      "skipped": 5,
+      "failed": 0
+    }
+  }
+}
