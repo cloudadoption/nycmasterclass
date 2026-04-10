@@ -59,6 +59,7 @@ export default async function decorate(block) {
     block.append(ul);
   } catch (error) {
     block.innerHTML = `<p class="error">Error loading speakers: ${error.message}</p>`;
+    // eslint-disable-next-line no-console
     console.error('Dynamic Cards error:', error);
   }
 }
