@@ -1,6 +1,6 @@
 /* Cards block - masterclass theme with dark cards */
 
-.cards > ul {
+.cards>ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -9,7 +9,7 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
-.cards > ul > li {
+.cards>ul>li {
   background-color: var(--card);
   border-radius: 16px;
   padding: 0;
@@ -19,7 +19,7 @@
   border: 1px solid rgb(255 255 255 / 5%);
 }
 
-.cards > ul > li:hover {
+.cards>ul>li:hover {
   transform: translateY(-4px);
   box-shadow: 0 15px 40px rgb(0 0 0 / 60%);
   border-color: rgb(255 255 255 / 10%);
@@ -58,13 +58,13 @@
   margin: 0;
 }
 
-.cards .cards-card-body > *:first-child {
+.cards .cards-card-body>*:first-child {
   margin-top: 0;
 }
 
 .cards h3,
-.cards .cards-card-body > p:first-child,
-.cards .cards-card-body > p > strong {
+.cards .cards-card-body>p:first-child,
+.cards .cards-card-body>p>strong {
   color: white;
   font-size: 1.4rem;
   font-weight: 700;
@@ -90,8 +90,8 @@
 }
 
 /* Responsive adjustments */
-@media (width >= 600px) {
-  .cards > ul {
+@media (width >=600px) {
+  .cards>ul {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 
@@ -100,8 +100,8 @@
   }
 }
 
-@media (width >= 900px) {
-  .cards > ul {
+@media (width >=900px) {
+  .cards>ul {
     grid-template-columns: repeat(3, 1fr);
   }
 
@@ -112,4 +112,13 @@
   .cards .cards-card-body {
     padding: 2rem;
   }
+}
+
+.cards .cards-card-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  color: var(--brand-1);
 }
