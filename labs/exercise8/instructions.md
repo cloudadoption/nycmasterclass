@@ -124,16 +124,16 @@ DA.live plugins are HTML + JavaScript applications hosted on your Edge Delivery 
 ┌─────────────────────────────────────────────────┐
 │            DA.live Editor                       │
 │                                                 │
-│  ┌───────────────────┐  ┌──────────────────┐  │
-│  │  Document Editor  │  │  Library Palette │  │
-│  │                   │  │                  │  │
-│  │  [Your Content]   │  │  [Plugin loads   │  │
-│  │                   │  │   in iframe]     │  │
-│  └────────┬──────────┘  └────────┬─────────┘  │
-│           │                      │             │
-│           │ PostMessage API      │             │
-│           │ (via DA App SDK)     │             │
-│           └──────────────────────┘             │
+│  ┌───────────────────┐  ┌──────────────────┐    │
+│  │  Document Editor  │  │  Library Palette │    │
+│  │                   │  │                  │    │
+│  │  [Your Content]   │  │  [Plugin loads   │    │
+│  │                   │  │   in iframe]     │    │
+│  └────────┬──────────┘  └────────┬─────────┘    │
+│           │                      │              │
+│           │ PostMessage API      │              │
+│           │ (via DA App SDK)     │              │
+│           └──────────────────────┘              │
 └─────────────────────────────────────────────────┘
                        │
                        │ Loads plugin from:
@@ -380,6 +380,7 @@ Copy this code:
 Copy this code:
 
 ```javascript
+// eslint-disable-next-line import/no-unresolved
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 
 const TRADINGVIEW_HOST = 's3.tradingview.com';
@@ -393,11 +394,11 @@ function setStatus(statusEl, message, type = '') {
 
 function escapeHtml(value) {
   return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
 }
 
 function normalizeHeight(config) {
@@ -411,12 +412,16 @@ function parseTradingViewEmbedCode(rawEmbedCode) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(rawEmbedCode, 'text/html');
   const scripts = [...doc.querySelectorAll('script[src]')];
-  const tradingViewScript = scripts.find((script) => script.src.includes(TRADINGVIEW_HOST));
+  const tradingViewScript = scripts.find(({ src }) => src.includes(TRADINGVIEW_HOST));
 
-  if (!tradingViewScript) throw new Error('No supported widget script found. Paste the full embed snippet.');
+  if (!tradingViewScript) {
+    throw new Error('No supported widget script found. Paste the full embed snippet.');
+  }
 
   const scriptURL = new URL(tradingViewScript.src);
-  if (scriptURL.host !== TRADINGVIEW_HOST) throw new Error('Unsupported script source in embed code.');
+  if (scriptURL.host !== TRADINGVIEW_HOST) {
+    throw new Error('Unsupported script source in embed code.');
+  }
 
   const scriptFilename = scriptURL.pathname.split('/').pop();
   if (!scriptFilename || !scriptFilename.startsWith(SCRIPT_PREFIX)) {
@@ -424,7 +429,9 @@ function parseTradingViewEmbedCode(rawEmbedCode) {
   }
 
   const scriptConfigText = tradingViewScript.textContent.trim();
-  if (!scriptConfigText) throw new Error('Widget configuration is empty.');
+  if (!scriptConfigText) {
+    throw new Error('Widget configuration is empty.');
+  }
 
   let config;
   try {
@@ -437,7 +444,11 @@ function parseTradingViewEmbedCode(rawEmbedCode) {
     throw new Error('Widget config must be a JSON object.');
   }
 
-  return { script: scriptFilename, height: normalizeHeight(config), config };
+  return {
+    script: scriptFilename,
+    height: normalizeHeight(config),
+    config,
+  };
 }
 
 function toTradingViewBlockHTML({ script, height, config }) {
@@ -448,10 +459,21 @@ function toTradingViewBlockHTML({ script, height, config }) {
   return `
 <table>
   <tbody>
-    <tr><td colspan="2"><p>tradingview</p></td></tr>
-    <tr><td><p>script</p></td><td><p>${safeScript}</p></td></tr>
-    <tr><td><p>height</p></td><td><p>${safeHeight}</p></td></tr>
-    <tr><td><p>config</p></td><td><pre><code>${safeConfig}</code></pre></td></tr>
+    <tr>
+      <td colspan="2"><p>tradingview</p></td>
+    </tr>
+    <tr>
+      <td><p>script</p></td>
+      <td><p>${safeScript}</p></td>
+    </tr>
+    <tr>
+      <td><p>height</p></td>
+      <td><p>${safeHeight}</p></td>
+    </tr>
+    <tr>
+      <td><p>config</p></td>
+      <td><pre><code>${safeConfig}</code></pre></td>
+    </tr>
   </tbody>
 </table>`.trim();
 }
@@ -469,13 +491,20 @@ function toTradingViewBlockHTML({ script, height, config }) {
       return;
     }
 
+    insertButton.disabled = true;
+    setStatus(statusEl, 'Parsing embed code...', '');
+
     try {
       const parsed = parseTradingViewEmbedCode(rawEmbedCode);
-      await actions.sendHTML(toTradingViewBlockHTML(parsed));
+      const blockHtml = toTradingViewBlockHTML(parsed);
+
+      await actions.sendHTML(blockHtml);
       setStatus(statusEl, 'Widget block inserted.', 'success');
       await actions.closeLibrary();
     } catch (error) {
       setStatus(statusEl, error.message || 'Unable to convert embed code.', 'error');
+    } finally {
+      insertButton.disabled = false;
     }
   });
 }());
